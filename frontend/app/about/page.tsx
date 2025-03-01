@@ -1,5 +1,5 @@
-import { GraduationCap, Users, BookOpen, Code } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { GraduationCap, Users, BookOpen, Code } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 export default function AboutPage() {
   return (
@@ -8,7 +8,8 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">About AcademicX</h1>
           <p className="text-lg text-gray-600">
-            Empowering students through collaborative learning and resource sharing
+            Empowering students through collaborative learning and resource
+            sharing
           </p>
         </div>
 
@@ -18,10 +19,15 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
-            AcademicX was created with a simple mission: to enhance the academic experience by providing a platform where students can share insights, resources, and feedback about their courses.
+            AcademicX was created with a simple mission: to enhance the academic
+            experience by providing a platform where students can share
+            insights, resources, and feedback about their courses.
           </p>
           <p className="text-gray-700 leading-relaxed">
-            We believe that collaborative learning leads to better outcomes for everyone. By creating a space where knowledge can be freely shared and discussed, we aim to help students make informed decisions about their academic journey and excel in their studies.
+            We believe that collaborative learning leads to better outcomes for
+            everyone. By creating a space where knowledge can be freely shared
+            and discussed, we aim to help students make informed decisions about
+            their academic journey and excel in their studies.
           </p>
         </Card>
 
