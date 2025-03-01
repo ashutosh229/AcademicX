@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { type Course } from '@/lib/data';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { type Course } from "@/lib/data";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   ThumbsUp,
   ThumbsDown,
@@ -12,9 +12,9 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   ExternalLink,
-} from 'lucide-react';
-import GaugeChart from 'react-gauge-chart'; // Add this library
-import { Bar } from 'react-chartjs-2'; // Bar chart library
+} from "lucide-react";
+import GaugeChart from "react-gauge-chart"; // Add this library
+import { Bar } from "react-chartjs-2"; // Bar chart library
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,7 +23,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -61,37 +61,37 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
   };
 
   const contentToughnessData = {
-    labels: ['Content Toughness'],
+    labels: ["Content Toughness"],
     datasets: [
       {
-        label: 'Average',
+        label: "Average",
         data: [course.metrics.contentToughness.average],
-        backgroundColor: '#29AB87',
+        backgroundColor: "#29AB87",
       },
     ],
   };
 
   const workloadData = {
-    labels: ['Workload'],
+    labels: ["Workload"],
     datasets: [
       {
-        label: 'Average',
+        label: "Average",
         data: [course.metrics.workload.average],
-        backgroundColor: '#00C9FF',
+        backgroundColor: "#00C9FF",
       },
     ],
   };
 
   const recommendationData = {
-    labels: ['Recommended', 'Not Recommended'],
+    labels: ["Recommended", "Not Recommended"],
     datasets: [
       {
-        label: 'Count',
+        label: "Count",
         data: [
           course.metrics.overallRecommendation.recommended,
           course.metrics.overallRecommendation.notRecommended,
         ],
-        backgroundColor: ['#29AB87', '#FF5F6D'],
+        backgroundColor: ["#29AB87", "#FF5F6D"],
       },
     ],
   };
@@ -101,7 +101,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
       {/* Course Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">
-          {course.name}{' '}
+          {course.name}{" "}
           <span className="text-2xl text-gray-600">({course.code})</span>
         </h1>
         <p className="text-xl text-gray-600">Professor: {course.professor}</p>
@@ -121,7 +121,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                   id="content-toughness-gauge"
                   nrOfLevels={10}
                   arcsLength={[0.2, 0.4, 0.4]}
-                  colors={['#FF5F6D', '#FFC371', '#29AB87']}
+                  colors={["#FF5F6D", "#FFC371", "#29AB87"]}
                   percent={course.metrics.contentToughness.average / 10}
                   textColor="#000"
                 />
@@ -142,7 +142,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                   id="workload-gauge"
                   nrOfLevels={10}
                   arcsLength={[0.3, 0.4, 0.3]}
-                  colors={['#00C9FF', '#FFD700', '#FF4500']}
+                  colors={["#00C9FF", "#FFD700", "#FF4500"]}
                   percent={course.metrics.workload.average / 10}
                   textColor="#000"
                 />
@@ -166,7 +166,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 id="recommendation-gauge"
                 nrOfLevels={10}
                 arcsLength={[0.7, 0.3]}
-                colors={['#29AB87', '#FF5F6D']}
+                colors={["#29AB87", "#FF5F6D"]}
                 percent={recommendationPercentage / 100}
                 textColor="#000"
               />
@@ -183,7 +183,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 <div className="flex items-center gap-2 text-red-600">
                   <XCircle className="w-6 h-6" />
                   <span>
-                    {course.metrics.overallRecommendation.notRecommended}{' '}
+                    {course.metrics.overallRecommendation.notRecommended}{" "}
                     Crosses
                   </span>
                 </div>
@@ -212,7 +212,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                   <div className="flex justify-between items-start mb-2">
                     <p className="text-sm font-medium">
                       {comment.author.isAnonymous
-                        ? 'Anonymous'
+                        ? "Anonymous"
                         : comment.author.name}
                     </p>
                     <div className="flex items-center space-x-4">
@@ -228,7 +228,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                   </div>
                   <p className="text-gray-700">{comment.text}</p>
                   <p className="text-sm text-gray-500 mt-2">
-                    Posted on{' '}
+                    Posted on{" "}
                     {new Date(comment.datePosted).toLocaleDateString()}
                   </p>
                 </div>
@@ -266,9 +266,9 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                         <ExternalLink className="h-4 w-4 ml-1" />
                       </a>
                       <p className="text-sm text-gray-600">
-                        {resource.type} • By{' '}
+                        {resource.type} • By{" "}
                         {resource.contributor.isAnonymous
-                          ? 'Anonymous'
+                          ? "Anonymous"
                           : resource.contributor.name}
                       </p>
                     </div>
