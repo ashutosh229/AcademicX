@@ -3,8 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Person
-from .serializers import PersonSerializer
+from .models import Person, Course
+from .serializers import PersonSerializer,CourseSerializer
 
 
 @api_view(['POST'])
@@ -24,4 +24,21 @@ def fetch_surname_test(request, firstname):  # Accepts path parameter
         return Response({"surname": person.surname})
     except Person.DoesNotExist:
         return Response({"error": "Person not found"}, status=404)
+
+"""----------------------------------------"""
+@api_view(['POST'])
+def create_course(request):
+
+    serializer = CourseSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Data inserted successfully"}, status=201)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+def get_all_courses(request):
+    courses = Course.objects.all()  # Fetch all courses
+    serializer = CourseSerializer(courses, many=True)  # Serialize the data
+    return Response(serializer.data)  # Return JSON response
 

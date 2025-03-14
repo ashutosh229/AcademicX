@@ -17,5 +17,14 @@ def api_root(request, format=None):
                 "fetch_surname", args=["John"], request=request, format=format # ek default arg deke rakha for example output
             ),
 
+            "create_course": reverse(
+                "create_course", request=request, format=format
+            ),
+
+            "get_all_courses": reverse(
+                "get_all_courses",  request=request, format=format
+
+            ),
+
         }
     )
