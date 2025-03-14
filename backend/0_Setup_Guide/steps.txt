@@ -4,7 +4,7 @@
 
 3) Create your own .env file ( one time )
 
-4) in your psql bash
+4) in your bash ( to clone the db)
 psql -U their_username -c "DROP DATABASE student_forum_db;" (don't do if first time setup)
 psql -U their_username -c "CREATE DATABASE student_forum_db;"
 pg_restore -U their_username -d student_forum_db -F c db_backup.sql
