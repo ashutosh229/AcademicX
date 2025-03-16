@@ -1,6 +1,6 @@
 // Temporary data store until API integration
 export interface Course {
-  id: string;
+  course_id: string;
   name: string;
   code: string;
   professor: string;
@@ -52,7 +52,7 @@ export interface Comment {
 
 export const courses: Course[] = [
   {
-    id: "1",
+    course_id: "1",
     name: "Introduction to Computer Science",
     code: "CS101",
     professor: "Dr. Sarah Johnson",

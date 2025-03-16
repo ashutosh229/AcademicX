@@ -13,7 +13,7 @@ import {
   ArrowDownCircle,
   ExternalLink,
 } from "lucide-react";
-import GaugeChart from "react-gauge-chart"; // Add this library
+import GaugeChart from "react-gauge-chart";
 import { Bar } from "react-chartjs-2"; // Bar chart library
 import {
   Chart as ChartJS,

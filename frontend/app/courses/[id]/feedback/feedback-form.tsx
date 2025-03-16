@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Course } from '@/lib/data';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Course } from "@/lib/data";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 interface FeedbackFormProps {
   course: Course;
@@ -20,7 +20,7 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
   const [contentToughness, setContentToughness] = useState([5]);
   const [workload, setWorkload] = useState([5]);
   const [recommend, setRecommend] = useState(true);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,7 +31,7 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
     // Simulate API call - replace with actual API call when backend is implemented
     setTimeout(() => {
       setIsSubmitting(false);
-      router.push(`/courses/${course.id}`);
+      router.push(`/courses/${course.course_id}`);
     }, 1000);
   };
 
@@ -41,7 +41,9 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Course Feedback</h1>
           <p className="text-xl text-gray-600 mb-1">{course.name}</p>
-          <p className="text-gray-500">{course.code} • {course.professor}</p>
+          <p className="text-gray-500">
+            {course.code} • {course.professor}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -137,11 +139,7 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
           </div>
 
           {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : "Submit Feedback"}
           </Button>
         </form>
