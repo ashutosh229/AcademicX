@@ -5,3 +5,6 @@
 /backend/*.pyc
 /backend/*.pyo
 /backend/*.pyd
+/backend/api/__pycache__
+/backend/api/migrations/
+/backend/mysite/__pycache__
