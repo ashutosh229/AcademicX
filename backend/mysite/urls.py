@@ -16,16 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import insert_name_test, fetch_surname_test
+from api.views import *
 from api.root import api_root
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', api_root, name='api_root'),  # Root page
-    path('insert_name/', insert_name_test, name='insert_name'),
-    path('fetch_surname/<str:firstname>/', fetch_surname_test, name='fetch_surname'),
-    # 'firstname' used in fetch_surname_test definintion
-    # 'name = fetch_surname' used in root.py
+    path('create_course/', create_course, name='create_course'),
+    path('get_all_courses/', get_all_courses, name='get_all_courses'),
 
 ]

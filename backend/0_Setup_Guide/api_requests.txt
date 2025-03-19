@@ -1,12 +1,6 @@
-1) Insert Name (POST)
+1) Create Course (POST)
 {
-  "firstname": "John",
-  "surname": "Doe"
-}
-
-2) fetch Surname (GET)
-path = 'root/fetch_surname/<str:firstname>/'
-output  =
-{
-  "surname": "Doe"
+    "name": "Data Structures",
+    "code": "CS201",
+    "professor": "Dr. John Doe"
 }
