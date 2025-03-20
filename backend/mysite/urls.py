@@ -25,5 +25,6 @@ urlpatterns = [
     path('', api_root, name='api_root'),  # Root page
     path('create_course/', create_course, name='create_course'),
     path('get_all_courses/', get_all_courses, name='get_all_courses'),
+    path('get_course_details/', get_course_details, name='get_course_details'),
 
 ]

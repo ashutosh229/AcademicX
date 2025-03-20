@@ -18,6 +18,10 @@ def api_root(request, format=None):
                 "get_all_courses",  request=request, format=format
 
             ),
+            "get_course_details": reverse(
+                "get_course_details", request=request, format=format
+
+            ),
 
         }
     )
