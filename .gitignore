@@ -5,3 +5,4 @@
 /backend/*.pyc
 /backend/*.pyo
 /backend/*.pyd
+/backend/tasks_to_be_done.py

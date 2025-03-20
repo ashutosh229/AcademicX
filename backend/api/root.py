@@ -19,7 +19,7 @@ def api_root(request, format=None):
 
             ),
             "get_course_details": reverse(
-                "get_course_details", request=request, format=format
+                "get_course_details",args=["CS201"], request=request, format=format
 
             ),
 
