@@ -1,15 +1,16 @@
 from django.db import models
 
 class Student(models.Model):
-
-    email = models.CharField(max_length=100,primary_key=True)
-    name = models.CharField(max_length=100,default=email)
+    email = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, blank=True)  # Allow blank for manual override
     batch = models.CharField(max_length=10)
     branch = models.CharField(max_length=100)
     activated = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"{self.email} {self.activated}"
+    def save(self, *args, **kwargs):
+        if not self.name:  # Set name only if it's empty
+            self.name = self.email
+        super().save(*args, **kwargs)
 
 class Course(models.Model):
 

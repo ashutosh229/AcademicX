@@ -465,7 +465,7 @@ COPY public.api_comment (comment_id, text, is_anonymous, upvotes, downvotes, dat
 --
 
 COPY public.api_course (id, name, code, professor, department, num_credits) FROM stdin;
-1	Data Structures	CS201	Dr. John Doe	CSE	1
+1	Data Structures	CS201	Dr. Ramesh	CSE	1
 \.
 
 
@@ -570,6 +570,7 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+1	pbkdf2_sha256$870000$JMh6gj3lSe6EN2kiuz0ld0$csg7JdRAFyNDNt1LjUHBQwt3WqUjSMQVvCTaX7epnUI=	2025-03-20 03:15:07.172498+05:30	t	shubhamy			shubhamy@iitbhilai.ac.in	t	t	2025-03-20 03:14:44.282069+05:30
 \.
 
 
@@ -594,6 +595,7 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 --
 
 COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2025-03-20 03:15:49.954848+05:30	1	Data Structures (CS201)	2	[{"changed": {"fields": ["Professor"]}}]	12	1
 \.
 
 
@@ -642,6 +644,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 18	sessions	0001_initial	2025-03-20 02:48:34.068208+05:30
 19	api	0001_initial	2025-03-20 02:48:50.042345+05:30
 20	api	0002_comment_course_coursemetrics_resource_student_and_more	2025-03-20 02:51:36.765308+05:30
+21	api	0003_alter_student_name	2025-03-20 12:12:52.107207+05:30
 \.
 
 
@@ -650,6 +653,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 --
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+s1n47tr3s8toxijfnzf8iatr70fje04c	.eJxVjMsOwiAQRf-FtSFMYXi4dO83EIaHVA0kpV0Z_12bdKHbe865L-bDtla_jbz4ObEzA3b63SjER247SPfQbp3H3tZlJr4r_KCDX3vKz8vh_h3UMOq3LtkJC9JgLBoSCDAoVSEZXMCiySlFkjQBKk3o0gTgrJbJCmHNpBDY-wPHazaE:1tv1Dn:z_rEAMHsGAnsfjRb-5YcOe9RiCW9Pojv0SqnLIi-570	2025-04-03 03:15:07.175048+05:30
 \.
 
 
@@ -713,7 +717,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 1, false);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 1, true);
 
 
 --
@@ -727,7 +731,7 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, true);
 
 
 --
@@ -741,7 +745,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 12, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 20, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
 
 
 --
