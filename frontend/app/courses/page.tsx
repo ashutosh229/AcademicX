@@ -52,7 +52,7 @@ export default function CoursesPage() {
                       </Button>
                       {session?.user?.role === "student" && (
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/courses/${course.id}/feedback`}>
+                          <Link href={`/courses/${course.course_id}/feedback`}>
                             Post Feedback
                           </Link>
                         </Button>
