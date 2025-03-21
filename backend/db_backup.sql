@@ -67,6 +67,8 @@ CREATE TABLE public.api_course (
 );
 
 
+
+
 ALTER TABLE public.api_course OWNER TO postgres;
 
 --

@@ -12,9 +12,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCourses = courses.filter((course) => {
+    return (
+      course.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+      course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    );
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -24,6 +34,17 @@ export default function CoursesPage() {
           Browse our comprehensive selection of courses and find detailed
           information about each one.
         </p>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-6 max-w-lg mx-auto">
+        <Input
+          type="text"
+          placeholder="Search by course name or code..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-lg"
+        />
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -38,29 +59,39 @@ export default function CoursesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {courses.map((course) => (
-                <TableRow key={course.course_id}>
-                  <TableCell className="font-medium">{course.name}</TableCell>
-                  <TableCell>{course.code}</TableCell>
-                  <TableCell>{course.professor}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="default" size="sm" asChild>
-                        <Link href={`/courses/${course.course_id}`}>
-                          View Course
-                        </Link>
-                      </Button>
-                      {session?.user?.role === "student" && (
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={`/courses/${course.course_id}/feedback`}>
-                            Post Feedback
+              {filteredCourses.length > 0 ? (
+                filteredCourses.map((course) => (
+                  <TableRow key={course.course_id}>
+                    <TableCell className="font-medium">{course.name}</TableCell>
+                    <TableCell>{course.code}</TableCell>
+                    <TableCell>{course.professor}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="default" size="sm" asChild>
+                          <Link href={`/courses/${course.course_id}`}>
+                            View Course
                           </Link>
                         </Button>
-                      )}
-                    </div>
+                        {session?.user?.role === "student" && (
+                          <Button variant="outline" size="sm" asChild>
+                            <Link
+                              href={`/courses/${course.course_id}/feedback`}
+                            >
+                              Post Feedback
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-4">
+                    No courses found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

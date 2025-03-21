@@ -63,7 +63,6 @@ class RatingDistribution(models.Model):
 class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="resources")
-
     name = models.CharField(max_length=100,default="link")
     remarks = models.CharField(max_length=255,default="") # type changed to remarks
     url = models.URLField()
