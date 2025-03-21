@@ -1,0 +1,4 @@
+The field "type" in resources was changed to "remarks"
+
+add department and num credits to the view courses page along with filters for them
+

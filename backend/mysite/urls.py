@@ -23,11 +23,9 @@ from api.root import api_root
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', api_root, name='api_root'),  # Root page
-    path('insert_name/', insert_name_test, name='insert_name'),
-    path('fetch_surname/<str:firstname>/', fetch_surname_test, name='fetch_surname'),
-    # 'firstname' used in fetch_surname_test definintion
-    # 'name = fetch_surname' used in root.py
     path('create_course/', create_course, name='create_course'),
     path('get_all_courses/', get_all_courses, name='get_all_courses'),
+    path('get_course_details/<str:course_code>/', get_course_details, name='get_course_details'),
+
 
 ]

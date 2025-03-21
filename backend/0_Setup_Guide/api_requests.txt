@@ -1,18 +1,15 @@
-1) Insert Name (POST)
+1) Create Course (POST)
 {
   "firstname": "John",
   "surname": "Doe"
 }
-
 2) fetch Surname (GET)
 path = 'root/fetch_surname/<str:firstname>/'
 output  =
 {
   "surname": "Doe"
 }
-
 Upar vale test api hai
-
 1) Create Course (POST)
 {
     "name": "Data Structures",

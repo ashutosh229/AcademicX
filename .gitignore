@@ -8,3 +8,5 @@
 /backend/api/__pycache__
 /backend/api/migrations/
 /backend/mysite/__pycache__
+/backend/tasks_to_be_done.py
+
