@@ -24,13 +24,7 @@ export interface CourseMetrics {
     recommended: number;
     notRecommended: number;
   };
-  teachingQuality: {
-    average: number;
-    distribution: {
-      value: number;
-      count: number;
-    }
-  };
+
 }
 
 export interface Resource {
