@@ -7,6 +7,8 @@ export interface Course {
   metrics: CourseMetrics;
   resources: Resource[];
   comments: Comment[];
+  department: string;
+  credits: number;
 }
 
 export interface CourseMetrics {
@@ -21,6 +23,13 @@ export interface CourseMetrics {
   overallRecommendation: {
     recommended: number;
     notRecommended: number;
+  };
+  teachingQuality: {
+    average: number;
+    distribution: {
+      value: number;
+      count: number;
+    }
   };
 }
 
@@ -56,6 +65,8 @@ export const courses: Course[] = [
     name: "Introduction to Computer Science",
     code: "CS101",
     professor: "Dr. Sarah Johnson",
+    department: "CSE",
+    credits: 4,
     metrics: {
       contentToughness: {
         average: 6,
@@ -150,6 +161,8 @@ export const courses: Course[] = [
     name: "Introduction to Deep Learning",
     code: "DS201",
     professor: "Dr. Sarah Johnson",
+    department: "CSE",
+    credits: 4,
     metrics: {
       contentToughness: {
         average: 6,
@@ -244,6 +257,8 @@ export const courses: Course[] = [
     name: "Introduction to Mechanical Properties of Solids",
     code: "ME230",
     professor: "Dr. Sarah Johnson",
+    department: "ME",
+    credits: 3,
     metrics: {
       contentToughness: {
         average: 6,
@@ -338,6 +353,8 @@ export const courses: Course[] = [
     name: "Introduction to Electrical machines",
     code: "EE210",
     professor: "Dr. Sarah Johnson",
+    department: "EE",
+    credits: 2,
     metrics: {
       contentToughness: {
         average: 6,
@@ -432,6 +449,8 @@ export const courses: Course[] = [
     name: "Introduction to Materials",
     code: "ME540",
     professor: "Dr. Sarah Johnson",
+    department: "MSME",
+    credits: 1,
     metrics: {
       contentToughness: {
         average: 6,

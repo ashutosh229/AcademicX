@@ -12,17 +12,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+} from "@/components/ui/select";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProfessor, setSelectedProfessor] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedCredits, setSelectedCredits] = useState(0);
+
+  const uniqueProfessors = [
+    ...new Set(courses.map((course) => course.professor)),
+  ];
+  const uniqueDepartments = [
+    ...new Set(courses.map((course) => course.department)),
+  ];
+  const uniqueCredits = [...new Set(courses.map((course) => course.credits))];
 
   const filteredCourses = courses.filter((course) => {
     return (
-      course.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
-      course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())
+      (course.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+        course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())) &&
+      (selectedProfessor === "" || course.professor === selectedProfessor) &&
+      (selectedDepartment === "" || course.department === selectedDepartment) &&
+      (selectedCredits === 0 || course.credits === selectedCredits)
     );
   });
 
@@ -36,15 +57,84 @@ export default function CoursesPage() {
         </p>
       </div>
 
-      {/* Search Bar */}
-      <div className="mb-6 max-w-lg mx-auto">
-        <Input
-          type="text"
-          placeholder="Search by course name or code..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-        />
+      {/* Search & Filters */}
+      <div className="mb-6 p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Search Input */}
+          <Input
+            type="text"
+            placeholder="Search by course name or code..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 min-w-[250px] p-2 border border-gray-300 rounded-lg"
+          />
+
+          {/* Professor Filter */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Professor:</label>
+            <Select
+              value={selectedProfessor}
+              onValueChange={setSelectedProfessor}
+            >
+              <SelectTrigger className="w-[180px] border border-gray-300 shadow-sm hover:bg-gray-100">
+                <SelectValue placeholder="All Professors" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Professors</SelectItem>
+                {uniqueProfessors.map((professor) => (
+                  <SelectItem key={professor} value={professor}>
+                    {professor}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Department Filter */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Department:</label>
+            <Select
+              value={selectedDepartment}
+              onValueChange={setSelectedDepartment}
+            >
+              <SelectTrigger className="w-[180px] border border-gray-300 shadow-sm hover:bg-gray-100">
+                <SelectValue placeholder="All Departments" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Departments</SelectItem>
+                {uniqueDepartments.map((department) => (
+                  <SelectItem key={department} value={department}>
+                    {department}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Credits Filter */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Credits:</label>
+            <Select
+              value={selectedCredits.toString()}
+              onValueChange={(value) => setSelectedCredits(Number(value))}
+            >
+              <SelectTrigger className="w-[150px] border border-gray-300 shadow-sm hover:bg-gray-100">
+                <SelectValue placeholder="All Credits" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">All Credits</SelectItem>
+                {uniqueCredits.map((credits) => (
+                  <SelectItem
+                    key={credits.toString()}
+                    value={credits.toString()}
+                  >
+                    {credits} Credits
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6">
