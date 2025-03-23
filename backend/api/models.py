@@ -23,15 +23,6 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.name} ({self.code})"
 
-class Course(models.Model):
-    course_id = models.AutoField(primary_key=True) # auto incremeent primary key
-    name = models.CharField(max_length=255)
-    code = models.CharField(max_length=50, unique=True)
-    professor = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"{self.name} ({self.code})"
-    
 class CourseMetrics(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="ratings")
     content_toughness = models.IntegerField(default=0)  # 0-10 scale
@@ -50,14 +41,6 @@ class CourseMetrics(models.Model):
 
     def __str__(self):
         return f"Rating for {self.course.name}"
-    
-class RatingDistribution(models.Model):
-    course_metrics = models.ForeignKey(CourseMetrics, on_delete=models.CASCADE, related_name="distributions")
-    category = models.CharField(max_length=50, choices=[("content_toughness", "Content Toughness"), ("workload", "Workload")])
-    value = models.IntegerField()
-    count = models.IntegerField()
-
-
 
 
 class Resource(models.Model):
