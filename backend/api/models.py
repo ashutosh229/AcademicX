@@ -23,14 +23,14 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.name} ({self.code})"
 
-class Course(models.Model):
-    course_id = models.AutoField(primary_key=True) # auto incremeent primary key
-    name = models.CharField(max_length=255)
-    code = models.CharField(max_length=50, unique=True)
-    professor = models.CharField(max_length=255)
+# class Course(models.Model):
+#     course_id = models.AutoField(primary_key=True) # auto incremeent primary key
+#     name = models.CharField(max_length=255)
+#     code = models.CharField(max_length=50, unique=True)
+#     professor = models.CharField(max_length=255)
 
-    def __str__(self):
-        return f"{self.name} ({self.code})"
+#     def __str__(self):
+#         return f"{self.name} ({self.code})"
     
 class CourseMetrics(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="ratings")

@@ -4,12 +4,12 @@ import CoursePageClient from "./client";
 // This function tells Next.js which paths to pre-render
 export function generateStaticParams() {
   return courses.map((course) => ({
-    id: course.course_id,
+    id: course.id,
   }));
 }
 
-export default function CoursePage({ params }: { params: { id: string } }) {
-  const course = courses.find((c) => c.course_id === params.id);
+export default function CoursePage({ params }: { params: { id: number } }) {
+  const course = courses.find((c) => c.id === params.id);
 
   if (!course) {
     return <div>Course not found</div>;

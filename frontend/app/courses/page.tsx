@@ -1,9 +1,14 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { courses } from "@/lib/data";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -12,22 +17,63 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-} from "@/components/ui/select";
+  setActiveCourseId,
+  setCourses,
+  setError,
+  setLoading,
+} from "@/redux/slices/courseSlice";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ErrorPage from "../error";
+import Loading from "../loading";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
+
+  const { courses, loading, error } = useSelector(
+    (state: RootState) => state.course
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedCredits, setSelectedCredits] = useState(0);
+
+  const navigator = useRouter();
+
+  const backendDomain = "http://localhost:8080";
+  useEffect(() => {
+    const fetchCourses = async () => {
+      dispatch(setLoading(true));
+      try {
+        const response = await fetch(`${backendDomain}/get_all_courses`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch the courses");
+        }
+        const data = await response.json();
+        dispatch(setCourses(data));
+        dispatch(setLoading(false));
+      } catch (error: any) {
+        console.log(error);
+        dispatch(setError(error.message));
+      }
+    };
+    fetchCourses();
+  }, [dispatch]);
+
+  if (loading) return <Loading></Loading>;
+  if (error)
+    return (
+      <ErrorPage
+        error={new Error(error)}
+        reset={() => window.location.reload()}
+      ></ErrorPage>
+    );
 
   const uniqueProfessors = [
     ...new Set(courses.map((course) => course.professor)),
@@ -35,7 +81,9 @@ export default function CoursesPage() {
   const uniqueDepartments = [
     ...new Set(courses.map((course) => course.department)),
   ];
-  const uniqueCredits = [...new Set(courses.map((course) => course.credits))];
+  const uniqueCredits = [
+    ...new Set(courses.map((course) => course.num_credits)),
+  ];
 
   const filteredCourses = courses.filter((course) => {
     return (
@@ -43,9 +91,33 @@ export default function CoursesPage() {
         course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())) &&
       (selectedProfessor === "" || course.professor === selectedProfessor) &&
       (selectedDepartment === "" || course.department === selectedDepartment) &&
-      (selectedCredits === 0 || course.credits === selectedCredits)
+      (selectedCredits === 0 || course.num_credits === selectedCredits)
     );
   });
+
+  const handleViewCourse = (id: number) => {
+    dispatch(setLoading(true));
+    try {
+      dispatch(setActiveCourseId(id));
+      navigator.push(`/courses/${id}`);
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
+    }
+  };
+
+  const handlePostFeedback = (id: number) => {
+    dispatch(setLoading(true));
+    try {
+      dispatch(setActiveCourseId(id));
+      navigator.push(`/courses/${id}/feedback`);
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -151,24 +223,28 @@ export default function CoursesPage() {
             <TableBody>
               {filteredCourses.length > 0 ? (
                 filteredCourses.map((course) => (
-                  <TableRow key={course.course_id}>
+                  <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.name}</TableCell>
                     <TableCell>{course.code}</TableCell>
                     <TableCell>{course.professor}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="default" size="sm" asChild>
-                          <Link href={`/courses/${course.course_id}`}>
-                            View Course
-                          </Link>
+                        <Button
+                          onClick={() => handleViewCourse(course.id)}
+                          variant="default"
+                          size="sm"
+                          asChild
+                        >
+                          View Course
                         </Button>
                         {session?.user?.role === "student" && (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link
-                              href={`/courses/${course.course_id}/feedback`}
-                            >
-                              Post Feedback
-                            </Link>
+                          <Button
+                            onClick={() => handlePostFeedback(course.id)}
+                            variant="outline"
+                            size="sm"
+                            asChild
+                          >
+                            Post Feedback
                           </Button>
                         )}
                       </div>

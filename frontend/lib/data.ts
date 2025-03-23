@@ -1,14 +1,18 @@
 // Temporary data store until API integration
 export interface Course {
-  course_id: string;
+  id: number;
   name: string;
   code: string;
   professor: string;
-  metrics: CourseMetrics;
-  resources: Resource[];
-  comments: Comment[];
   department: string;
-  credits: number;
+  num_credits: number;
+}
+
+export interface CourseState {
+  courses: Course[];
+  loading: boolean;
+  error: string | null;
+  activeCourseId: number | null;
 }
 
 export interface CourseMetrics {
