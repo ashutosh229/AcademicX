@@ -10,6 +10,19 @@ from rest_framework.response import Response
 from api.models import  *
 from api.serializers import *
 
+
+@api_view(['PATCH'])
+def activate_student(request, email):
+    student = get_object_or_404(Student, email=email)
+
+    if not student.activated:
+        student.activated = True
+        student.save()
+        return Response({"message": "Student activated successfully"}, status=200)
+
+    return Response({"message": "Student is already activated"}, status=200)
+
+
 @api_view(['GET'])
 def get_student_profile(request, email):
     student = get_object_or_404(Student, email=email)  # Fetch the student or return 404
@@ -34,3 +47,10 @@ def edit_student_name(request, email):
     student.save()
 
     return Response({"message": "Name updated successfully", "name": student.name}, status=200)
+
+@api_view(['GET'])
+def get_user_course_feedback(request, course_id, email):
+    feedback = get_object_or_404(CourseMetrics, course_id=course_id, contributor__email=email)
+
+    serializer = CourseMetricSerializer(feedback)
+    return Response(serializer.data, status=200)

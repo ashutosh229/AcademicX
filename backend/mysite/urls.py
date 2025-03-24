@@ -31,5 +31,8 @@ urlpatterns = [
     path('get_course_details/<str:id>/', get_course_details, name='get_course_details'),
     path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),
     path('edit_student_name/<str:email>/', edit_student_name, name='edit_student_name'),
+    path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),
+    path('activate_student/<str:email>/', activate_student, name='activate_student'),
+
     
 ]

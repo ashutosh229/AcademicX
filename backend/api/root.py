@@ -31,6 +31,10 @@ def api_root(request, format=None):
                 "get_course_details",args=["1"], request=request, format=format
 
             ),
+            "Activate Student (if not already)": reverse(
+                "activate_student", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
+
+            ),
             "Get Student Profile using email": reverse(
                 "get_student_profile", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
 
@@ -39,6 +43,11 @@ def api_root(request, format=None):
                 "edit_student_name", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
 
             ),
+            "Get User's Course Feedback": reverse(
+                "user_course_feedback", args=["1","shubhamy@iitbhilai.ac.in"], request=request, format=format
+
+            ),
+
 
         }
     )
