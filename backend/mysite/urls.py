@@ -29,5 +29,6 @@ urlpatterns = [
     path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),
     path('get_all_courses/', get_all_courses, name='get_all_courses'),
     path('get_course_details/<str:course_code>/', get_course_details, name='get_course_details'),
+    path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),
     
 ]

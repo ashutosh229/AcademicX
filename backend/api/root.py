@@ -10,28 +10,31 @@ def api_root(request, format=None):
     return Response(
         {
 
-            "create_course": reverse(
+            "Create Course": reverse(
                 "create_course", request=request, format=format
             ),
-            "add_comment": reverse(
+            "Add Comment": reverse(
                 "add_comment", request=request, format=format
             ),
-            "add_resource": reverse(
+            "Add Resource": reverse(
                 "add_resource", request=request, format=format
             ),
-            "give_course_feedback": reverse(
+            "Give Course Feedback": reverse(
                 "give_course_feedback", request=request, format=format
             ),
 
-            "get_all_courses": reverse(
+            "Get All Courses": reverse(
                 "get_all_courses",  request=request, format=format
 
             ),
-            "get_course_details": reverse(
+            "Get Course Details using course code": reverse(
                 "get_course_details",args=["CS201"], request=request, format=format
 
             ),
+            "Get Student Profile using email": reverse(
+                "get_student_profile", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
 
+            ),
 
         }
     )
