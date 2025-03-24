@@ -1,29 +1,32 @@
 "use client";
 
-import { type Course } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { setError, setLoading } from "@/redux/slices/courseSlice";
+import { RootState } from "@/redux/store";
 import {
-  ThumbsUp,
-  ThumbsDown,
-  CheckCircle2,
-  XCircle,
-  Plus,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  ExternalLink,
-} from "lucide-react";
-import GaugeChart from "react-gauge-chart";
-import { Bar } from "react-chartjs-2"; // Bar chart library
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
+import {
+  ArrowDownCircle,
+  ArrowUpCircle,
+  CheckCircle2,
+  ExternalLink,
+  Plus,
+  ThumbsDown,
+  ThumbsUp,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2"; // Bar chart library
+import GaugeChart from "react-gauge-chart";
+import { useDispatch, useSelector } from "react-redux";
 
 ChartJS.register(
   CategoryScale,
@@ -34,13 +37,42 @@ ChartJS.register(
   Legend
 );
 
-interface CoursePageClientProps {
-  course: Course;
-}
+export default function CoursePageClient() {
+  const { activeCourseId, error, loading, courses } = useSelector(
+    (state: RootState) => state.course
+  );
+  const dispatch = useDispatch();
+  const [courseData, setCourseData] = useState(null);
 
-export default function CoursePageClient({ course }: CoursePageClientProps) {
+  const activeCourse = courses.filter((course) => {
+    return course.id === activeCourseId;
+  });
+
+  const backendDomain = "http://localhost:8080";
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      dispatch(setLoading(true));
+      try {
+        const response = await fetch(
+          `${backendDomain}/get_course_details/${activeCourse[0].code}`
+        );
+        if (!response.ok) {
+          throw new Error("Course details could not be fetched properly");
+        }
+        const data = await response.json();
+        setCourseData(data);
+        dispatch(setLoading(false));
+      } catch (error: any) {
+        console.log(error);
+        dispatch(setError(error.message));
+      }
+    };
+    fetchDetails();
+  }, []);
+
   const recommendationPercentage =
-    (course.metrics.overallRecommendation.recommended /
+    (.metrics.overallRecommendation.recommended /
       (course.metrics.overallRecommendation.recommended +
         course.metrics.overallRecommendation.notRecommended)) *
     100;

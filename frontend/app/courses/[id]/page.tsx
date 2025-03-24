@@ -1,19 +1,30 @@
-import { courses } from "@/lib/data";
+"use client";
+import { setActiveCourseId } from "@/redux/slices/courseSlice";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import CoursePageClient from "./client";
 
-// This function tells Next.js which paths to pre-render
-export function generateStaticParams() {
-  return courses.map((course) => ({
-    id: course.course_id,
-  }));
-}
+// // This function tells Next.js which paths to pre-render
+// export function generateStaticParams() {
+//   return courses.map((course) => ({
+//     id: course.id,
+//   }));
+// }
 
-export default function CoursePage({ params }: { params: { id: string } }) {
-  const course = courses.find((c) => c.course_id === params.id);
+export default function CoursePage({ params }: { params: { id: number } }) {
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  if (!course) {
-    return <div>Course not found</div>;
-  }
 
-  return <CoursePageClient course={course} />;
+
+  useEffect(() => {
+    if (params.id) {
+      dispatch(setActiveCourseId(params.id));
+    } else {
+      router.push("/courses");
+    }
+  }, [params.id, dispatch, router]);
+
+  return <CoursePageClient></CoursePageClient>;
 }
