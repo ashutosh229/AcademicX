@@ -10,7 +10,7 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import courseSlice from "./slices/courseSlice.js";
+import courseSlice from "./slices/courseSlice";
 
 const persistConfig = {
   key: "root",

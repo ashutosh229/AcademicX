@@ -7,6 +7,7 @@
 /backend/*.pyd
 /backend/api/__pycache__/
 /backend/api/migrations
+/backend/api/migrations/__pycache__/
 /backend/api/views/__pycache__/
 /backend/mysite/__pycache__/
 /backend/tasks_to_be_done.py
