@@ -72,9 +72,9 @@ export default function CoursePageClient() {
   }, []);
 
   const recommendationPercentage =
-    (.metrics.overallRecommendation.recommended /
-      (course.metrics.overallRecommendation.recommended +
-        course.metrics.overallRecommendation.notRecommended)) *
+    (courseData.metrics.overallRecommendation.recommended /
+      (courseData.metrics.overallRecommendation.recommended +
+        courseData.metrics.overallRecommendation.notRecommended)) *
     100;
 
   const barOptions = {
