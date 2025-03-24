@@ -42,7 +42,7 @@ export default function CoursePageClient() {
     (state: RootState) => state.course
   );
   const dispatch = useDispatch();
-  const [courseData, setCourseData] = useState(null);
+  const [courseData, setCourseData] = useState<>();
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -55,7 +55,7 @@ export default function CoursePageClient() {
       dispatch(setLoading(true));
       try {
         const response = await fetch(
-          `${backendDomain}/get_course_details/${activeCourse[0].code}`
+          `${backendDomain}/get_course_details/${activeCourse[0].id}`
         );
         if (!response.ok) {
           throw new Error("Course details could not be fetched properly");
