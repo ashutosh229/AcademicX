@@ -33,7 +33,7 @@ class CourseMetrics(models.Model):
     resources_provided= models.IntegerField(default=0)  # 0-10 scale
     recommendation = models.IntegerField(default=0)     # 0-10 scale
     grade_obtained = models.IntegerField(default=0)  # 0-10 scale
-    contributor= models.ForeignKey(Student, on_delete=models.CASCADE, related_name="feedbacks")
+    contributor= models.ForeignKey(Student, on_delete=models.CASCADE, related_name="feedbacks") # by default pk, to_field not needed
     """
     student = Student.objects.get(email="student@example.com")
     student_feedbacks = student.feedbacks.all()  # Fetch all feedbacks given by this student

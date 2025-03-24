@@ -36,8 +36,6 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AddCommentSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(min_length=1, max_length=100)  # Enforcing length
-    remarks = serializers.CharField(min_length=0, max_length=255)
     class Meta:
         model = Comment
         fields = ['course','text','contributor','is_anonymous']

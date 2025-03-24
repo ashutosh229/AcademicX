@@ -13,6 +13,15 @@ def api_root(request, format=None):
             "create_course": reverse(
                 "create_course", request=request, format=format
             ),
+            "add_comment": reverse(
+                "add_comment", request=request, format=format
+            ),
+            "add_resource": reverse(
+                "add_resource", request=request, format=format
+            ),
+            "give_course_feedback": reverse(
+                "give_course_feedback", request=request, format=format
+            ),
 
             "get_all_courses": reverse(
                 "get_all_courses",  request=request, format=format
@@ -23,14 +32,6 @@ def api_root(request, format=None):
 
             ),
 
-            "create_course": reverse(
-                "create_course", request=request, format=format
-            ),
-
-            "get_all_courses": reverse(
-                "get_all_courses",  request=request, format=format
-
-            ),
 
         }
     )

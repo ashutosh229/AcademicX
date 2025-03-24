@@ -41,7 +41,7 @@ class CourseMetricsAdmin(admin.ModelAdmin):
         return super().get_model_perms(request)
 
     def has_module_permission(self, request):
-        self.model._meta.verbose_name_plural = "Course Metrics"  # Correct display name
+        self.model._meta.verbose_name_plural = "Course Feedbacks"  # Correct display name
         # This was done as admin page made it plural by default and displayed it as Course metricss
         return super().has_module_permission(request)
 
