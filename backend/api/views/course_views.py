@@ -66,9 +66,9 @@ def add_resource(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
-def get_course_details(request, course_code):
+def get_course_details(request, id):
     try:
-        course_obj = Course.objects.get(code=course_code)  # Fetch course by code
+        course_obj = Course.objects.get(id=id)  # Fetch course by code
         resources = course_obj.resources.all() # Foreign key relation related name
         # equivalent to resources = Resource.objects.filter(course=course_obj)  # Fetch resources
         comments = course_obj.comments.all()

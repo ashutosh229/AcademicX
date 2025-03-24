@@ -8,4 +8,4 @@ However, Django projects typically use Python 3+, where implicit namespace packa
 from .course_views import *
 from .student_views import *
 __all__ = ["create_course", "get_all_courses","get_course_details","add_comment","add_resource","give_course_feedback",
-           "get_student_profile"]
+           "get_student_profile", "edit_student_name"]
