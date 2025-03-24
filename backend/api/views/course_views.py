@@ -66,9 +66,9 @@ def add_resource(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
-def get_course_details(request, course_code):
+def get_course_details(request, id):
     try:
-        course_obj = Course.objects.get(code=course_code)  # Fetch course by code
+        course_obj = Course.objects.get(id=id)  # Fetch course by code
         resources = course_obj.resources.all() # Foreign key relation related name
         # equivalent to resources = Resource.objects.filter(course=course_obj)  # Fetch resources
         comments = course_obj.comments.all()
@@ -116,7 +116,10 @@ def get_course_details(request, course_code):
                 metrics[metric]["distribution"].append({"value":i, "count": dist[i]})
                 weighted_sum+= (i*dist[i])
 
-            metrics[metric]["average"] = weighted_sum / sum(dist)
+            if sum(dist):
+                metrics[metric]["average"] = weighted_sum / sum(dist)
+            else:
+                metrics[metric]["average"] = -1 # indicates no ratings
 
 
 
@@ -135,7 +138,7 @@ def get_course_details(request, course_code):
             except Student.DoesNotExist:
                 contributor_name = contributor_email  # Default to email if not found
 
-            resource_item["contributor"] = {"name": contributor_name, "isAnonymous": anonymous_value}
+            resource_item["contributor"] = {"name": contributor_name, "email":contributor_email, "isAnonymous": anonymous_value}
 
         comments= comment_serializer.data.copy()
 
@@ -152,7 +155,7 @@ def get_course_details(request, course_code):
             except Student.DoesNotExist:
                 author_name = contributor_email  # Default to email if not found
 
-            comment_item["author"] = {"name": author_name, "isAnonymous": anonymous_value}
+            comment_item["author"] = {"name": author_name, "email":contributor_email, "isAnonymous": anonymous_value}
 
 
 

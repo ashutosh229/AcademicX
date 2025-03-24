@@ -10,8 +10,47 @@ from rest_framework.response import Response
 from api.models import  *
 from api.serializers import *
 
+
+@api_view(['PATCH'])
+def activate_student(request, email):
+    student = get_object_or_404(Student, email=email)
+
+    if not student.activated:
+        student.activated = True
+        student.save()
+        return Response({"message": "Student activated successfully"}, status=200)
+
+    return Response({"message": "Student is already activated"}, status=200)
+
+
 @api_view(['GET'])
 def get_student_profile(request, email):
     student = get_object_or_404(Student, email=email)  # Fetch the student or return 404
     serializer = StudentSerializer(student)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['PATCH'])
+def edit_student_name(request, email):
+    student = get_object_or_404(Student, email=email)
+
+    new_name = request.data.get("name")
+
+    # Validate presence and length of the name
+    if not new_name:
+        return Response({"error": "Name field is required"}, status=400)
+
+    if len(new_name) > 50:
+        return Response({"error": "Name cannot exceed 50 characters"}, status=400)
+
+    student.name = new_name
+    student.save()
+
+    return Response({"message": "Name updated successfully", "name": student.name}, status=200)
+
+@api_view(['GET'])
+def get_user_course_feedback(request, course_id, email):
+    feedback = get_object_or_404(CourseMetrics, course_id=course_id, contributor__email=email)
+
+    serializer = CourseMetricSerializer(feedback)
     return Response(serializer.data, status=200)

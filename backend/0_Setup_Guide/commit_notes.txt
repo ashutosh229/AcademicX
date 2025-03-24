@@ -17,6 +17,21 @@ the ones who click outside domain lgin will be directly sent to the website in v
 
 The ones within domain will go through oath and we will then check if they are a student using our db
 
+# Get course Details
+name email both passed in the contributors of comment and resource
+
+In course metrics -1 returned as average to indicate "No ratings given yet" ( Zero division error resolved)
+Display Header NO RATINGS YET
+
+# Edit Profile page
+dont allow batch and branch edit ( for now depends on the data we get from acad office)
 
 
 
+# Analyis Page
+
+Number of users activated
+number of comments
+number of feedbacks
+number of resources
+number of upvites and downvotes

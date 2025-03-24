@@ -27,14 +27,27 @@ def api_root(request, format=None):
                 "get_all_courses",  request=request, format=format
 
             ),
-            "Get Course Details using course code": reverse(
-                "get_course_details",args=["CS201"], request=request, format=format
+            "Get Course Details using course id": reverse(
+                "get_course_details",args=["1"], request=request, format=format
+
+            ),
+            "Activate Student (if not already)": reverse(
+                "activate_student", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
 
             ),
             "Get Student Profile using email": reverse(
                 "get_student_profile", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
 
             ),
+            "Edit Student Name": reverse(
+                "edit_student_name", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
+
+            ),
+            "Get User's Course Feedback": reverse(
+                "user_course_feedback", args=["1","shubhamy@iitbhilai.ac.in"], request=request, format=format
+
+            ),
+
 
         }
     )

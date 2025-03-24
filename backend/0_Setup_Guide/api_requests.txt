@@ -36,3 +36,10 @@
   "grade_obtained": 8,
   "contributor": "shubhamy@iitbhilai.ac.in"
 }
+
+5) Edit Student name (PATCH)
+endpoint - 'edit_student_name/<str:email>/'
+
+{
+    "name": "Johnathan Doe"
+}
