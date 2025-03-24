@@ -28,8 +28,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ErrorPage from "../error";
-import Loading from "../loading";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
@@ -66,14 +64,14 @@ export default function CoursesPage() {
     fetchCourses();
   }, [dispatch]);
 
-  if (loading) return <Loading></Loading>;
-  if (error)
-    return (
-      <ErrorPage
-        error={new Error(error)}
-        reset={() => window.location.reload()}
-      ></ErrorPage>
-    );
+  // if (loading) return <Loading></Loading>;
+  // if (error)
+  //   return (
+  //     <ErrorPage
+  //       error={new Error(error)}
+  //       reset={() => window.location.reload()}
+  //     ></ErrorPage>
+  //   );
 
   const uniqueProfessors = [
     ...new Set(courses.map((course) => course.professor)),
