@@ -27,7 +27,7 @@ def api_root(request, format=None):
                 "get_all_courses",  request=request, format=format
 
             ),
-            "Get Course Details using course code": reverse(
+            "Get Course Details using course id": reverse(
                 "get_course_details",args=["1"], request=request, format=format
 
             ),
