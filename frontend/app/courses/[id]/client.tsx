@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CourseDetails } from "@/lib/types";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import {
@@ -42,7 +43,8 @@ export default function CoursePageClient() {
     (state: RootState) => state.course
   );
   const dispatch = useDispatch();
-  const [courseData, setCourseData] = useState<>();
+
+  const [courseData, setCourseData] = useState<CourseDetails | null>(null);
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -69,74 +71,78 @@ export default function CoursePageClient() {
       }
     };
     fetchDetails();
-  }, []);
+  }, [activeCourse]);
 
-  const recommendationPercentage =
-    (courseData.metrics.overallRecommendation.recommended /
-      (courseData.metrics.overallRecommendation.recommended +
-        courseData.metrics.overallRecommendation.notRecommended)) *
-    100;
+  // const recommendationPercentage =
+  //   (courseData.metrics.overallRecommendation.recommended /
+  //     (courseData.metrics.overallRecommendation.recommended +
+  //       courseData.metrics.overallRecommendation.notRecommended)) *
+  //   100;
 
-  const barOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 10,
-      },
-    },
-  };
+  // const barOptions = {
+  //   responsive: true,
+  //   plugins: {
+  //     legend: {
+  //       display: false,
+  //     },
+  //   },
+  //   scales: {
+  //     y: {
+  //       beginAtZero: true,
+  //       max: 10,
+  //     },
+  //   },
+  // };
 
-  const contentToughnessData = {
-    labels: ["Content Toughness"],
-    datasets: [
-      {
-        label: "Average",
-        data: [course.metrics.contentToughness.average],
-        backgroundColor: "#29AB87",
-      },
-    ],
-  };
+  // const contentToughnessData = {
+  //   labels: ["Content Toughness"],
+  //   datasets: [
+  //     {
+  //       label: "Average",
+  //       data: [course.metrics.contentToughness.average],
+  //       backgroundColor: "#29AB87",
+  //     },
+  //   ],
+  // };
 
-  const workloadData = {
-    labels: ["Workload"],
-    datasets: [
-      {
-        label: "Average",
-        data: [course.metrics.workload.average],
-        backgroundColor: "#00C9FF",
-      },
-    ],
-  };
+  // const workloadData = {
+  //   labels: ["Workload"],
+  //   datasets: [
+  //     {
+  //       label: "Average",
+  //       data: [course.metrics.workload.average],
+  //       backgroundColor: "#00C9FF",
+  //     },
+  //   ],
+  // };
 
-  const recommendationData = {
-    labels: ["Recommended", "Not Recommended"],
-    datasets: [
-      {
-        label: "Count",
-        data: [
-          course.metrics.overallRecommendation.recommended,
-          course.metrics.overallRecommendation.notRecommended,
-        ],
-        backgroundColor: ["#29AB87", "#FF5F6D"],
-      },
-    ],
-  };
+  // const recommendationData = {
+  //   labels: ["Recommended", "Not Recommended"],
+  //   datasets: [
+  //     {
+  //       label: "Count",
+  //       data: [
+  //         course.metrics.overallRecommendation.recommended,
+  //         course.metrics.overallRecommendation.notRecommended,
+  //       ],
+  //       backgroundColor: ["#29AB87", "#FF5F6D"],
+  //     },
+  //   ],
+  // };
 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Course Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">
-          {course.name}{" "}
-          <span className="text-2xl text-gray-600">({course.code})</span>
+          {courseData?.course.name}{" "}
+          <span className="text-2xl text-gray-600">
+            ({courseData?.course.code})
+          </span>
         </h1>
-        <p className="text-xl text-gray-600">Professor: {course.professor}</p>
+        <p className="text-xl text-gray-600">
+          Professor: {courseData?.course.professor}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -147,25 +153,7 @@ export default function CoursePageClient() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Content Toughness */}
-              <div>
-                <h3 className="text-lg font-medium mb-4">Content Toughness</h3>
-                <GaugeChart
-                  id="content-toughness-gauge"
-                  nrOfLevels={10}
-                  arcsLength={[0.2, 0.4, 0.4]}
-                  colors={["#FF5F6D", "#FFC371", "#29AB87"]}
-                  percent={course.metrics.contentToughness.average / 10}
-                  textColor="#000"
-                />
-                <p className="text-center mt-2">
-                  Average: {course.metrics.contentToughness.average}/10
-                </p>
-                <Bar
-                  data={contentToughnessData}
-                  options={barOptions}
-                  className="mt-4"
-                />
-              </div>
+              
 
               {/* Workload */}
               <div>

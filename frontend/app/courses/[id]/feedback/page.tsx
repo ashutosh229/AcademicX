@@ -1,4 +1,4 @@
-import { courses } from "@/lib/data";
+import { courses } from "@/lib/types";
 import FeedbackForm from "./feedback-form";
 
 // This function tells Next.js which paths to pre-render

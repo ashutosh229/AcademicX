@@ -1,4 +1,4 @@
-import { Course, CourseState } from "@/lib/data";
+import { Course, CourseState } from "@/lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: CourseState = {
