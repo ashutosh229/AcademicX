@@ -61,12 +61,12 @@ const CoursePageClient = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "course":activeCourseId,
-          "text":
-        })
+          course: activeCourseId,
+          text: "",
+        }),
       });
       dispatch(setLoading(false));
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       dispatch(setError(error.message));
     }
