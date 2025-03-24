@@ -7,15 +7,6 @@ import { CourseDetails } from "@/lib/types";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  Title,
-  Tooltip,
-} from "chart.js";
-import {
   ArrowDownCircle,
   ArrowUpCircle,
   ExternalLink,
@@ -25,15 +16,6 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const CoursePageClient = () => {
   const { activeCourseId, error, loading, courses } = useSelector(
@@ -71,9 +53,22 @@ const CoursePageClient = () => {
   }, [activeCourse]);
 
   const handleAddComment = async () => {
+    dispatch(setLoading(true));
     try {
+      const response = await fetch(`${backendDomain}/add_comment/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "course":activeCourseId,
+          "text":
+        })
+      });
+      dispatch(setLoading(false));
     } catch (error) {
       console.log(error);
+      dispatch(setError(error.message));
     }
 
     const handleUpdateUpvotesComment = async () => {
