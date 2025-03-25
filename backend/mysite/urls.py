@@ -34,8 +34,8 @@ urlpatterns = [
     path('add_comment/', add_comment, name='add_comment'), #integrated
     path('delete_comment/', delete_comment, name='delete_comment'), #integrated
     path('comments/upvote/', upvote_comment, name='upvote_comment'), #integrated
+    path('comments/downvote/', downvote_comment, name='downvote_comment'),#integrated
     path('comments/remove_upvote/', remove_upvote_comment, name='remove_upvote_comment'),
-    path('comments/downvote/', downvote_comment, name='downvote_comment'),
     path('comments/remove_downvote/', remove_downvote_comment, name='remove_downvote_comment'),
     
     #resources end-points
