@@ -299,7 +299,10 @@ const CoursePageClient = () => {
                         <ArrowUpCircle className="h-4 w-4 mr-1" />
                         {comment.upvotes}
                       </button>
-                      <button className="flex items-center text-sm text-gray-600">
+                      <button
+                        onClick={() => handleUpdateDownvotesComment(comment.id)}
+                        className="flex items-center text-sm text-gray-600"
+                      >
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
                         {comment.downvotes}
                       </button>
