@@ -220,14 +220,32 @@ const CoursePageClient = () => {
     }
   };
 
-  const handleUpdateUpvotesResource = async () => {
+  const handleUpdateUpvotesResource = async (id: number) => {
+    dispatch(setLoading(true));
     try {
-    } catch (error) {
+      const response = await fetch(`${backendDomain}/resources/upvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          resource_id: id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to upvote the resource");
+        toast.error("Unable to upvote the resource");
+      }
+      toast.success("Upvoted");
+      dispatch(setLoading(false));
+    } catch (error: any) {
       console.log(error);
+      dispatch(setError(error.message));
     }
   };
 
-  const handleUpdateDownvotesResource = async () => {
+  const handleUpdateDownvotesResource = async (id: number) => {
     try {
     } catch (error) {
       console.log(error);

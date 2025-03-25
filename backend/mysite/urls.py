@@ -39,7 +39,7 @@ urlpatterns = [
     path('comments/remove_downvote/', remove_downvote_comment, name='remove_downvote_comment'),
     
     #resources end-points
-    path('add_resource/', add_resource, name='add_resource'),
+    path('add_resource/', add_resource, name='add_resource'), #integrated
     path('delete_resource/', delete_resource, name='delete_resource'),
     path('resources/upvote/', upvote_resource, name='upvote_resource'),
     path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),
