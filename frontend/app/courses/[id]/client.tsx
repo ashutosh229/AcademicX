@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { CourseDetails } from "@/lib/types";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
@@ -45,6 +46,11 @@ const CoursePageClient = () => {
   const [commentText, setCommentText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<number | null>(null);
+  const [isOpenForResources, setIsOpenForResources] = useState(false);
+  const [resourceName, setResourceName] = useState("");
+  const [resourceRemarks, setResourceRemarks] = useState("");
+  const [resourceUrl, setResourceUrl] = useState("");
+  const [isAnonymousForResources, setIsAnonymousForResources] = useState(false);
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -180,10 +186,37 @@ const CoursePageClient = () => {
     }
   };
 
-  const handleAddResource = async () => {
+  const handleAddResource = async (
+    name: string,
+    remarks: string,
+    url: string,
+    isAnonymous: boolean
+  ) => {
+    dispatch(setLoading(true));
     try {
-    } catch (error) {
+      const response = await fetch(`${backendDomain}/add_resource`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          course: activeCourseId,
+          name: name,
+          remarks: remarks,
+          url: url,
+          contributor: session?.user.email?.toString(),
+          is_anonymous: isAnonymous,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to add the resource");
+        toast.error("Unable to add the resource");
+      }
+      toast.success("Added the resource successfully");
+      dispatch(setLoading(false));
+    } catch (error: any) {
       console.log(error);
+      dispatch(setError(error.message));
     }
   };
 
@@ -362,10 +395,72 @@ const CoursePageClient = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold">Resources</h2>
-              <Button onClick={() => handleAddResource()}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Resource
-              </Button>
+
+              <Dialog
+                open={isOpenForResources}
+                onOpenChange={setIsOpenForResources}
+              >
+                <DialogTrigger asChild>
+                  <Button onClick={() => setIsOpenForResources(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Resource
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add a Resource</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Label>Resource Name</Label>
+                    <Input
+                      type="text"
+                      placeholder="Enter resource name..."
+                      value={resourceName}
+                      onChange={(e) => setResourceName(e.target.value)}
+                    />
+
+                    <Label>Remarks</Label>
+                    <Textarea
+                      placeholder="Add remarks about this resource..."
+                      value={resourceRemarks}
+                      onChange={(e) => setResourceRemarks(e.target.value)}
+                    />
+
+                    <Label>Resource URL</Label>
+                    <Input
+                      type="url"
+                      placeholder="Enter URL..."
+                      value={resourceUrl}
+                      onChange={(e) => setResourceUrl(e.target.value)}
+                    />
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="anonymous"
+                        checked={isAnonymousForResources}
+                        onCheckedChange={(checked) =>
+                          setIsAnonymousForResources(checked === true)
+                        }
+                      />
+                      <Label htmlFor="anonymous">Contribute Anonymously</Label>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      onClick={() =>
+                        handleAddResource(
+                          resourceName,
+                          resourceRemarks,
+                          resourceUrl,
+                          isAnonymousForResources
+                        )
+                      }
+                    >
+                      Add Resource
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="space-y-4">
@@ -395,14 +490,14 @@ const CoursePageClient = () => {
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
                     <button
-                      onClick={() => handleUpdateUpvotesResource()}
+                      onClick={() => handleUpdateUpvotesResource(resource.id)}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsUp className="h-4 w-4 mr-1" />
                       {resource.upvotes}
                     </button>
                     <button
-                      onClick={() => handleUpdateDownvotesResource()}
+                      onClick={() => handleUpdateDownvotesResource(resource.id)}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsDown className="h-4 w-4 mr-1" />
