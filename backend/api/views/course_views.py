@@ -47,23 +47,6 @@ def give_course_feedback(request):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def add_comment(request):
-
-    serializer = AddCommentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Data inserted successfully"}, status=201)
-    return Response(serializer.errors, status=400)
-
-@api_view(['POST'])
-def add_resource(request):
-
-    serializer = AddResourceSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Data inserted successfully"}, status=201)
-    return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
 def get_course_details(request, id):

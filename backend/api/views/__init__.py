@@ -12,7 +12,7 @@ from .resource_views import *
 __all__ = [
     # Course-related views
     "create_course", "get_all_courses", "get_course_details",
-    "add_comment", "add_resource", "give_course_feedback",
+    "add_comment","delete_comment", "add_resource","delete_resource", "give_course_feedback",
 
     # Student-related views
     "get_student_profile", "edit_student_name", "get_user_course_feedback",

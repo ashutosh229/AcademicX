@@ -19,6 +19,12 @@ def api_root(request, format=None):
             "Add Resource": reverse(
                 "add_resource", request=request, format=format
             ),
+            "Delete Comment": reverse(
+                "delete_comment", request=request, format=format
+            ),
+            "Delete Resource": reverse(
+                "delete_resource", request=request, format=format
+            ),
             "Give Course Feedback": reverse(
                 "give_course_feedback", request=request, format=format
             ),

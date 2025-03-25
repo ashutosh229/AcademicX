@@ -3,7 +3,32 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from api.models import ResourceVote,Resource, Student
+from api.serializers import AddResourceSerializer
 
+
+
+@api_view(['POST'])
+def add_resource(request):
+
+    serializer = AddResourceSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Data inserted successfully"}, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+def delete_resource(request):
+    email = request.data.get("email")
+    resource_id = request.data.get("resource_id")
+
+    if not email or not resource_id:
+        return Response({"error": "Email and resource_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    student = get_object_or_404(Student, email=email)
+    resource = get_object_or_404(Resource, resource_id=resource_id, contributor=student)
+
+    resource.delete()
+    return Response({"message": "Resource deleted successfully."}, status=status.HTTP_200_OK)
 @api_view(['POST'])
 def upvote_resource(request):
     email = request.data.get('email')
