@@ -83,6 +83,11 @@ def api_root(request, format=None):
                 "remove_downvote_resource", request=request, format=format
             ),
 
+            "Get Analytics": reverse(
+                "get_analytics", request=request, format=format
+
+            ),
+
 
         }
     )

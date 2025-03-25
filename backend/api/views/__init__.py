@@ -9,6 +9,7 @@ from .course_views import *
 from .student_views import *
 from .comment_views import *
 from .resource_views import *
+from .misc_views import *
 __all__ = [
     # Course-related views
     "create_course", "get_all_courses", "get_course_details",
@@ -25,4 +26,6 @@ __all__ = [
     # Resource Voting APIs
     "upvote_resource", "remove_upvote_resource",
     "downvote_resource", "remove_downvote_resource",
+
+    "get_analytics",
 ]

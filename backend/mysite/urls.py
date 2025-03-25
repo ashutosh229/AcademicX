@@ -47,6 +47,8 @@ urlpatterns = [
     path('resources/downvote/', downvote_resource, name='downvote_resource'),
     path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),
 
+    path('get_analytics/', get_analytics, name='get_analytics'),
+
 
     
 ]
