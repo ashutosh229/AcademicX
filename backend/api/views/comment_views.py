@@ -12,6 +12,7 @@ def add_comment(request):
         serializer.save()
         return Response({"message": "Data inserted successfully"}, status=201)
     return Response(serializer.errors, status=400)
+
 @api_view(['POST'])
 def delete_comment(request):
     email = request.data.get("email")

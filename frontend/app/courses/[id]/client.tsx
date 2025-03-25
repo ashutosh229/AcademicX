@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -24,6 +25,7 @@ import {
   Plus,
   ThumbsDown,
   ThumbsUp,
+  Trash,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -42,6 +44,7 @@ const CoursePageClient = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<number | null>(null);
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -95,6 +98,32 @@ const CoursePageClient = () => {
       toast.success("Added comment successfully");
       dispatch(setLoading(false));
       setIsOpen(false);
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
+    }
+  };
+
+  const handleDeleteComment = async (id: number) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await fetch(`${backendDomain}/delete_comment/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          comment_id: id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to delete the comment");
+        toast.error("Unable to delete the comment");
+      }
+      toast.success("Deleted the comment successfully");
+      dispatch(setLoading(false));
+      setDeleteDialogOpen(null);
     } catch (error: any) {
       console.log(error);
       dispatch(setError(error.message));
@@ -235,6 +264,44 @@ const CoursePageClient = () => {
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
                         {comment.downvotes}
                       </button>
+                      {/* Delete Button */}
+                      <Dialog
+                        open={deleteDialogOpen === comment.id}
+                        onOpenChange={() => setDeleteDialogOpen(null)}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            onClick={() => setDeleteDialogOpen(comment.id)}
+                          >
+                            <Trash className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete this comment? This
+                              action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() => setDeleteDialogOpen(null)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteComment(comment.id)}
+                            >
+                              Delete Comment
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                   <p className="text-gray-700">{comment.text}</p>
