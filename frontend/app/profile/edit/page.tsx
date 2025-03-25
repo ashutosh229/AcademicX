@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import EditProfileForm from './edit-profile-form';
-import { getUserByEmail } from '@/lib/auth-utils';
+import { getUserByEmail } from "@/lib/auth-utils";
+import { useSession } from "next-auth/react";
+import EditProfileForm from "./edit-profile-form";
 
 export default function EditProfilePage() {
   const { data: session } = useSession();
-  
+
   // Get user data from our mock database
   const user = session?.user?.email ? getUserByEmail(session.user.email) : null;
 
-  if (!user || user.role !== 'student') {
+  if (!user || user.role !== "student") {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
