@@ -54,3 +54,25 @@ def get_user_course_feedback(request, course_id, email):
 
     serializer = CourseMetricSerializer(feedback)
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def delete_user_course_feedback(request):
+    email = request.data.get('email')
+    course_id = request.data.get('course_id')
+
+    if not email or not course_id:
+        return Response({"error": "Email and course_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    student = Student.objects.filter(email=email).first()
+    if not student:
+        return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    feedback = CourseMetrics.objects.filter(contributor=student, course_id=course_id).first()
+    if not feedback:
+        return Response({"error": "No feedback found for this course by the contributor."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    feedback.delete()
+    return Response({"message": "Feedback deleted successfully."}, status=status.HTTP_200_OK)
+

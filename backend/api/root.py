@@ -47,6 +47,10 @@ def api_root(request, format=None):
                 "user_course_feedback", args=["1","shubhamy@iitbhilai.ac.in"], request=request, format=format
 
             ),
+            "Delete User's Course Feedback": reverse(
+                "delete_user_course_feedback", request=request, format=format
+
+            ),
 
 
         }
