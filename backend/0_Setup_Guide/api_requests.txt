@@ -38,18 +38,18 @@
 }
 
 5) Edit Student name (PATCH)
-endpoint - 'edit_student_name/<str:email>/'
+endpoint - 'edit_student_name/'
 
 {
-    "name": "Johnathan Doe"
+    "email": "test@iitbhilai.ac.in",
+    "name": "gunther"
 }
 
 6) Activate student (PATCH)
-endpoint - 'activate_student/<str:email>/
+endpoint - 'activate_student/
 {
+    "email": "test@iitbhilai.ac.in"
 }
-
-# No message needed
 
 7) Delete User Course Feedback (DELETE)
 {

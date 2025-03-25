@@ -12,7 +12,10 @@ from api.serializers import *
 
 
 @api_view(['PATCH'])
-def activate_student(request, email):
+def activate_student(request):
+    email = request.data.get("email")
+    if not email:
+        return Response({"error": "Email field is required"}, status=400)
     student = get_object_or_404(Student, email=email)
 
     if not student.activated:
@@ -31,18 +34,20 @@ def get_student_profile(request, email):
 
 
 @api_view(['PATCH'])
-def edit_student_name(request, email):
-    student = get_object_or_404(Student, email=email)
-
+def edit_student_name(request):
+    email = request.data.get("email")
     new_name = request.data.get("name")
-
     # Validate presence and length of the name
-    if not new_name:
-        return Response({"error": "Name field is required"}, status=400)
-
+    if not new_name or not email:
+        return Response({"error": "Email and Name field is required"}, status=400)
+    if type(new_name) != str:
+        return Response({"error": "Name has to be a string"}, status=400)
     if len(new_name) > 50:
         return Response({"error": "Name cannot exceed 50 characters"}, status=400)
 
+
+
+    student = get_object_or_404(Student, email=email)
     student.name = new_name
     student.save()
 
