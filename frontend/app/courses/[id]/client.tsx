@@ -199,7 +199,9 @@ const CoursePageClient = () => {
                       <Checkbox
                         id="anonymous"
                         checked={isAnonymous}
-                        onCheckedChange={setIsAnonymous}
+                        onCheckedChange={(checked) =>
+                          setIsAnonymous(checked === true)
+                        }
                       />
                       <Label htmlFor="anonymous">Post as Anonymous</Label>
                     </div>
