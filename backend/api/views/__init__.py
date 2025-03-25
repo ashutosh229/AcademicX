@@ -7,6 +7,22 @@ However, Django projects typically use Python 3+, where implicit namespace packa
 """
 from .course_views import *
 from .student_views import *
-__all__ = ["create_course", "get_all_courses","get_course_details","add_comment","add_resource","give_course_feedback",
-           "get_student_profile", "edit_student_name","get_user_course_feedback","activate_student",
-           "delete_user_course_feedback"]
+from .comment_views import *
+from .resource_views import *
+__all__ = [
+    # Course-related views
+    "create_course", "get_all_courses", "get_course_details",
+    "add_comment", "add_resource", "give_course_feedback",
+
+    # Student-related views
+    "get_student_profile", "edit_student_name", "get_user_course_feedback",
+    "activate_student", "delete_user_course_feedback",
+
+    # Comment Voting APIs
+    "upvote_comment", "remove_upvote_comment",
+    "downvote_comment", "remove_downvote_comment",
+
+    # Resource Voting APIs
+    "upvote_resource", "remove_upvote_resource",
+    "downvote_resource", "remove_downvote_resource",
+]

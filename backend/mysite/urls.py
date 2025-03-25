@@ -34,6 +34,17 @@ urlpatterns = [
     path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),
     path('activate_student/<str:email>/', activate_student, name='activate_student'),
     path('delete_course_feedback/', delete_user_course_feedback, name='delete_user_course_feedback'),
+    path('comments/upvote/', upvote_comment, name='upvote_comment'),
+    path('comments/remove_upvote/', remove_upvote_comment, name='remove_upvote_comment'),
+    path('comments/downvote/', downvote_comment, name='downvote_comment'),
+    path('comments/remove_downvote/', remove_downvote_comment, name='remove_downvote_comment'),
+
+    # Resource vote endpoints
+    path('resources/upvote/', upvote_resource, name='upvote_resource'),
+    path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),
+    path('resources/downvote/', downvote_resource, name='downvote_resource'),
+    path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),
+
 
     
 ]

@@ -56,3 +56,15 @@ endpoint - 'activate_student/<str:email>/
     "email": "student@example.com",
     "course_id": 1
 }
+
+8) Upvote / Remove Upvote / Downvote / Remove Downvote - Comment
+{
+    "email": "user@example.com",
+    "comment_id": 123
+}
+
+9) Upvote / Remove Upvote / Downvote / Remove Downvote - Resource
+{
+    "email": "user@example.com",
+    "resource_id": 123
+}

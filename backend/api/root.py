@@ -51,6 +51,31 @@ def api_root(request, format=None):
                 "delete_user_course_feedback", request=request, format=format
 
             ),
+            "Upvote Comment": reverse(
+                "upvote_comment", request=request, format=format
+            ),
+            "Remove Upvote from Comment": reverse(
+                "remove_upvote_comment", request=request, format=format
+            ),
+            "Downvote Comment": reverse(
+                "downvote_comment", request=request, format=format
+            ),
+            "Remove Downvote from Comment": reverse(
+                "remove_downvote_comment", request=request, format=format
+            ),
+
+            "Upvote Resource": reverse(
+                "upvote_resource", request=request, format=format
+            ),
+            "Remove Upvote from Resource": reverse(
+                "remove_upvote_resource", request=request, format=format
+            ),
+            "Downvote Resource": reverse(
+                "downvote_resource", request=request, format=format
+            ),
+            "Remove Downvote from Resource": reverse(
+                "remove_downvote_resource", request=request, format=format
+            ),
 
 
         }
