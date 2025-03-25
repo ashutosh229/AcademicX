@@ -18,7 +18,7 @@ class Course(models.Model):
     code = models.CharField(max_length=50, unique=True)
     professor = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
-    num_credits = models.PositiveIntegerField()
+    num_credits = models.CharField(max_length=10) # to allow 3/6 type
 
     def __str__(self):
         return f"{self.name} ({self.code})"
@@ -66,3 +66,23 @@ class Comment(models.Model):
     upvotes = models.PositiveIntegerField(default=0)
     downvotes = models.PositiveIntegerField(default=0)
     date_posted = models.DateField(auto_now_add=True)
+
+class ResourceVote(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="resource_votes", to_field="email")
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name="votes")
+    vote_type = models.IntegerField(choices=[(-1, "Downvote"), (1, "Upvote")])
+
+    class Meta:
+        unique_together = ("student", "resource")  # Prevents duplicate votes
+class CommentVote(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="comment_votes", to_field="email")
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="votes")
+    vote_type = models.IntegerField(choices=[(-1, "Downvote"), (1, "Upvote")])  # restricts choices to valid values
+
+    class Meta:
+        unique_together = ("student", "comment")  # Ensures one vote per student per comment
+
+
+
+
+

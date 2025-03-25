@@ -19,6 +19,12 @@ def api_root(request, format=None):
             "Add Resource": reverse(
                 "add_resource", request=request, format=format
             ),
+            "Delete Comment": reverse(
+                "delete_comment", request=request, format=format
+            ),
+            "Delete Resource": reverse(
+                "delete_resource", request=request, format=format
+            ),
             "Give Course Feedback": reverse(
                 "give_course_feedback", request=request, format=format
             ),
@@ -32,7 +38,7 @@ def api_root(request, format=None):
 
             ),
             "Activate Student (if not already)": reverse(
-                "activate_student", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
+                "activate_student", request=request, format=format
 
             ),
             "Get Student Profile using email": reverse(
@@ -40,11 +46,45 @@ def api_root(request, format=None):
 
             ),
             "Edit Student Name": reverse(
-                "edit_student_name", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
+                "edit_student_name", request=request, format=format
 
             ),
             "Get User's Course Feedback": reverse(
                 "user_course_feedback", args=["1","shubhamy@iitbhilai.ac.in"], request=request, format=format
+
+            ),
+            "Delete User's Course Feedback": reverse(
+                "delete_user_course_feedback", request=request, format=format
+
+            ),
+            "Upvote Comment": reverse(
+                "upvote_comment", request=request, format=format
+            ),
+            "Remove Upvote from Comment": reverse(
+                "remove_upvote_comment", request=request, format=format
+            ),
+            "Downvote Comment": reverse(
+                "downvote_comment", request=request, format=format
+            ),
+            "Remove Downvote from Comment": reverse(
+                "remove_downvote_comment", request=request, format=format
+            ),
+
+            "Upvote Resource": reverse(
+                "upvote_resource", request=request, format=format
+            ),
+            "Remove Upvote from Resource": reverse(
+                "remove_upvote_resource", request=request, format=format
+            ),
+            "Downvote Resource": reverse(
+                "downvote_resource", request=request, format=format
+            ),
+            "Remove Downvote from Resource": reverse(
+                "remove_downvote_resource", request=request, format=format
+            ),
+
+            "Get Analytics": reverse(
+                "get_analytics", request=request, format=format
 
             ),
 

@@ -38,8 +38,34 @@
 }
 
 5) Edit Student name (PATCH)
-endpoint - 'edit_student_name/<str:email>/'
+endpoint - 'edit_student_name/'
 
 {
-    "name": "Johnathan Doe"
+    "email": "test@iitbhilai.ac.in",
+    "name": "gunther"
 }
+
+6) Activate student (PATCH)
+endpoint - 'activate_student/
+{
+    "email": "test@iitbhilai.ac.in"
+}
+
+7) Delete User Course Feedback (DELETE)
+{
+    "email": "student@example.com",
+    "course_id": 1
+}
+
+8) Upvote / Remove Upvote / Downvote / Remove Downvote / DELETE  - Comment
+{
+    "email": "user@example.com",
+    "comment_id": 123
+}
+
+9) Upvote / Remove Upvote / Downvote / Remove Downvote / DELETE- Resource
+{
+    "email": "user@example.com",
+    "resource_id": 123
+}
+
