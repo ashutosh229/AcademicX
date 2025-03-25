@@ -130,10 +130,28 @@ const CoursePageClient = () => {
     }
   };
 
-  const handleUpdateUpvotesComment = async () => {
+  const handleUpdateUpvotesComment = async (id: number) => {
+    dispatch(setLoading(true));
     try {
-    } catch (error) {
+      const response = await fetch(`${backendDomain}/comments/upvote/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          comment_id: id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to upvote");
+        toast.error("Unable to upvote");
+      }
+      toast.success("Upvoted");
+      dispatch(setLoading(false));
+    } catch (error: any) {
       console.log(error);
+      dispatch(setError(error.message));
     }
   };
 
@@ -256,7 +274,10 @@ const CoursePageClient = () => {
                         : comment.author.name}
                     </p>
                     <div className="flex items-center space-x-4">
-                      <button className="flex items-center text-sm text-gray-600">
+                      <button
+                        onClick={() => handleUpdateUpvotesComment(comment.id)}
+                        className="flex items-center text-sm text-gray-600"
+                      >
                         <ArrowUpCircle className="h-4 w-4 mr-1" />
                         {comment.upvotes}
                       </button>
