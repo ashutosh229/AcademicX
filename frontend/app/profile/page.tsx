@@ -29,7 +29,7 @@ const iconMap: { [key: string]: any } = {
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  const { loading, error } = useSelector((state: RootState) => state.course);
+  const { loading, error } = useSelector((state: RootState) => state.student);
   const dispatch = useDispatch();
 
   const backendDomain = "http://localhost:8080";
@@ -46,7 +46,7 @@ export default function ProfilePage() {
       }
       toast.success("Students fetched successfully");
       const data = await response.json();
-      
+
       dispatch(setLoading(false));
     } catch (error: any) {
       console.log(error);
