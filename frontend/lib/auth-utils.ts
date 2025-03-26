@@ -93,7 +93,7 @@ export function getUserByEmail(email: string): User | null {
   // First check if it's an existing student
   const student = authorizedStudents.find(s => s.email === email);
   if (student) return student;
-  
+
   // If not found but has institutional email, create a new student
   if (isInstitutionalEmail(email)) {
     return {
@@ -103,7 +103,7 @@ export function getUserByEmail(email: string): User | null {
       role: 'student'
     };
   }
-  
+
   // For viewers, create a new user object
   return {
     id: `viewer-${Date.now()}`,
