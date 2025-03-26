@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getUserByEmail } from "@/lib/auth-utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { setStudents } from "@/redux/slices/studentSlice";
 import { RootState } from "@/redux/store";
@@ -58,10 +59,8 @@ export default function ProfilePage() {
     fetchStudets();
   }, [dispatch]);
 
-  
-
   const student = session?.user.email
-    ? getUserByEmail(session.user.email)
+    ? getUserByEmail(session.user.email, session, students)
     : null;
 
   if (!student) {
