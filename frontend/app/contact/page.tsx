@@ -1,25 +1,25 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Mail, Linkedin, Github } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const developers = [
   {
-    name: "John Doe",
-    role: "Lead Developer",
-    email: "johndoe@example.com",
-    linkedin: "https://linkedin.com/in/johndoe",
-    github: "https://github.com/johndoe",
+    name: "Shubham Mahajan",
+    role: "Backend Developer",
+    email: "shubhamy@iitbhilai.ac.in",
+    linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
+    github: "https://github.com/Shubham-Y-Mahajan",
   },
   {
-    name: "Jane Smith",
-    role: "Backend Engineer",
-    email: "janesmith@example.com",
-    linkedin: "https://linkedin.com/in/janesmith",
-    github: "https://github.com/janesmith",
+    name: "Ashutosh Kumar Jha",
+    role: "Frontend Developer",
+    email: "ashutoshj@iitbhilai.ac.in",
+    linkedin: "https://www.linkedin.com/in/ashutosh-kumar-jha-601098280/",
+    github: "https://github.com/ashutosh229",
   },
 ];
 
