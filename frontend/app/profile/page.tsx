@@ -3,7 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getUserByEmail } from "@/lib/auth-utils";
+import { setError, setLoading } from "@/redux/slices/courseSlice";
+import { RootState } from "@/redux/store";
 import {
   Calendar,
   Edit,
@@ -17,6 +18,8 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const iconMap: { [key: string]: any } = {
   Star,
@@ -26,6 +29,30 @@ const iconMap: { [key: string]: any } = {
 
 export default function ProfilePage() {
   const { data: session } = useSession();
+  const { loading, error } = useSelector((state: RootState) => state.course);
+  const dispatch = useDispatch();
+
+  const backendDomain = "http://localhost:8080";
+
+  const getUserByEmail = async (email: string) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await fetch(`${backendDomain}/get_all_students/`, {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error("Unable to fetch the students");
+        toast.error("Unable to fetch the students");
+      }
+      toast.success("Students fetched successfully");
+      const data = await response.json();
+
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
+    }
+  };
 
   // Get user data from our mock database
   const user = session?.user?.email ? getUserByEmail(session.user.email) : null;
