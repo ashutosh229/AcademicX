@@ -270,6 +270,31 @@ const CoursePageClient = () => {
     }
   };
 
+  const handleDeleteResource = async (id: number) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await fetch(`${backendDomain}/delete_resource`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          resource_id: id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to delete the resource");
+        toast.error("Unable to delete the resource");
+      }
+      toast.success("Deleted the resource successfully");
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error));
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Course Header */}
