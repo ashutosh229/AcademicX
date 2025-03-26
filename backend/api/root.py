@@ -37,6 +37,10 @@ def api_root(request, format=None):
                 "get_course_details",args=["1"], request=request, format=format
 
             ),
+            "Get All Students": reverse(
+                "get_all_students", request=request, format=format
+
+            ),
             "Activate Student (if not already)": reverse(
                 "activate_student", request=request, format=format
 

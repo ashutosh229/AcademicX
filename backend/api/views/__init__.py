@@ -17,7 +17,7 @@ __all__ = [
 
     # Student-related views
     "get_student_profile", "edit_student_name", "get_user_course_feedback",
-    "activate_student", "delete_user_course_feedback",
+    "activate_student", "delete_user_course_feedback","get_all_students",
 
     # Comment Voting APIs
     "upvote_comment", "remove_upvote_comment",
