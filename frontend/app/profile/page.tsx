@@ -58,26 +58,7 @@ export default function ProfilePage() {
     fetchStudets();
   }, [dispatch]);
 
-  const getUserByEmail = (email: string) => {
-    try {
-      const student = students.find((student) => {
-        return student.email === email;
-      });
-      if (!student) {
-        return {
-          email: session?.user.email?.toString(),
-          role: "viewer",
-        };
-      }
-      return student;
-    } catch (error: any) {
-      console.log(error);
-      // dispatch(setError(error.message));
-      return {
-        error: error.message,
-      };
-    }
-  };
+  
 
   const student = session?.user.email
     ? getUserByEmail(session.user.email)

@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserByEmail } from "@/lib/auth-utils";
+
 import { useSession } from "next-auth/react";
 import EditProfileForm from "./edit-profile-form";
 

@@ -1,3 +1,5 @@
+import { Student } from "./types";
+
 // Auth related types and utilities
 export interface User {
   id: string;
@@ -88,30 +90,52 @@ export const authorizedStudents: User[] = [
   },
 ];
 
-// Function to get user by email
-export function getUserByEmail(email: string): User | null {
-  // First check if it's an existing student
-  const student = authorizedStudents.find(s => s.email === email);
-  if (student) return student;
+// // Function to get user by email
+// export function getUserByEmail(email: string): User | null {
+//   // First check if it's an existing student
+//   const student = authorizedStudents.find(s => s.email === email);
+//   if (student) return student;
 
-  // If not found but has institutional email, create a new student
-  if (isInstitutionalEmail(email)) {
+//   // If not found but has institutional email, create a new student
+//   if (isInstitutionalEmail(email)) {
+//     return {
+//       id: `student-${Date.now()}`,
+//       email,
+//       name: email.split('@')[0], // Use part before @ as name
+//       role: 'student'
+//     };
+//   }
+
+//   // For viewers, create a new user object
+//   return {
+//     id: `viewer-${Date.now()}`,
+//     email,
+//     name: email.split('@')[0], // Use part before @ as name
+//     role: 'viewer'
+//   };
+// }
+
+
+export function getUserByEmail(email: string, session: any, students: Student[]) {
+  try {
+    const student = students.find((student) => {
+      return student.email === email;
+    });
+    if (!student) {
+      return {
+        email: session?.user.email?.toString(),
+        role: "viewer",
+      };
+    }
+    return student;
+  } catch (error: any) {
+    console.log(error);
+    // dispatch(setError(error.message));
     return {
-      id: `student-${Date.now()}`,
-      email,
-      name: email.split('@')[0], // Use part before @ as name
-      role: 'student'
+      error: error.message,
     };
   }
-
-  // For viewers, create a new user object
-  return {
-    id: `viewer-${Date.now()}`,
-    email,
-    name: email.split('@')[0], // Use part before @ as name
-    role: 'viewer'
-  };
-}
+};
 
 // Function to update user profile
 export function updateUserProfile(id: string, updates: Partial<User>): User | null {
