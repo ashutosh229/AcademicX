@@ -1,16 +1,21 @@
 "use client";
 
+import MetricSlider from "@/components/charts/metricSlider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const FeedbackForm = () => {
+  const { data: session } = useSession();
   const { courses, loading, error, activeCourseId } = useSelector(
     (state: RootState) => state.course
   );
@@ -34,14 +39,41 @@ const FeedbackForm = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const backendDomain = "http://localhost:8080";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // setIsSubmitting(true);
-    // // Simulate API call - replace with actual API call when backend is implemented
-    // setTimeout(() => {
-    //   setIsSubmitting(false);
-    //   router.push(`/courses/${course.course_id}`);
-    // }, 1000);
+    setIsSubmitting(true);
+    dispatch(setLoading(true));
+    try {
+      const response = await fetch(`${backendDomain}/give_course_feedback`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          course: activeCourseId,
+          content_toughness: contentToughness,
+          teaching_quality: teachingQuality,
+          workload: workload,
+          exam_difficulty: examDifficulty,
+          grading_strictness: gradingStrictness,
+          resources_provided: resourcesProvided,
+          recommendation: recommendation,
+          grade_obtained: gradeObtained,
+          contributor: session?.user.email?.toString(),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to send the course feedback");
+        toast.error("Unable to send the course feedback");
+      }
+      toast.success("Course Feedback sent successfully");
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
+    }
   };
 
   return (
@@ -56,7 +88,64 @@ const FeedbackForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          
+          {/* Metric Sliders */}
+          <MetricSlider
+            label="Content Toughness"
+            value={contentToughness}
+            setValue={setContentToughness}
+            minLabel="Easy"
+            maxLabel="Hard"
+          />
+          <MetricSlider
+            label="Teaching Quality"
+            value={teachingQuality}
+            setValue={setTeachingQuality}
+            minLabel="Poor"
+            maxLabel="Excellent"
+          />
+          <MetricSlider
+            label="Workload"
+            value={workload}
+            setValue={setWorkload}
+            minLabel="Light"
+            maxLabel="Heavy"
+          />
+          <MetricSlider
+            label="Exam Difficulty"
+            value={examDifficulty}
+            setValue={setExamDifficulty}
+            minLabel="Easy"
+            maxLabel="Hard"
+          />
+          <MetricSlider
+            label="Grading Strictness"
+            value={gradingStrictness}
+            setValue={setGradingStrictness}
+            minLabel="Lenient"
+            maxLabel="Strict"
+          />
+          <MetricSlider
+            label="Resources Provided"
+            value={resourcesProvided}
+            setValue={setResourcesProvided}
+            minLabel="Insufficient"
+            maxLabel="Great"
+          />
+          <MetricSlider
+            label="Recommendation"
+            value={recommendation}
+            setValue={setRecommendation}
+            minLabel="Not Recommended"
+            maxLabel="Highly Recommended"
+          />
+          <MetricSlider
+            label="Grade Obtained"
+            value={gradeObtained}
+            setValue={setGradeObtained}
+            minLabel="Low"
+            maxLabel="High"
+          />
+
           {/* Comment */}
           <div className="space-y-4">
             <Label htmlFor="comment">Additional Comments</Label>
