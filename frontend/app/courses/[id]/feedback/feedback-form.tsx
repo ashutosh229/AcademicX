@@ -6,17 +6,23 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Course } from "@/lib/types";
+import { RootState } from "@/redux/store";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-interface FeedbackFormProps {
-  course: Course;
-}
-
-export default function FeedbackForm({ course }: FeedbackFormProps) {
+const FeedbackForm = () => {
+  const { courses, loading, error, activeCourseId } = useSelector(
+    (state: RootState) => state.course
+  );
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const activeCourse = courses.filter((course) => {
+    return course.id === activeCourseId;
+  });
+
   const [contentToughness, setContentToughness] = useState([5]);
   const [workload, setWorkload] = useState([5]);
   const [recommend, setRecommend] = useState(true);
@@ -25,14 +31,13 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call - replace with actual API call when backend is implemented
-    setTimeout(() => {
-      setIsSubmitting(false);
-      router.push(`/courses/${course.course_id}`);
-    }, 1000);
+    // e.preventDefault();
+    // setIsSubmitting(true);
+    // // Simulate API call - replace with actual API call when backend is implemented
+    // setTimeout(() => {
+    //   setIsSubmitting(false);
+    //   router.push(`/courses/${course.course_id}`);
+    // }, 1000);
   };
 
   return (
@@ -40,9 +45,9 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
       <Card className="p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Course Feedback</h1>
-          <p className="text-xl text-gray-600 mb-1">{course.name}</p>
+          <p className="text-xl text-gray-600 mb-1">{activeCourse[0].name}</p>
           <p className="text-gray-500">
-            {course.code} • {course.professor}
+            {activeCourse[0].code} • {activeCourse[0].professor}
           </p>
         </div>
 
@@ -66,7 +71,7 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
               />
               <span className="text-sm text-gray-500">Hard</span>
             </div>
-          </div>
+          </div>  
 
           {/* Workload */}
           <div className="space-y-4">
@@ -146,4 +151,6 @@ export default function FeedbackForm({ course }: FeedbackFormProps) {
       </Card>
     </div>
   );
-}
+};
+
+export default FeedbackForm;

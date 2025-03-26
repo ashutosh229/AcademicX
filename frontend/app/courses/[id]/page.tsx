@@ -16,8 +16,6 @@ export default function CoursePage({ params }: { params: { id: number } }) {
   const dispatch = useDispatch();
   const router = useRouter();
 
-
-
   useEffect(() => {
     if (params.id) {
       dispatch(setActiveCourseId(params.id));
