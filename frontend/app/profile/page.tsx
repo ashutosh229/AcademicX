@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { getUserByEmail } from '@/lib/auth-utils';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { getUserByEmail } from "@/lib/auth-utils";
 import {
-  UserCircle,
   Calendar,
-  GraduationCap,
-  Trophy,
-  ThumbsUp,
-  ThumbsDown,
-  FileText,
-  Star,
   Edit,
-} from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+  FileText,
+  GraduationCap,
+  Star,
+  ThumbsDown,
+  ThumbsUp,
+  Trophy,
+  UserCircle,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const iconMap: { [key: string]: any } = {
   Star,
@@ -26,11 +26,11 @@ const iconMap: { [key: string]: any } = {
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  
+
   // Get user data from our mock database
   const user = session?.user?.email ? getUserByEmail(session.user.email) : null;
 
-  if (!user || user.role !== 'student') {
+  if (!user || user.role !== "student") {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
@@ -67,11 +67,11 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2 text-gray-600">
               <Calendar className="h-5 w-5" />
-              <span>Batch: {user.batch || 'Not specified'}</span>
+              <span>Batch: {user.batch || "Not specified"}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <GraduationCap className="h-5 w-5" />
-              <span>Branch: {user.branch || 'Not specified'}</span>
+              <span>Branch: {user.branch || "Not specified"}</span>
             </div>
           </div>
         </Card>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
             <Trophy className="h-6 w-6 text-primary" />
             Earned Badges
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {user.stats?.badges?.map((badge) => {
               const IconComponent = iconMap[badge.icon] || Trophy;
@@ -140,9 +140,7 @@ export default function ProfilePage() {
                         {new Date(badge.dateEarned).toLocaleDateString()}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600">
-                      {badge.description}
-                    </p>
+                    <p className="text-sm text-gray-600">{badge.description}</p>
                   </div>
                 </div>
               );
