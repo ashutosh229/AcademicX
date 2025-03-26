@@ -8,6 +8,20 @@ export interface Course {
   num_credits: number;
 }
 
+export interface Student {
+  email: string;
+  name: string;
+  branch: string;
+  batch: string;
+  activated: boolean
+}
+
+export interface StudentState {
+  students: Student[],
+  loading: boolean,
+  error: string | null,
+}
+
 export interface Resource {
   id: number
   name: string;
