@@ -46,9 +46,9 @@ urlpatterns = [
     path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),
     path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),
 
-    path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),
-    path('get_all_courses/', get_all_courses, name='get_all_courses'),
-    path('get_course_details/<str:id>/', get_course_details, name='get_course_details'),
+    path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),#integrated
+    path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
+    path('get_course_details/<str:id>/', get_course_details, name='get_course_details'),#integrated
     path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),
     path('edit_student_name/', edit_student_name, name='edit_student_name'),
     path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),
