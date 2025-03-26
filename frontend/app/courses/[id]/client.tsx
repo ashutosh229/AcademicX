@@ -16,9 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CourseDetails } from "@/lib/types";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
+import { CourseDetails } from "@/types/types";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
