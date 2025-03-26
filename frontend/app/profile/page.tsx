@@ -74,9 +74,7 @@ export default function ProfilePage() {
         </div>
       </div>
     );
-  }
-
-  if ("error" in student) {
+  } else if ("error" in student) {
     console.log("Internal server error occured");
     return (
       <div className="container mx-auto px-4 py-8">
