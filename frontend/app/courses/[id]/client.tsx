@@ -246,9 +246,27 @@ const CoursePageClient = () => {
   };
 
   const handleUpdateDownvotesResource = async (id: number) => {
+    dispatch(setLoading(true));
     try {
-    } catch (error) {
+      const response = await fetch(`${backendDomain}/resources/downvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          resource_id: id,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Unable to downvote the resource");
+        toast.error("Unable to downvote the resource");
+      }
+      toast.success("Downvoted");
+      dispatch(setLoading(false));
+    } catch (error: any) {
       console.log(error);
+      dispatch(setError(error.message));
     }
   };
 

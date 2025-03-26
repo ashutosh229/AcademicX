@@ -41,7 +41,7 @@ urlpatterns = [
     #resources end-points
     path('add_resource/', add_resource, name='add_resource'), #integrated
     path('delete_resource/', delete_resource, name='delete_resource'),
-    path('resources/upvote/', upvote_resource, name='upvote_resource'),
+    path('resources/upvote/', upvote_resource, name='upvote_resource'),#integrated
     path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),
     path('resources/downvote/', downvote_resource, name='downvote_resource'),
     path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),
