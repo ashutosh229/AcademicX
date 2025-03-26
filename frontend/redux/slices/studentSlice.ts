@@ -1,19 +1,18 @@
-import { Course, CourseState } from "@/lib/types";
+import { Student, StudentState } from "@/lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: CourseState = {
-    courses: [],
+const initialState: StudentState = {
+    students: [],
     loading: false,
     error: null,
-    activeCourseId: null,
 }
 
-export const courseSlice = createSlice({
-    name: "course",
+export const studentSlice = createSlice({
+    name: "student",
     initialState: initialState,
     reducers: {
-        setCourses: (state, action: PayloadAction<Course[]>) => {
-            state.courses = action.payload;
+        setStudents: (state, action: PayloadAction<Student[]>) => {
+            state.students = action.payload;
             state.loading = false;
             state.error = null
         },
@@ -23,14 +22,11 @@ export const courseSlice = createSlice({
         setError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;
         },
-        setActiveCourseId: (state, action: PayloadAction<number | null>) => {
-            state.activeCourseId = action.payload;
-        }
     }
 })
 
-export const { setCourses, setLoading, setError, setActiveCourseId } = courseSlice.actions;
-export default courseSlice.reducer;
+export const { setStudents, setLoading, setError } = studentSlice.actions;
+export default studentSlice.reducer;
 
 
 

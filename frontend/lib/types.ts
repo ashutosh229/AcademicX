@@ -98,7 +98,6 @@ export interface CourseDetails {
   metrics: CourseMetrics,
 }
 
-
 export interface CourseState {
   courses: Course[];
   loading: boolean;
