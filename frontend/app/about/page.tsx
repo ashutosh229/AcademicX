@@ -1,5 +1,5 @@
-import { GraduationCap, Users, BookOpen, Code } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { BookOpen, Code, GraduationCap, Users } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -19,7 +19,7 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
-            AcademicX was created with a simple mission: to enhance the academic
+            AcademicX was created with a simple mission of enhancing the academic
             experience by providing a platform where students can share
             insights, resources, and feedback about their courses.
           </p>
@@ -68,24 +68,16 @@ export default function AboutPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Lead Developer</h3>
-              <p className="text-gray-700">Rahul Sharma</p>
-              <p className="text-gray-600 text-sm">Computer Science, 2023</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">UI/UX Designer</h3>
-              <p className="text-gray-700">Priya Patel</p>
-              <p className="text-gray-600 text-sm">Design, 2024</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Backend Developer</h3>
-              <p className="text-gray-700">Amit Kumar</p>
-              <p className="text-gray-600 text-sm">Computer Science, 2023</p>
+              <p className="text-gray-700">Shubham Mahajan</p>
+              <p className="text-gray-600 text-sm">Computer Science, 2026</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Project Manager</h3>
-              <p className="text-gray-700">Neha Singh</p>
-              <p className="text-gray-600 text-sm">Management, 2022</p>
+              <h3 className="font-semibold mb-2">Frontend Developer</h3>
+              <p className="text-gray-700">Ashutosh Kumar Jha</p>
+              <p className="text-gray-600 text-sm">
+                Data Science and Artificial Intelligence, 2027
+              </p>
             </div>
           </div>
         </Card>
