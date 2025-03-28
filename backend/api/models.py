@@ -15,7 +15,7 @@ class Student(models.Model):
 class Course(models.Model):
 
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=50)
     professor = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
     num_credits = models.CharField(max_length=10) # to allow 3/6 type
