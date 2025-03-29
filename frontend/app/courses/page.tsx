@@ -64,15 +64,6 @@ export default function CoursesPage() {
     fetchCourses();
   }, [dispatch]);
 
-  // if (loading) return <Loading></Loading>;
-  // if (error)
-  //   return (
-  //     <ErrorPage
-  //       error={new Error(error)}
-  //       reset={() => window.location.reload()}
-  //     ></ErrorPage>
-  //   );
-
   const uniqueProfessors = [
     ...new Set(courses.map((course) => course.professor)),
   ];
@@ -231,7 +222,6 @@ export default function CoursesPage() {
                           onClick={() => handleViewCourse(course.id)}
                           variant="default"
                           size="sm"
-                          asChild
                         >
                           View Course
                         </Button>
@@ -240,7 +230,6 @@ export default function CoursesPage() {
                             onClick={() => handlePostFeedback(course.id)}
                             variant="outline"
                             size="sm"
-                            asChild
                           >
                             Post Feedback
                           </Button>

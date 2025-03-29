@@ -68,6 +68,7 @@ class Comment(models.Model):
     downvotes = models.PositiveIntegerField(default=0)
     date_posted = models.DateField(auto_now_add=True)
 
+
 class ResourceVote(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="resource_votes", to_field="email")
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name="votes")
@@ -75,6 +76,7 @@ class ResourceVote(models.Model):
 
     class Meta:
         unique_together = ("student", "resource")  # Prevents duplicate votes
+        
 class CommentVote(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="comment_votes", to_field="email")
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="votes")

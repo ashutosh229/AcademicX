@@ -1,64 +1,61 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { User, updateUserProfile } from '@/lib/auth-utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { UserCircle, Save, AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { setError, setLoading } from "@/redux/slices/courseSlice";
+import { RootState } from "@/redux/store";
+import { Student } from "@/types/types";
+import { AlertCircle, Save, UserCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 interface EditProfileFormProps {
-  user: User;
+  student: Student;
 }
 
-export default function EditProfileForm({ user }: EditProfileFormProps) {
-  const router = useRouter();
-  const { update } = useSession();
+export default function EditProfileForm({ student }: EditProfileFormProps) {
+  const { data: session } = useSession();
+  const { error, loading, students } = useSelector(
+    (state: RootState) => state.student
+  );
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    name: user.name,
-    batch: user.batch || '',
-    branch: user.branch || ''
+    name: student.name || "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const backendDomain = "http://localhost:8080";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
+    dispatch(setLoading(true));
     setSuccess(false);
-
     try {
-      const updatedUser = updateUserProfile(user.id, {
-        name: formData.name,
-        batch: formData.batch,
-        branch: formData.branch
+      const response = await fetch(`${backendDomain}/edit_student_name/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user.email?.toString(),
+          name: formData.name,
+        }),
       });
-
-      if (!updatedUser) {
-        throw new Error('Failed to update profile');
+      if (!response.ok) {
+        throw new Error("Unable to update the name of the studen");
+        toast.error("Unable to update the name of the student");
       }
-
-      // Update the session with new user data
-      await update({
-        ...user,
-        name: formData.name,
-      });
-
+      toast.success("Updated the name of the user successfully");
       setSuccess(true);
-      
-      // Simulate API delay
-      setTimeout(() => {
-        router.push('/courses');
-      }, 1500);
-    } catch (err) {
-      setError('Failed to update profile. Please try again.');
+    } catch (error: any) {
+      console.log(error);
+      dispatch(setError(error.message));
     } finally {
-      setIsLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -68,7 +65,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
         <UserCircle className="h-12 w-12 text-primary" />
         <div>
           <h1 className="text-2xl font-bold">Edit Profile</h1>
-          <p className="text-gray-600">{user.email}</p>
+          <p className="text-gray-600">{student.email}</p>
         </div>
       </div>
 
@@ -78,30 +75,36 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
           <Input
             id="name"
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, name: e.target.value }))
+            }
             required
           />
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="batch">Batch Year</Label>
           <Input
             id="batch"
             value={formData.batch}
-            onChange={(e) => setFormData(prev => ({ ...prev, batch: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, batch: e.target.value }))
+            }
             placeholder="e.g., 2023"
           />
-        </div>
+        </div> */}
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="branch">Branch</Label>
           <Input
             id="branch"
             value={formData.branch}
-            onChange={(e) => setFormData(prev => ({ ...prev, branch: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, branch: e.target.value }))
+            }
             placeholder="e.g., Computer Science"
           />
-        </div>
+        </div> */}
 
         {error && (
           <div className="flex items-center gap-2 text-red-600 text-sm">
@@ -116,13 +119,9 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
           </div>
         )}
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isLoading}
-        >
+        <Button type="submit" className="w-full" disabled={loading}>
           <Save className="h-4 w-4 mr-2" />
-          {isLoading ? 'Saving...' : 'Save Changes'}
+          {loading ? "Saving..." : "Save Changes"}
         </Button>
       </form>
     </Card>

@@ -1,28 +1,22 @@
 "use client";
 import { setActiveCourseId } from "@/redux/slices/courseSlice";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import CoursePageClient from "./client";
 
-// // This function tells Next.js which paths to pre-render
-// export function generateStaticParams() {
-//   return courses.map((course) => ({
-//     id: course.id,
-//   }));
-// }
-
-export default function CoursePage({ params }: { params: { id: number } }) {
+export default function CoursePage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const params = useParams(); // ✅ Correct way to access dynamic params
 
   useEffect(() => {
-    if (params.id) {
-      dispatch(setActiveCourseId(params.id));
+    if (params?.id) {
+      dispatch(setActiveCourseId(Number(params.id))); // Ensure it's a number
     } else {
       router.push("/courses");
     }
-  }, [params.id, dispatch, router]);
+  }, [params, dispatch, router]);
 
-  return <CoursePageClient></CoursePageClient>;
+  return <CoursePageClient />;
 }

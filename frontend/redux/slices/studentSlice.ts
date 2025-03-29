@@ -1,4 +1,4 @@
-import { Student, StudentState } from "@/lib/types";
+import { Student, StudentState } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: StudentState = {
