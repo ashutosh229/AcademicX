@@ -3,6 +3,7 @@ from django.db import models
 class Student(models.Model):
     email = models.CharField(max_length=100, primary_key=True)
     name = models.CharField(max_length=100, blank=True)  # Allow blank for manual override
+    degree = models.CharField(max_length=10, blank = True)
     batch = models.CharField(max_length=10)
     branch = models.CharField(max_length=100)
     activated = models.BooleanField(default=False)
