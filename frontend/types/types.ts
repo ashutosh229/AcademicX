@@ -42,7 +42,7 @@ export interface Comment {
   text: string;
   upvotes: number;
   downvotes: number;
-  datePosted: string;
+  date_posted: string;
   author: {
     name: string;
     isAnonymous: boolean;

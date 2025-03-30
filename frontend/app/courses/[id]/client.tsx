@@ -315,7 +315,7 @@ const CoursePageClient = () => {
     return [...courseData?.comments].sort((a, b) => {
       if (sortOption === "By Date") {
         return (
-          new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime()
+          new Date(b.date_posted).getTime() - new Date(a.date_posted).getTime()
         ); // Latest first
       } else if (sortOption === "By Upvotes") {
         return b.upvotes - a.upvotes; // Most upvoted first
@@ -497,7 +497,7 @@ const CoursePageClient = () => {
                   <p className="text-gray-700">{comment.text}</p>
                   <p className="text-sm text-gray-500 mt-2">
                     Posted on{" "}
-                    {new Date(comment.datePosted).toLocaleDateString()}
+                    {new Date(comment.date_posted).toLocaleDateString()}
                   </p>
                 </div>
               ))}

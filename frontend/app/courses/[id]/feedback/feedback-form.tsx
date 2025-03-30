@@ -20,8 +20,7 @@ const FeedbackForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  console.log("Courses:", courses);
-  console.log("Active Course ID:", activeCourseId);
+  // console.log("Courses:", courses);
 
   const activeCourse = courses.find((course) => course.id === activeCourseId);
 
@@ -56,30 +55,44 @@ const FeedbackForm = () => {
     setIsSubmitting(true);
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${backendDomain}/give_course_feedback`, {
+      console.log(activeCourseId);
+      console.log(contentToughness[0]);
+      console.log(teachingQuality[0]);
+      console.log(workload[0]);
+      console.log(examDifficulty[0]);
+      console.log(gradingStrictness[0]);
+      console.log(resourcesProvided[0]);
+      console.log(recommendation[0]);
+      console.log(gradeObtained);
+      console.log(session?.user.email?.toString());
+
+      const response = await fetch(`${backendDomain}/give_course_feedback/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           course: activeCourseId,
-          content_toughness: contentToughness,
-          teaching_quality: teachingQuality,
-          workload: workload,
-          exam_difficulty: examDifficulty,
-          grading_strictness: gradingStrictness,
-          resources_provided: resourcesProvided,
-          recommendation: recommendation,
+          content_toughness: contentToughness[0],
+          teaching_quality: teachingQuality[0],
+          workload: workload[0],
+          exam_difficulty: examDifficulty[0],
+          grading_strictness: gradingStrictness[0],
+          resources_provided: resourcesProvided[0],
+          recommendation: recommendation[0],
           grade_obtained: gradeObtained,
           contributor: session?.user.email?.toString(),
         }),
       });
       if (!response.ok) {
+        console.log(response);
         throw new Error("Unable to send the course feedback");
         toast.error("Unable to send the course feedback");
       }
       toast.success("Course Feedback sent successfully");
       dispatch(setLoading(false));
+      setIsSubmitting(false);
+      router.push("/courses");
     } catch (error: any) {
       console.log(error);
       dispatch(setError(error.message));
