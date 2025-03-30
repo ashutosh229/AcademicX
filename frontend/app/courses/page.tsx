@@ -65,13 +65,13 @@ export default function CoursesPage() {
   }, [dispatch]);
 
   const uniqueProfessors = [
-    ...new Set(courses.map((course) => course.professor)),
+    ...new Set(courses.map((course) => course.professor).filter(Boolean)),
   ];
   const uniqueDepartments = [
-    ...new Set(courses.map((course) => course.department)),
+    ...new Set(courses.map((course) => course.department).filter(Boolean)),
   ];
   const uniqueCredits = [
-    ...new Set(courses.map((course) => course.num_credits)),
+    ...new Set(courses.map((course) => course.num_credits).filter(Boolean)),
   ];
 
   const filteredCourses = courses.filter((course) => {
@@ -135,18 +135,23 @@ export default function CoursesPage() {
             <label className="text-sm font-medium">Professor:</label>
             <Select
               value={selectedProfessor}
-              onValueChange={setSelectedProfessor}
+              onValueChange={(value) =>
+                setSelectedProfessor(value === "all" ? "" : value)
+              }
             >
               <SelectTrigger className="w-[180px] border border-gray-300 shadow-sm hover:bg-gray-100">
                 <SelectValue placeholder="All Professors" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Professors</SelectItem>
-                {uniqueProfessors.map((professor) => (
-                  <SelectItem key={professor} value={professor}>
-                    {professor}
-                  </SelectItem>
-                ))}
+                {uniqueProfessors.map(
+                  (professor) =>
+                    professor && (
+                      <SelectItem key={professor} value={professor}>
+                        {professor}
+                      </SelectItem>
+                    )
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -156,18 +161,23 @@ export default function CoursesPage() {
             <label className="text-sm font-medium">Department:</label>
             <Select
               value={selectedDepartment}
-              onValueChange={setSelectedDepartment}
+              onValueChange={(value) =>
+                setSelectedDepartment(value === "all" ? "" : value)
+              }
             >
               <SelectTrigger className="w-[180px] border border-gray-300 shadow-sm hover:bg-gray-100">
                 <SelectValue placeholder="All Departments" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Departments</SelectItem>
-                {uniqueDepartments.map((department) => (
-                  <SelectItem key={department} value={department}>
-                    {department}
-                  </SelectItem>
-                ))}
+                {uniqueDepartments.map(
+                  (department) =>
+                    department && (
+                      <SelectItem key={department} value={department}>
+                        {department}
+                      </SelectItem>
+                    )
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -177,21 +187,26 @@ export default function CoursesPage() {
             <label className="text-sm font-medium">Credits:</label>
             <Select
               value={selectedCredits.toString()}
-              onValueChange={(value) => setSelectedCredits(Number(value))}
+              onValueChange={(value) =>
+                setSelectedCredits(value === "all" ? 0 : Number(value))
+              }
             >
               <SelectTrigger className="w-[150px] border border-gray-300 shadow-sm hover:bg-gray-100">
                 <SelectValue placeholder="All Credits" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">All Credits</SelectItem>
-                {uniqueCredits.map((credits) => (
-                  <SelectItem
-                    key={credits.toString()}
-                    value={credits.toString()}
-                  >
-                    {credits} Credits
-                  </SelectItem>
-                ))}
+                <SelectItem value="all">All Credits</SelectItem>
+                {uniqueCredits.map(
+                  (credits) =>
+                    credits && (
+                      <SelectItem
+                        key={credits.toString()}
+                        value={credits.toString()}
+                      >
+                        {credits} Credits
+                      </SelectItem>
+                    )
+                )}
               </SelectContent>
             </Select>
           </div>
