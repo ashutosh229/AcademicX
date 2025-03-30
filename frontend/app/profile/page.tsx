@@ -2,9 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getUserByEmail } from "@/lib/auth-utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
-import { setStudents } from "@/redux/slices/studentSlice";
+import { setActiveStudent } from "@/redux/slices/studentSlice";
 import { RootState } from "@/redux/store";
 import {
   Calendar,
@@ -29,7 +28,7 @@ const iconMap: { [key: string]: any } = {
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  const { loading, error, students } = useSelector(
+  const { loading, error, activeStudent } = useSelector(
     (state: RootState) => state.student
   );
   const dispatch = useDispatch();
@@ -40,16 +39,19 @@ export default function ProfilePage() {
     const fetchStudets = async () => {
       dispatch(setLoading(true));
       try {
-        const response = await fetch(`${backendDomain}/get_all_students/`, {
-          method: "GET",
-        });
+        const response = await fetch(
+          `${backendDomain}/get_student_profile/${session?.user.email}/`,
+          {
+            method: "GET",
+          }
+        );
         if (!response.ok) {
           throw new Error("Unable to fetch the students");
           toast.error("Unable to fetch the students");
         }
         toast.success("Students fetched successfully");
         const data = await response.json();
-        dispatch(setStudents(data));
+        dispatch(setActiveStudent(data));
         dispatch(setLoading(false));
       } catch (error: any) {
         console.log(error);
@@ -59,79 +61,43 @@ export default function ProfilePage() {
     fetchStudets();
   }, [dispatch]);
 
-  const student = session?.user.email
-    ? getUserByEmail(session.user.email, session, students)
-    : null;
-
-  if (!student) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
-          <p className="text-gray-600 mt-2">
-            No session is active for the user
-          </p>
-        </div>
-      </div>
-    );
-  } else if ("error" in student) {
-    console.log("Internal server error occured");
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
-          <p className="text-gray-600 mt-2">Internal server error occured</p>
-        </div>
-      </div>
-    );
-  } else if ("role" in student) {
-    console.log("Viewer access is given");
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
-          <p className="text-gray-600 mt-2">Viewers cannot access this page</p>
-        </div>
-      </div>
-    );
-  } else {
-    console.log("Student of the college");
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Profile Header */}
-          <Card className="p-8 mb-8">
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex items-center gap-4">
-                <UserCircle className="h-20 w-20 text-primary" />
-                <div>
-                  <h1 className="text-3xl font-bold">{student.name}</h1>
-                  <p className="text-gray-600">{student.email}</p>
-                </div>
-              </div>
-              <Button asChild variant="outline">
-                <Link href="/profile/edit">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Link>
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Calendar className="h-5 w-5" />
-                <span>Batch: {student.batch || "Not specified"}</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <GraduationCap className="h-5 w-5" />
-                <span>Branch: {student.branch || "Not specified"}</span>
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Profile Header */}
+        <Card className="p-8 mb-8">
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex items-center gap-4">
+              <UserCircle className="h-20 w-20 text-primary" />
+              <div>
+                <h1 className="text-3xl font-bold">{activeStudent?.name}</h1>
+                <p className="text-gray-600">{activeStudent?.email}</p>
+                <p className="text-gray-600">{activeStudent?.degree}</p>
               </div>
             </div>
-          </Card>
+            <Button asChild variant="outline">
+              <Link href="/profile/edit">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Profile
+              </Link>
+            </Button>
+          </div>
 
-          {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* <Card className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center gap-2 text-gray-600">
+              <Calendar className="h-5 w-5" />
+              <span>Batch: {activeStudent?.batch || "Not specified"}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <GraduationCap className="h-5 w-5" />
+              <span>Branch: {activeStudent?.branch || "Not specified"}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* <Card className="p-6">
               <div className="flex items-center gap-3">
                 <FileText className="h-8 w-8 text-primary" />
                 <div>
@@ -143,7 +109,7 @@ export default function ProfilePage() {
               </div>
             </Card> */}
 
-            {/* <Card className="p-6">
+          {/* <Card className="p-6">
               <div className="flex items-center gap-3">
                 <ThumbsUp className="h-8 w-8 text-green-600" />
                 <div>
@@ -155,7 +121,7 @@ export default function ProfilePage() {
               </div>
             </Card> */}
 
-            {/* <Card className="p-6">
+          {/* <Card className="p-6">
               <div className="flex items-center gap-3">
                 <ThumbsDown className="h-8 w-8 text-red-600" />
                 <div>
@@ -166,10 +132,10 @@ export default function ProfilePage() {
                 </div>
               </div>
             </Card> */}
-          </div>
+        </div>
 
-          {/* Badges */}
-          {/* <Card className="p-8">
+        {/* Badges */}
+        {/* <Card className="p-8">
             <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
               <Trophy className="h-6 w-6 text-primary" />
               Earned Badges
@@ -209,8 +175,7 @@ export default function ProfilePage() {
               </div>
             )}
           </Card> */}
-        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

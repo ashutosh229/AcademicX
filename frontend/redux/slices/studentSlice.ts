@@ -5,6 +5,7 @@ const initialState: StudentState = {
     students: [],
     loading: false,
     error: null,
+    activeStudent: null
 }
 
 export const studentSlice = createSlice({
@@ -22,10 +23,13 @@ export const studentSlice = createSlice({
         setError: (state, action: PayloadAction<string | null>) => {
             state.error = action.payload;
         },
+        setActiveStudent: (state, action: PayloadAction<Student | null>) => {
+            state.activeStudent = action.payload
+        }
     }
 })
 
-export const { setStudents, setLoading, setError } = studentSlice.actions;
+export const { setStudents, setLoading, setError, setActiveStudent } = studentSlice.actions;
 export default studentSlice.reducer;
 
 

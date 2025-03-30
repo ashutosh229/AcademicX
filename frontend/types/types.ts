@@ -13,13 +13,15 @@ export interface Student {
   name: string;
   branch: string;
   batch: string;
-  activated: boolean
+  activated: boolean;
+  degree: string
 }
 
 export interface StudentState {
   students: Student[],
   loading: boolean,
   error: string | null,
+  activeStudent: Student | null
 }
 
 export interface Resource {
