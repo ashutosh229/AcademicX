@@ -3,9 +3,6 @@
 import MetricSlider from "@/components/charts/metricSlider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
@@ -48,8 +45,8 @@ const FeedbackForm = () => {
   const [recommendation, setRecommendation] = useState([5]);
   const [gradeObtained, setGradeObtained] = useState([5]);
 
-  const [comment, setComment] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  // const [comment, setComment] = useState("");
+  // const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const backendDomain = "http://localhost:8080";
@@ -160,7 +157,7 @@ const FeedbackForm = () => {
           />
 
           {/* Comment */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <Label htmlFor="comment">Additional Comments</Label>
             <Textarea
               id="comment"
@@ -169,10 +166,10 @@ const FeedbackForm = () => {
               placeholder="Share your experience with this course..."
               className="h-32"
             />
-          </div>
+          </div> */}
 
           {/* Anonymous Toggle */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <Label htmlFor="anonymous" className="cursor-pointer">
               Submit Anonymously
             </Label>
@@ -181,7 +178,7 @@ const FeedbackForm = () => {
               checked={isAnonymous}
               onCheckedChange={setIsAnonymous}
             />
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
