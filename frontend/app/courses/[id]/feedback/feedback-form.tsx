@@ -22,9 +22,22 @@ const FeedbackForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const activeCourse = courses.filter((course) => {
-    return course.id === activeCourseId;
-  });
+  console.log("Courses:", courses);
+  console.log("Active Course ID:", activeCourseId);
+
+  const activeCourse = courses.find((course) => course.id === activeCourseId);
+
+  if (!activeCourse) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <Card className="p-6">
+          <h1 className="text-3xl font-bold mb-2">Course Feedback</h1>
+          <p className="text-xl text-gray-600 mb-4">Course not found.</p>
+          <Button onClick={() => router.push("/courses")}>Go Back</Button>
+        </Card>
+      </div>
+    );
+  }
 
   const [contentToughness, setContentToughness] = useState([5]);
   const [teachingQuality, setTeachingQuality] = useState([5]);
@@ -81,9 +94,9 @@ const FeedbackForm = () => {
       <Card className="p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Course Feedback</h1>
-          <p className="text-xl text-gray-600 mb-1">{activeCourse[0].name}</p>
+          <p className="text-xl text-gray-600 mb-1">{activeCourse.name}</p>
           <p className="text-gray-500">
-            {activeCourse[0].code} • {activeCourse[0].professor}
+            {activeCourse.code} • {activeCourse.professor}
           </p>
         </div>
 
