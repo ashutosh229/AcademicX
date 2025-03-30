@@ -60,7 +60,9 @@ const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
         percent={metricData.average / 10}
         textColor="#000"
       />
-      <p className="text-center mt-2">Average: {metricData.average}/10</p>
+      <p className="text-center mt-2">
+        Average: {metricData.average.toFixed(2)}/10
+      </p>
       <Bar data={barData} options={barOptions} className="mt-4" />
     </div>
   );
