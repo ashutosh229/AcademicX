@@ -1,5 +1,6 @@
 "use client";
 
+import GradeDropdown from "@/components/charts/dropDown";
 import MetricSlider from "@/components/charts/metricSlider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -43,8 +44,7 @@ const FeedbackForm = () => {
   const [gradingStrictness, setGradingStrictness] = useState([5]);
   const [resourcesProvided, setResourcesProvided] = useState([5]);
   const [recommendation, setRecommendation] = useState([5]);
-  const [gradeObtained, setGradeObtained] = useState([5]);
-
+  const [gradeObtained, setGradeObtained] = useState<number>(0);
   // const [comment, setComment] = useState("");
   // const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -148,13 +148,7 @@ const FeedbackForm = () => {
             minLabel="Not Recommended"
             maxLabel="Highly Recommended"
           />
-          <MetricSlider
-            label="Grade Obtained"
-            value={gradeObtained}
-            setValue={setGradeObtained}
-            minLabel="Low"
-            maxLabel="High"
-          />
+          <GradeDropdown onChange={setGradeObtained}></GradeDropdown>
 
           {/* Comment */}
           {/* <div className="space-y-4">
