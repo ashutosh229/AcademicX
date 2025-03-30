@@ -618,46 +618,53 @@ const CoursePageClient = () => {
                       <ThumbsDown className="h-4 w-4 mr-1" />
                       {resource.downvotes}
                     </button>
+
                     {/* Delete Button */}
-                    <Dialog
-                      open={deleteDialogOpenForResource === resource.id}
-                      onOpenChange={() => setDeleteDialogOpenForResource(null)}
-                    >
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="destructive"
-                          onClick={() =>
-                            setDeleteDialogOpenForResource(resource.id)
-                          }
-                        >
-                          <Trash className="h-4 w-4 mr-1" />
-                          Delete
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Confirm Deletion</DialogTitle>
-                          <DialogDescription>
-                            Are you sure you want to delete this comment? This
-                            action cannot be undone.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => setDeleteDialogOpenForResource(null)}
-                          >
-                            Cancel
-                          </Button>
+                    {session?.user.email === resource.contributor.email && (
+                      <Dialog
+                        open={deleteDialogOpenForResource === resource.id}
+                        onOpenChange={() =>
+                          setDeleteDialogOpenForResource(null)
+                        }
+                      >
+                        <DialogTrigger asChild>
                           <Button
                             variant="destructive"
-                            onClick={() => handleDeleteResource(resource.id)}
+                            onClick={() =>
+                              setDeleteDialogOpenForResource(resource.id)
+                            }
                           >
-                            Delete Comment
+                            <Trash className="h-4 w-4 mr-1" />
+                            Delete
                           </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete this comment? This
+                              action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                setDeleteDialogOpenForResource(null)
+                              }
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteResource(resource.id)}
+                            >
+                              Delete Comment
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                 </div>
               ))}
