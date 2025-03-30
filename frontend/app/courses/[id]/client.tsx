@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { formatString } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
@@ -30,7 +37,7 @@ import {
   Trash,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
@@ -54,6 +61,9 @@ const CoursePageClient = () => {
   const [isAnonymousForResources, setIsAnonymousForResources] = useState(false);
   const [deleteDialogOpenForResource, setDeleteDialogOpenForResource] =
     useState<number | null>(null);
+  const [sortOption, setSortOption] = useState<"By Date" | "By Upvotes">(
+    "By Date"
+  ); // Sorting state
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -298,6 +308,22 @@ const CoursePageClient = () => {
     }
   };
 
+  // Sorting logic
+  const sortedComments = useMemo(() => {
+    if (!courseData?.comments) return [];
+
+    return [...courseData?.comments].sort((a, b) => {
+      if (sortOption === "By Date") {
+        return (
+          new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime()
+        ); // Latest first
+      } else if (sortOption === "By Upvotes") {
+        return b.upvotes - a.upvotes; // Most upvoted first
+      }
+      return 0;
+    });
+  }, [courseData?.comments, sortOption]);
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Course Header */}
@@ -339,49 +365,70 @@ const CoursePageClient = () => {
           <Card className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold">Comments</h2>
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger asChild>
-                  <Button onClick={() => setIsOpen(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Comment
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add a Comment</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Label>Your Comment</Label>
-                    <Input
-                      type="text"
-                      placeholder="Write your comment..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                    />
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="anonymous"
-                        checked={isAnonymous}
-                        onCheckedChange={(checked) =>
-                          setIsAnonymous(checked === true)
-                        }
-                      />
-                      <Label htmlFor="anonymous">Post as Anonymous</Label>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      onClick={() => handleAddComment(commentText, isAnonymous)}
-                    >
+              <div className="flex items-center space-x-4">
+                {/* Sorting Dropdown */}
+                <Select
+                  onValueChange={(value) =>
+                    setSortOption(value as "By Date" | "By Upvotes")
+                  }
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="By Date">By Date</SelectItem>
+                    <SelectItem value="By Upvotes">By Upvotes</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Add Comment Button */}
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button onClick={() => setIsOpen(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
                       Add Comment
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add a Comment</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Label>Your Comment</Label>
+                      <Input
+                        type="text"
+                        placeholder="Write your comment..."
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                      />
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="anonymous"
+                          checked={isAnonymous}
+                          onCheckedChange={(checked) =>
+                            setIsAnonymous(checked === true)
+                          }
+                        />
+                        <Label htmlFor="anonymous">Post as Anonymous</Label>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        onClick={() =>
+                          handleAddComment(commentText, isAnonymous)
+                        }
+                      >
+                        Add Comment
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
 
+            {/* Comments Section */}
             <div className="space-y-6">
-              {courseData?.comments.map((comment) => (
+              {sortedComments.map((comment) => (
                 <div key={comment.id} className="border-b pb-4 last:border-b-0">
                   <div className="flex justify-between items-start mb-2">
                     <p className="text-sm font-medium">
@@ -404,7 +451,8 @@ const CoursePageClient = () => {
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
                         {comment.downvotes}
                       </button>
-                      {/* Delete Button */}
+
+                      {/* Delete Comment Dialog */}
                       <Dialog
                         open={deleteDialogOpen === comment.id}
                         onOpenChange={() => setDeleteDialogOpen(null)}
