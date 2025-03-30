@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import { Student } from "@/types/types";
 import { AlertCircle, Save, UserCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ export default function EditProfileForm({ student }: EditProfileFormProps) {
     name: student.name || "",
   });
   const [success, setSuccess] = useState(false);
+  const navigator = useRouter();
 
   const backendDomain = "http://localhost:8080";
 
@@ -51,6 +53,7 @@ export default function EditProfileForm({ student }: EditProfileFormProps) {
       }
       toast.success("Updated the name of the user successfully");
       setSuccess(true);
+      navigator.push("/profile");
     } catch (error: any) {
       console.log(error);
       dispatch(setError(error.message));
