@@ -45,6 +45,12 @@ export function Header() {
               </Link>
             )}
             <Link
+              href={"/analytics"}
+              className="text-sm font-medium hover:text-primary"
+            >
+              Analytics
+            </Link>
+            <Link
               href="/about"
               className="text-sm font-medium hover:text-primary"
             >

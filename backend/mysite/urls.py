@@ -52,10 +52,10 @@ urlpatterns = [
 
     path('get_all_students/', get_all_students, name='get_all_students'), #integrated
     path('edit_student_name/', edit_student_name, name='edit_student_name'), #integrated
-    path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),
+    path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),#integrated
     path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),
     path('activate_student/', activate_student, name='activate_student'),   
     path('delete_course_feedback/', delete_user_course_feedback, name='delete_user_course_feedback'),
 
-    path('get_analytics/', get_analytics, name='get_analytics'),
+    path('get_analytics/', get_analytics, name='get_analytics'), # integrated
 ]
