@@ -453,43 +453,45 @@ const CoursePageClient = () => {
                       </button>
 
                       {/* Delete Comment Dialog */}
-                      <Dialog
-                        open={deleteDialogOpen === comment.id}
-                        onOpenChange={() => setDeleteDialogOpen(null)}
-                      >
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="destructive"
-                            onClick={() => setDeleteDialogOpen(comment.id)}
-                          >
-                            <Trash className="h-4 w-4 mr-1" />
-                            Delete
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Confirm Deletion</DialogTitle>
-                            <DialogDescription>
-                              Are you sure you want to delete this comment? This
-                              action cannot be undone.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DialogFooter>
-                            <Button
-                              variant="outline"
-                              onClick={() => setDeleteDialogOpen(null)}
-                            >
-                              Cancel
-                            </Button>
+                      {session?.user.email === comment.author.email && (
+                        <Dialog
+                          open={deleteDialogOpen === comment.id}
+                          onOpenChange={() => setDeleteDialogOpen(null)}
+                        >
+                          <DialogTrigger asChild>
                             <Button
                               variant="destructive"
-                              onClick={() => handleDeleteComment(comment.id)}
+                              onClick={() => setDeleteDialogOpen(comment.id)}
                             >
-                              Delete Comment
+                              <Trash className="h-4 w-4 mr-1" />
+                              Delete
                             </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Confirm Deletion</DialogTitle>
+                              <DialogDescription>
+                                Are you sure you want to delete this comment?
+                                This action cannot be undone.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <Button
+                                variant="outline"
+                                onClick={() => setDeleteDialogOpen(null)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleDeleteComment(comment.id)}
+                              >
+                                Delete Comment
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
                     </div>
                   </div>
                   <p className="text-gray-700">{comment.text}</p>
