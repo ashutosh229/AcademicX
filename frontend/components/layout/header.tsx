@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { GraduationCap, UserCircle, LogOut } from 'lucide-react';
-import { useSession, signOut } from "next-auth/react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from '@/components/ui/button';
+import { GraduationCap, LogOut, UserCircle } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export function Header() {
   const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
-  const isStudent = session?.user?.role === 'student';
+  const isAuthenticated = status === "authenticated";
+  const isStudent = session?.user?.role === "student";
 
   return (
     <header className="border-b">
@@ -30,27 +30,42 @@ export function Header() {
             <Link href="/" className="text-sm font-medium hover:text-primary">
               Home
             </Link>
-            <Link href={isAuthenticated ? "/courses" : "/"} className="text-sm font-medium hover:text-primary">
+            <Link
+              href={isAuthenticated ? "/courses" : "/"}
+              className="text-sm font-medium hover:text-primary"
+            >
               Courses
             </Link>
             {isStudent && (
-              <Link href="/profile/edit" className="text-sm font-medium hover:text-primary">
+              <Link
+                href="/profile/edit"
+                className="text-sm font-medium hover:text-primary"
+              >
                 Edit Profile
               </Link>
             )}
-            <Link href="/about" className="text-sm font-medium hover:text-primary">
+            <Link
+              href="/about"
+              className="text-sm font-medium hover:text-primary"
+            >
               About
             </Link>
-            <Link href="/contact" className="text-sm font-medium hover:text-primary">
+            <Link
+              href="/contact"
+              className="text-sm font-medium hover:text-primary"
+            >
               Contact
             </Link>
-            
-            {isAuthenticated ? (
+
+            {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={session.user?.image || ''} alt={session.user?.name || ''} />
+                      {/* <AvatarImage src={session.user?.image || ''} alt={session.user?.name || ''} /> */}
                       <AvatarFallback>
                         <UserCircle className="h-5 w-5" />
                       </AvatarFallback>
@@ -60,7 +75,9 @@ export function Header() {
                 <DropdownMenuContent align="end">
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
-                      {session.user?.name && <p className="font-medium">{session.user.name}</p>}
+                      {session.user?.name && (
+                        <p className="font-medium">{session.user.name}</p>
+                      )}
                       {session.user?.email && (
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
                           {session.user.email}
@@ -78,7 +95,7 @@ export function Header() {
                     className="cursor-pointer"
                     onSelect={(event) => {
                       event.preventDefault();
-                      signOut({ callbackUrl: '/' });
+                      signOut({ callbackUrl: "/" });
                     }}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
@@ -86,13 +103,6 @@ export function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button variant="default" size="sm" asChild>
-                <Link href="/">
-                  <UserCircle className="mr-2 h-4 w-4" />
-                  Login
-                </Link>
-              </Button>
             )}
           </div>
         </nav>
