@@ -7,7 +7,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React from "react";
+import React, { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import GaugeChart from "react-gauge-chart";
 
@@ -49,17 +49,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
     },
   };
 
-  return (
-    <div>
-      <h3 className="text-lg font-medium mb-4">{metricName}</h3>
+  const stableGaugeChart = useMemo(
+    () => (
       <GaugeChart
-        id="content-toughness-gauge"
+        id={metricName}
         nrOfLevels={11}
         arcsLength={[0.2, 0.4, 0.4]}
         colors={["#FF5F6D", "#FFC371", "#29AB87"]}
         percent={metricData.average / 10}
         textColor="#000"
+        animate={false} // Disable animation
       />
+    ),
+    [metricName, metricData.average]
+  );
+
+  return (
+    <div>
+      <h3 className="text-lg font-medium mb-4">{metricName}</h3>
+      {stableGaugeChart}
       <p className="text-center mt-2">
         Average: {metricData.average.toFixed(2)}/10
       </p>
