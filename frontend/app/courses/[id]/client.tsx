@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { formatString } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { CourseDetails } from "@/types/types";
@@ -321,10 +322,11 @@ const CoursePageClient = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {Object.entries(courseData?.metrics ?? {}).map(
                 ([metricName, metricData]) => {
+                  const formattedMetricName = formatString(metricName);
                   return (
                     <ChartCard
                       key={metricName}
-                      metricName={metricName}
+                      metricName={formattedMetricName}
                       metricData={metricData}
                     ></ChartCard>
                   );
