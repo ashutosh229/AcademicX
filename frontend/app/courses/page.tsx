@@ -233,6 +233,8 @@ export default function CoursesPage() {
                 <TableHead>Course Name</TableHead>
                 <TableHead>Course Code</TableHead>
                 <TableHead>Professor</TableHead>
+                <TableHead>Department</TableHead>
+                <TableHead>Credits</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -243,6 +245,8 @@ export default function CoursesPage() {
                     <TableCell className="font-medium">{course.name}</TableCell>
                     <TableCell>{course.code}</TableCell>
                     <TableCell>{course.professor}</TableCell>
+                    <TableCell>{course.department}</TableCell>
+                    <TableCell>{course.num_credits}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
