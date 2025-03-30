@@ -41,6 +41,7 @@ export default function CoursesPage() {
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedCredits, setSelectedCredits] = useState(0);
+  const [professorSearch, setProfessorSearch] = useState(""); // Added professor search state
 
   const navigator = useRouter();
 
@@ -78,6 +79,9 @@ export default function CoursesPage() {
     return (
       (course.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
         course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())) &&
+      course.professor
+        .toLowerCase()
+        .includes(professorSearch.toLowerCase().trim()) &&
       (selectedProfessor === "" || course.professor === selectedProfessor) &&
       (selectedDepartment === "" || course.department === selectedDepartment) &&
       (selectedCredits === 0 || course.num_credits === selectedCredits)
@@ -127,6 +131,14 @@ export default function CoursesPage() {
             placeholder="Search by course name or code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 min-w-[250px] p-2 border border-gray-300 rounded-lg"
+          />
+
+          <Input
+            type="text"
+            placeholder="Search by professor name..."
+            value={professorSearch}
+            onChange={(e) => setProfessorSearch(e.target.value)}
             className="flex-1 min-w-[250px] p-2 border border-gray-300 rounded-lg"
           />
 
