@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useComments from "@/hooks/custom-hooks/useComments";
+import useFetchCourseDetails from "@/hooks/custom-hooks/useFetchCourseDetails";
 import useResources from "@/hooks/custom-hooks/useResources";
 import { formatString } from "@/lib/utils";
-import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
-import { backendDomain, CourseDetails } from "@/types/types";
+import { backendDomain } from "@/types/types";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
@@ -39,17 +39,14 @@ import {
   Trash,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 const CoursePageClient = () => {
   const { data: session } = useSession();
   const { activeCourseId, error, loading, courses } = useSelector(
     (state: RootState) => state.course
   );
-  const dispatch = useDispatch();
-
-  const [courseData, setCourseData] = useState<CourseDetails | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -70,33 +67,11 @@ const CoursePageClient = () => {
     return course.id === activeCourseId;
   });
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      dispatch(setLoading(true));
-      try {
-        const response = await fetch(`${backendDomain}/get_course_details`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_email: session?.user.email?.toString(),
-            course_id: activeCourseId,
-          }),
-        });
-        if (!response.ok) {
-          throw new Error("Course details could not be fetched properly");
-        }
-        const data = await response.json();
-        setCourseData(data);
-        dispatch(setLoading(false));
-      } catch (error: any) {
-        console.log(error);
-        dispatch(setError(error.message));
-      }
-    };
-    fetchDetails();
-  }, [activeCourse]);
+  const { courseData, refreshCourseDetails } = useFetchCourseDetails(
+    backendDomain,
+    session,
+    activeCourseId
+  );
 
   const { addComment, deleteComment, upvoteComment, downvoteComment } =
     useComments(backendDomain, session, courseData);
@@ -210,14 +185,15 @@ const CoursePageClient = () => {
                     </div>
                     <DialogFooter>
                       <Button
-                        onClick={() =>
+                        onClick={() => {
                           addComment(
                             activeCourseId,
                             commentText,
                             isAnonymous,
                             setIsOpen
-                          )
-                        }
+                          );
+                          refreshCourseDetails();
+                        }}
                       >
                         Add Comment
                       </Button>
@@ -239,14 +215,20 @@ const CoursePageClient = () => {
                     </p>
                     <div className="flex items-center space-x-4">
                       <button
-                        onClick={() => upvoteComment(comment.id)}
+                        onClick={() => {
+                          upvoteComment(comment.id);
+                          refreshCourseDetails();
+                        }}
                         className="flex items-center text-sm text-gray-600"
                       >
                         <ArrowUpCircle className="h-4 w-4 mr-1" />
                         {comment.upvotes}
                       </button>
                       <button
-                        onClick={() => downvoteComment(comment.id)}
+                        onClick={() => {
+                          downvoteComment(comment.id);
+                          refreshCourseDetails();
+                        }}
                         className="flex items-center text-sm text-gray-600"
                       >
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
@@ -285,9 +267,13 @@ const CoursePageClient = () => {
                               </Button>
                               <Button
                                 variant="destructive"
-                                onClick={() =>
-                                  deleteComment(comment.id, setDeleteDialogOpen)
-                                }
+                                onClick={() => {
+                                  deleteComment(
+                                    comment.id,
+                                    setDeleteDialogOpen
+                                  );
+                                  refreshCourseDetails();
+                                }}
                               >
                                 Delete Comment
                               </Button>
@@ -365,14 +351,15 @@ const CoursePageClient = () => {
                   </div>
                   <DialogFooter>
                     <Button
-                      onClick={() =>
+                      onClick={() => {
                         addResource(
                           resourceName,
                           resourceRemarks,
                           resourceUrl,
                           isAnonymousForResources
-                        )
-                      }
+                        );
+                        refreshCourseDetails();
+                      }}
                     >
                       Add Resource
                     </Button>
@@ -408,14 +395,20 @@ const CoursePageClient = () => {
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
                     <button
-                      onClick={() => upvoteResource(resource.id)}
+                      onClick={() => {
+                        upvoteResource(resource.id);
+                        refreshCourseDetails();
+                      }}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsUp className="h-4 w-4 mr-1" />
                       {resource.upvotes}
                     </button>
                     <button
-                      onClick={() => downvoteResource(resource.id)}
+                      onClick={() => {
+                        downvoteResource(resource.id);
+                        refreshCourseDetails();
+                      }}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsDown className="h-4 w-4 mr-1" />
@@ -460,7 +453,10 @@ const CoursePageClient = () => {
                             </Button>
                             <Button
                               variant="destructive"
-                              onClick={() => deleteResource(resource.id)}
+                              onClick={() => {
+                                deleteResource(resource.id);
+                                refreshCourseDetails();
+                              }}
                             >
                               Delete Comment
                             </Button>

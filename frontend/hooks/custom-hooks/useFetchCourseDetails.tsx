@@ -1,15 +1,16 @@
 "use client";
 
 import { setError, setLoading } from "@/redux/slices/courseSlice";
+import { CourseDetails } from "@/types/types";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-const useCourseDetails = (
+const useFetchCourseDetails = (
   backendDomain: string,
   session: any,
-  activeCourseId: number
+  activeCourseId: number | null
 ) => {
-  const [courseData, setCourseData] = useState(null);
+  const [courseData, setCourseData] = useState<CourseDetails | null>(null);
   const dispatch = useDispatch();
 
   const fetchDetails = useCallback(async () => {
@@ -47,4 +48,4 @@ const useCourseDetails = (
   return { courseData, refreshCourseDetails: fetchDetails };
 };
 
-export default useCourseDetails;
+export default useFetchCourseDetails;
