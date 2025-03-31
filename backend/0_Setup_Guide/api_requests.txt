@@ -69,3 +69,8 @@ endpoint - 'activate_student/
     "resource_id": 123
 }
 
+10) Get Course Details (POST)
+{
+    "user_email": "student@example.com",
+    "course_id": 1808
+}

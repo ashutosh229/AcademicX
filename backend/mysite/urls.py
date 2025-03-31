@@ -48,7 +48,7 @@ urlpatterns = [
 
     path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),#integrated
     path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
-    path('get_course_details/<str:id>/', get_course_details, name='get_course_details'),#integrated
+    path('get_course_details', get_course_details, name='get_course_details'),#integrated
 
     path('get_all_students/', get_all_students, name='get_all_students'), #integrated
     path('edit_student_name/', edit_student_name, name='edit_student_name'), #integrated

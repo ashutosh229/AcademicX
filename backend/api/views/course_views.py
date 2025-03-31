@@ -48,8 +48,13 @@ def give_course_feedback(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def get_course_details(request, id):
+@api_view(['POST'])
+def get_course_details(request):
+
+    id = request.data.get("course_id")
+    user_email = request.data.get("user_email")
+    if not id or not user_email:
+        return Response({"error": "course_id and user_email are required."}, status=status.HTTP_400_BAD_REQUEST)
     try:
         course_obj = Course.objects.get(id=id)  # Fetch course by code
         resources = course_obj.resources.all() # Foreign key relation related name
@@ -57,6 +62,12 @@ def get_course_details(request, id):
         comments = course_obj.comments.all()
         feedbacks = course_obj.ratings.all()
 
+
+        # Fetch all votes made by this user in a single query
+        user_comment_votes = CommentVote.objects.filter(student_id=user_email).values_list("comment_id", "vote_type")
+        comment_vote_map = dict(user_comment_votes)  # Create a dictionary {comment_id: vote_type}
+        user_resource_votes = ResourceVote.objects.filter(student_id=user_email).values_list("resource_id", "vote_type")
+        resource_vote_map = dict(user_resource_votes)  # Create a dictionary {comment_id: vote_type}
 
         course_serializer = CourseSerializer(course_obj)  # Serialize course details
         resource_serializer = ResourceSerializer(resources, many=True)  # Serialize resources
@@ -112,6 +123,7 @@ def get_course_details(request, id):
             del resource_item["course"] # remove without return
             id_val = resource_item.pop("resource_id")
             resource_item["id"] = id_val
+            resource_item["user_vote"] = resource_vote_map.get(id_val, 0)  # Default to 0 if no vote exists
             anonymous_value = resource_item.pop("is_anonymous")
             contributor_email = resource_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
@@ -129,13 +141,14 @@ def get_course_details(request, id):
             del comment_item["course"]  # remove without return
             id_val = comment_item.pop("comment_id")
             comment_item["id"] = id_val
+            comment_item["user_vote"] = comment_vote_map.get(id_val, 0)  # Default to 0 if no vote exists
             anonymous_value = comment_item.pop("is_anonymous")
             contributor_email = comment_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
             try:
                 student = Student.objects.get(email=contributor_email)
                 author_name = student.name if student.name else contributor_email
-            except Student.DoesNotExist:
+            except Student.DoesNotExist: # this will never be triggered as Student deletion will have cascade effect
                 author_name = contributor_email  # Default to email if not found
 
             comment_item["author"] = {"name": author_name, "email":contributor_email, "isAnonymous": anonymous_value}
