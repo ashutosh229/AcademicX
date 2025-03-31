@@ -36,14 +36,6 @@ export function Header() {
             >
               Courses
             </Link>
-            {isStudent && (
-              <Link
-                href="/profile/edit"
-                className="text-sm font-medium hover:text-primary"
-              >
-                Edit Profile
-              </Link>
-            )}
             <Link
               href={"/analytics"}
               className="text-sm font-medium hover:text-primary"
@@ -95,6 +87,11 @@ export function Header() {
                   {isStudent && (
                     <DropdownMenuItem asChild>
                       <Link href="/profile">View Profile</Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isStudent && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile/edit">Edit Profile</Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem
