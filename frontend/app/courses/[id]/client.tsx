@@ -123,14 +123,15 @@ const CoursePageClient = () => {
       });
       if (!response.ok) {
         throw new Error("Unable to add the comment");
-        toast.error("Unable to add comment");
       }
       toast.success("Added comment successfully");
-      dispatch(setLoading(false));
       setIsOpen(false);
     } catch (error: any) {
       console.log(error);
+      toast.error("Unable to add comment");
       dispatch(setError(error.message));
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -149,14 +150,15 @@ const CoursePageClient = () => {
       });
       if (!response.ok) {
         throw new Error("Unable to delete the comment");
-        toast.error("Unable to delete the comment");
       }
       toast.success("Deleted the comment successfully");
-      dispatch(setLoading(false));
       setDeleteDialogOpen(null);
     } catch (error: any) {
       console.log(error);
+      toast.error("Unable to delete the comment");
       dispatch(setError(error.message));
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
