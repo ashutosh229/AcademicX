@@ -23,7 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { formatString } from "@/lib/utils";
+import {
+  formatString,
+  getUserVote,
+  getUserVoteForResources,
+} from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { CourseDetails } from "@/types/types";
@@ -158,52 +162,142 @@ const CoursePageClient = () => {
 
   const handleUpdateUpvotesComment = async (id: number) => {
     dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/comments/upvote/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          comment_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to upvote");
-        toast.error("Unable to upvote");
+
+    const performAction = async (
+      url: string,
+      successMessage: string,
+      errorMessage: string
+    ) => {
+      try {
+        const response = await fetch(`${backendDomain}/comments/${url}/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session?.user.email?.toString(),
+            comment_id: id,
+          }),
+        });
+
+        if (!response.ok) throw new Error(errorMessage);
+
+        toast.success(successMessage);
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error.message);
+        dispatch(setError(error.message));
       }
-      toast.success("Upvoted");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
+    };
+
+    const userVote = getUserVote(courseData?.comments, id);
+
+    switch (userVote) {
+      case 0:
+        await performAction(
+          "upvote",
+          "Upvoted successfully",
+          "Unable to upvote"
+        );
+        break;
+
+      case 1:
+        await performAction(
+          "remove_upvote",
+          "Upvote removed",
+          "Unable to remove the upvote"
+        );
+        break;
+
+      case 2:
+        await performAction(
+          "remove_downvote",
+          "Removed downvote",
+          "Unable to remove the downvote"
+        );
+        await performAction(
+          "upvote",
+          "Upvoted successfully",
+          "Unable to upvote"
+        );
+        break;
+
+      default:
+        console.warn("Unexpected vote state");
+        break;
     }
+
+    dispatch(setLoading(false));
   };
 
   const handleUpdateDownvotesComment = async (id: number) => {
     dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/comments/downvote/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          comment_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to downvote");
-        toast.error("Unable to downvote");
+
+    const performAction = async (
+      url: string,
+      successMessage: string,
+      errorMessage: string
+    ) => {
+      try {
+        const response = await fetch(`${backendDomain}/comments/${url}/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session?.user.email?.toString(),
+            comment_id: id,
+          }),
+        });
+
+        if (!response.ok) throw new Error(errorMessage);
+
+        toast.success(successMessage);
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error.message);
+        dispatch(setError(error.message));
       }
-      toast.success("Downvoted");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
+    };
+
+    const userVote = getUserVote(courseData?.comments, id);
+
+    switch (userVote) {
+      case 0:
+        await performAction(
+          "downvote",
+          "Downvoted successfully",
+          "Unable to downvote"
+        );
+        break;
+
+      case 2:
+        await performAction(
+          "remove_downvote",
+          "Downvote removed",
+          "Unable to remove the downvote"
+        );
+        break;
+
+      case 1:
+        await performAction(
+          "remove_upvote",
+          "Removed upvote",
+          "Unable to remove the upvote"
+        );
+        await performAction(
+          "downvote",
+          "Downvoted successfully",
+          "Unable to downvote"
+        );
+        break;
+
+      default:
+        console.warn("Unexpected vote state");
+        break;
     }
+
+    dispatch(setLoading(false));
   };
 
   const handleAddResource = async (
@@ -242,52 +336,142 @@ const CoursePageClient = () => {
 
   const handleUpdateUpvotesResource = async (id: number) => {
     dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/resources/upvote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          resource_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to upvote the resource");
-        toast.error("Unable to upvote the resource");
+
+    const performAction = async (
+      url: string,
+      successMessage: string,
+      errorMessage: string
+    ) => {
+      try {
+        const response = await fetch(`${backendDomain}/resources/${url}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session?.user.email?.toString(),
+            resource_id: id,
+          }),
+        });
+
+        if (!response.ok) throw new Error(errorMessage);
+
+        toast.success(successMessage);
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error.message);
+        dispatch(setError(error.message));
       }
-      toast.success("Upvoted");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
+    };
+
+    const userVote = getUserVoteForResources(courseData?.resources, id);
+
+    switch (userVote) {
+      case 0:
+        await performAction(
+          "upvote",
+          "Upvoted successfully",
+          "Unable to upvote the resource"
+        );
+        break;
+
+      case 1:
+        await performAction(
+          "remove_upvote",
+          "Upvote removed",
+          "Unable to remove the upvote"
+        );
+        break;
+
+      case 2:
+        await performAction(
+          "remove_downvote",
+          "Removed downvote",
+          "Unable to remove the downvote"
+        );
+        await performAction(
+          "upvote",
+          "Upvoted successfully",
+          "Unable to upvote the resource"
+        );
+        break;
+
+      default:
+        console.warn("Unexpected vote state");
+        break;
     }
+
+    dispatch(setLoading(false));
   };
 
   const handleUpdateDownvotesResource = async (id: number) => {
     dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/resources/downvote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          resource_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to downvote the resource");
-        toast.error("Unable to downvote the resource");
+
+    const performAction = async (
+      url: string,
+      successMessage: string,
+      errorMessage: string
+    ) => {
+      try {
+        const response = await fetch(`${backendDomain}/resources/${url}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: session?.user.email?.toString(),
+            resource_id: id,
+          }),
+        });
+
+        if (!response.ok) throw new Error(errorMessage);
+
+        toast.success(successMessage);
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error.message);
+        dispatch(setError(error.message));
       }
-      toast.success("Downvoted");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
+    };
+
+    const userVote = getUserVoteForResources(courseData?.resources, id);
+
+    switch (userVote) {
+      case 0:
+        await performAction(
+          "downvote",
+          "Downvoted successfully",
+          "Unable to downvote the resource"
+        );
+        break;
+
+      case 2:
+        await performAction(
+          "remove_downvote",
+          "Downvote removed",
+          "Unable to remove the downvote"
+        );
+        break;
+
+      case 1:
+        await performAction(
+          "remove_upvote",
+          "Removed upvote",
+          "Unable to remove the upvote"
+        );
+        await performAction(
+          "downvote",
+          "Downvoted successfully",
+          "Unable to downvote the resource"
+        );
+        break;
+
+      default:
+        console.warn("Unexpected vote state");
+        break;
     }
+
+    dispatch(setLoading(false));
   };
 
   const handleDeleteResource = async (id: number) => {

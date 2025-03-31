@@ -1,4 +1,4 @@
-import { Comment } from '@/types/types';
+import { Comment, Resource } from '@/types/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,8 +12,13 @@ export function formatString(str: string) {
     : str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function getUserVote(comments: Comment[], commentId: number) {
-  const comment = comments.find(comment => comment.id === commentId);
+export function getUserVote(comments: Comment[] | undefined, commentId: number) {
+  const comment = comments?.find(comment => comment.id === commentId);
   return comment ? comment.user_vote : null;
+}
+
+export function getUserVoteForResources(resources: Resource[] | undefined, resourceId: number) {
+  const resource = resources?.find(resource => resource.id === resourceId);
+  return resource ? resource.user_vote : null;
 }
 
