@@ -6,6 +6,7 @@ import {
   setError,
   setLoading,
 } from "@/redux/slices/courseSlice";
+import { setCourseFeedback } from "@/redux/slices/studentSlice";
 import { AppDispatch } from "@/redux/store";
 import { backendDomain } from "@/types/types";
 import { useRouter } from "next/navigation";
@@ -65,7 +66,7 @@ export function useCourseHandlers() {
       if ("detail" in data) {
         router.push(`/courses/${id}/feedback`);
       } else {
-        
+        dispatch(setCourseFeedback(data));
         router.push(`/courses/${id}/feedback/show`);
       }
     } catch (error: any) {

@@ -1,11 +1,13 @@
 import { Student, StudentState } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Feedback } from './../../types/types';
 
 const initialState: StudentState = {
     students: [],
     loading: false,
     error: null,
-    activeStudent: null
+    activeStudent: null,
+    courseFeedback: null
 }
 
 export const studentSlice = createSlice({
@@ -25,11 +27,14 @@ export const studentSlice = createSlice({
         },
         setActiveStudent: (state, action: PayloadAction<Student | null>) => {
             state.activeStudent = action.payload
+        },
+        setCourseFeedback: (state, action: PayloadAction<Feedback | null>) => {
+            state.courseFeedback = action.payload
         }
     }
 })
 
-export const { setStudents, setLoading, setError, setActiveStudent } = studentSlice.actions;
+export const { setStudents, setLoading, setError, setActiveStudent, setCourseFeedback } = studentSlice.actions;
 export default studentSlice.reducer;
 
 
