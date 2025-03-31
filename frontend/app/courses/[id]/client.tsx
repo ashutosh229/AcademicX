@@ -63,7 +63,7 @@ const CoursePageClient = () => {
     useState<number | null>(null);
   const [sortOption, setSortOption] = useState<"By Date" | "By Upvotes">(
     "By Date"
-  ); // Sorting state
+  );
 
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
@@ -75,9 +75,16 @@ const CoursePageClient = () => {
     const fetchDetails = async () => {
       dispatch(setLoading(true));
       try {
-        const response = await fetch(
-          `${backendDomain}/get_course_details/${activeCourse[0].id}`
-        );
+        const response = await fetch(`${backendDomain}/get_course_details/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_email: session?.user.email?.toString(),
+            course_id: activeCourseId,
+          }),
+        });
         if (!response.ok) {
           throw new Error("Course details could not be fetched properly");
         }

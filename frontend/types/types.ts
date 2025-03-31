@@ -32,6 +32,7 @@ export interface Resource {
   upvotes: number;
   downvotes: number;
   dateAdded: string;
+  user_vote: number;
   contributor: {
     name: string;
     isAnonymous: boolean;
@@ -45,6 +46,7 @@ export interface Comment {
   upvotes: number;
   downvotes: number;
   date_posted: string;
+  user_vote: number;
   author: {
     name: string;
     isAnonymous: boolean;
