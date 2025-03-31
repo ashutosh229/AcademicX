@@ -4,15 +4,16 @@ import GradeDropdown from "@/components/charts/dropDown";
 import MetricSlider from "@/components/charts/metricSlider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
 
 const FeedbackForm = () => {
+  const { toast } = useToast();
   const { data: session } = useSession();
   const { courses, loading, error, activeCourseId } = useSelector(
     (state: RootState) => state.course
@@ -77,13 +78,22 @@ const FeedbackForm = () => {
         console.log(response);
         throw new Error("Unable to send the course feedback");
       }
-      setIsSubmitting(false);
-      toast.success("Course Feedback sent successfully");
       dispatch(setLoading(false));
-      router.push("/courses");
+      setIsSubmitting(false);
+      // Introduce a delay before redirecting
+      setTimeout(() => {
+        toast({
+          title: "Success",
+          description: "Course Feedback sent successfully",
+        });
+        router.push("/courses");
+      }, 1.5); // 10 seconds delay
     } catch (error: any) {
       console.log(error);
-      toast.error("Unable to send the course feedback");
+      toast({
+        title: "Error",
+        description: "Unable to send the course feedback",
+      });
       dispatch(setError(error.message));
     }
   };

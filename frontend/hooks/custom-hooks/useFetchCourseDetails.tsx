@@ -4,12 +4,14 @@ import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { CourseDetails } from "@/types/types";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useToast } from "../use-toast";
 
 const useFetchCourseDetails = (
   backendDomain: string,
   session: any,
   activeCourseId: number | null
 ) => {
+  const { toast } = useToast();
   const [courseData, setCourseData] = useState<CourseDetails | null>(null);
   const dispatch = useDispatch();
 
@@ -32,6 +34,10 @@ const useFetchCourseDetails = (
       }
 
       const data = await response.json();
+      toast({
+        title: "Success",
+        description: "Successfully fetched the courses",
+      });
       setCourseData(data);
     } catch (error: any) {
       console.error(error);

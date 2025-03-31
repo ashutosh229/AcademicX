@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { ReduxProvider } from "@/redux/provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <Toaster />
         <ReduxProvider>
           <AuthProvider>
             <Header />
