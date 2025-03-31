@@ -1,9 +1,11 @@
+"use client";
+
 import { setActiveCourseId } from "@/redux/slices/courseSlice";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-export function useActiveCourse() {
+export function useSetActiveCourseId() {
   const dispatch = useDispatch();
   const router = useRouter();
   const params = useParams();
