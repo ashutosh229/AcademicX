@@ -1,12 +1,42 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 import { RootState } from "@/redux/store";
+import { backendDomain } from "@/types/types";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 const ShowFeedback = () => {
+  const { data: session } = useSession();
   const { courseFeedback } = useSelector((state: RootState) => state.student);
+  const { activeCourseId } = useSelector((state: RootState) => state.course);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const handleDeleteAndGiveNewFeedback = async () => {
+    const response = await fetch(`${backendDomain}/delete_course_feedback/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: session?.user.email?.toString(),
+        course_id: activeCourseId,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Unable to delete the course feedback");
+    }
+    toast({
+      title: "Success",
+      description: "Successfully deleted the course feedback",
+    });
+    router.push(`/courses/${activeCourseId}/feedback`);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
@@ -55,6 +85,14 @@ const ShowFeedback = () => {
           ))}
         </CardContent>
       </Card>
+
+      {/* Delete and Give New Feedback Button */}
+      <Button
+        className="mt-6 bg-red-600 hover:bg-red-700"
+        onClick={handleDeleteAndGiveNewFeedback}
+      >
+        Delete and Give New Feedback
+      </Button>
     </div>
   );
 };

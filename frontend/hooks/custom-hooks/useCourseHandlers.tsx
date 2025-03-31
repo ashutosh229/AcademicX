@@ -59,13 +59,10 @@ export function useCourseHandlers() {
           method: "GET",
         }
       );
-      if (!response.ok) {
-        throw new Error("Unable to get the user's feedback");
-      }
-      const data = await response.json();
-      if ("detail" in data) {
+      if (response.status === 404) {
         router.push(`/courses/${id}/feedback`);
       } else {
+        const data = await response.json();
         dispatch(setCourseFeedback(data));
         router.push(`/courses/${id}/feedback/show`);
       }
