@@ -4,63 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { setError, setLoading } from "@/redux/slices/courseSlice";
+import { useEditStudentProfile } from "@/hooks/custom-hooks/useEditStudentProfile";
 import { RootState } from "@/redux/store";
 import { Student } from "@/types/types";
 import { AlertCircle, Save, UserCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 interface EditProfileFormProps {
   student: Student;
 }
 
 export default function EditProfileForm({ student }: EditProfileFormProps) {
-  const { data: session } = useSession();
-  const { error, loading, students } = useSelector(
-    (state: RootState) => state.student
-  );
-  const dispatch = useDispatch();
+  const { error, loading } = useSelector((state: RootState) => state.student);
   const [formData, setFormData] = useState({
     name: student.name || "",
   });
-  const [success, setSuccess] = useState(false);
-  const navigator = useRouter();
-
-  const backendDomain = "http://localhost:8080";
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(setLoading(true));
-    setSuccess(false);
-    try {
-      const response = await fetch(`${backendDomain}/edit_student_name/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          name: formData.name,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to update the name of the studen");
-        toast.error("Unable to update the name of the student");
-      }
-      toast.success("Updated the name of the user successfully");
-      setSuccess(true);
-      navigator.push("/profile");
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
+  const { handleEditProfile, success } = useEditStudentProfile();
 
   return (
     <Card className="p-8">
@@ -72,7 +32,13 @@ export default function EditProfileForm({ student }: EditProfileFormProps) {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleEditProfile(formData.name);
+        }}
+        className="space-y-6"
+      >
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
           <Input

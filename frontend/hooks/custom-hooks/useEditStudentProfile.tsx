@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
-export function useEditProfile() {
+export function useEditStudentProfile() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
