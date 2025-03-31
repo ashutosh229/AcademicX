@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { setError, setLoading } from "@/redux/slices/courseSlice";
-import { setActiveStudent } from "@/redux/slices/studentSlice";
+import { useFetchStudentProfile } from "@/hooks/custom-hooks/useFetchStudentProfile";
 import { RootState } from "@/redux/store";
 import {
   Calendar,
@@ -14,11 +13,8 @@ import {
   Trophy,
   UserCircle,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const iconMap: { [key: string]: any } = {
   Star,
@@ -27,39 +23,9 @@ const iconMap: { [key: string]: any } = {
 };
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
-  const { loading, error, activeStudent } = useSelector(
-    (state: RootState) => state.student
-  );
-  const dispatch = useDispatch();
+  const { activeStudent } = useSelector((state: RootState) => state.student);
 
-  const backendDomain = "http://localhost:8080";
-
-  useEffect(() => {
-    const fetchStudets = async () => {
-      dispatch(setLoading(true));
-      try {
-        const response = await fetch(
-          `${backendDomain}/get_student_profile/${session?.user.email}/`,
-          {
-            method: "GET",
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Unable to fetch the students");
-          toast.error("Unable to fetch the students");
-        }
-        toast.success("Students fetched successfully");
-        const data = await response.json();
-        dispatch(setActiveStudent(data));
-        dispatch(setLoading(false));
-      } catch (error: any) {
-        console.log(error);
-        dispatch(setError(error.message));
-      }
-    };
-    fetchStudets();
-  }, [dispatch]);
+  useFetchStudentProfile();
 
   return (
     <div className="container mx-auto px-4 py-8">
