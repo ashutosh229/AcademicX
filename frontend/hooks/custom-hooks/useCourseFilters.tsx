@@ -1,3 +1,5 @@
+"use client";
+
 import { RootState } from "@/redux/store";
 import { Course } from "@/types/types";
 import { useMemo, useState } from "react";
@@ -14,21 +16,27 @@ export function useCourseFilters() {
 
   const uniqueProfessors = useMemo(
     () => [
-      ...new Set(courses.map((course) => course.professor).filter(Boolean)),
+      ...new Set(
+        courses.map((course: Course) => course.professor).filter(Boolean)
+      ),
     ],
     [courses]
   );
 
   const uniqueDepartments = useMemo(
     () => [
-      ...new Set(courses.map((course) => course.department).filter(Boolean)),
+      ...new Set(
+        courses.map((course: Course) => course.department).filter(Boolean)
+      ),
     ],
     [courses]
   );
 
   const uniqueCredits = useMemo(
     () => [
-      ...new Set(courses.map((course) => course.num_credits).filter(Boolean)),
+      ...new Set(
+        courses.map((course: Course) => course.num_credits).filter(Boolean)
+      ),
     ],
     [courses]
   );

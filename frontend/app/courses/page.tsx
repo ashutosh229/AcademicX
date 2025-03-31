@@ -17,31 +17,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCourseFilters } from "@/hooks/custom-hooks/useCourseFilters";
 import {
   setActiveCourseId,
   setCourses,
   setError,
   setLoading,
 } from "@/redux/slices/courseSlice";
-import { AppDispatch, RootState } from "@/redux/store";
+import { AppDispatch } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
 
-  const { courses, loading, error } = useSelector(
-    (state: RootState) => state.course
-  );
   const dispatch = useDispatch<AppDispatch>();
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedCredits, setSelectedCredits] = useState(0);
-  const [professorSearch, setProfessorSearch] = useState(""); // Added professor search state
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedProfessor,
+    setSelectedProfessor,
+    selectedDepartment,
+    setSelectedDepartment,
+    selectedCredits,
+    setSelectedCredits,
+    professorSearch,
+    setProfessorSearch,
+    filteredCourses,
+    uniqueProfessors,
+    uniqueDepartments,
+    uniqueCredits,
+  } = useCourseFilters();
 
   const navigator = useRouter();
 
@@ -64,29 +73,6 @@ export default function CoursesPage() {
     };
     fetchCourses();
   }, [dispatch]);
-
-  const uniqueProfessors = [
-    ...new Set(courses.map((course) => course.professor).filter(Boolean)),
-  ];
-  const uniqueDepartments = [
-    ...new Set(courses.map((course) => course.department).filter(Boolean)),
-  ];
-  const uniqueCredits = [
-    ...new Set(courses.map((course) => course.num_credits).filter(Boolean)),
-  ];
-
-  const filteredCourses = courses.filter((course) => {
-    return (
-      (course.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
-        course.code.toLowerCase().includes(searchTerm.toLowerCase().trim())) &&
-      course.professor
-        .toLowerCase()
-        .includes(professorSearch.toLowerCase().trim()) &&
-      (selectedProfessor === "" || course.professor === selectedProfessor) &&
-      (selectedDepartment === "" || course.department === selectedDepartment) &&
-      (selectedCredits === 0 || course.num_credits === selectedCredits)
-    );
-  });
 
   const handleViewCourse = (id: number) => {
     dispatch(setLoading(true));

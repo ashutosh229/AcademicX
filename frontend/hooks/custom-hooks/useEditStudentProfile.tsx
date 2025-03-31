@@ -1,3 +1,5 @@
+"use client";
+
 import { setError, setLoading } from "@/redux/slices/studentSlice";
 import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
