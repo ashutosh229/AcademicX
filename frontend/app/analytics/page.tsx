@@ -2,36 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-
-const backendURL = "http://localhost:8080"; // Replace with your actual backend URL
+import { useAnalytics } from "@/hooks/custom-hooks/useAnalytics";
 
 const AnalyticsPage = () => {
-  const [analytics, setAnalytics] = useState<Record<string, number> | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        const response = await fetch(`${backendURL}/get_analytics/`);
-        if (!response.ok) throw new Error("Failed to fetch analytics data");
-
-        const data = await response.json();
-        setAnalytics(data);
-      } catch (err: any) {
-        setError(err.message);
-        toast.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAnalytics();
-  }, []);
+  const { analytics, loading, error } = useAnalytics();
 
   const analyticsData = [
     { label: "Activated Users", key: "number_of_users_activated" },
