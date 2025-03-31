@@ -28,7 +28,7 @@ import useResources from "@/hooks/custom-hooks/useResources";
 import { formatString } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
-import { CourseDetails } from "@/types/types";
+import { backendDomain, CourseDetails } from "@/types/types";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
@@ -69,8 +69,6 @@ const CoursePageClient = () => {
   const activeCourse = courses.filter((course) => {
     return course.id === activeCourseId;
   });
-
-  const backendDomain = "http://localhost:8080";
 
   useEffect(() => {
     const fetchDetails = async () => {
