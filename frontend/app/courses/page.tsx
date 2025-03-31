@@ -18,22 +18,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCourseFilters } from "@/hooks/custom-hooks/useCourseFilters";
-import {
-  setActiveCourseId,
-  setCourses,
-  setError,
-  setLoading,
-} from "@/redux/slices/courseSlice";
-import { AppDispatch } from "@/redux/store";
+import { useCourseHandlers } from "@/hooks/custom-hooks/useCourseHandlers";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 export default function CoursesPage() {
   const { data: session } = useSession();
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const {
     searchTerm,
@@ -52,51 +41,7 @@ export default function CoursesPage() {
     uniqueCredits,
   } = useCourseFilters();
 
-  const navigator = useRouter();
-
-  const backendDomain = "http://localhost:8080";
-  useEffect(() => {
-    const fetchCourses = async () => {
-      dispatch(setLoading(true));
-      try {
-        const response = await fetch(`${backendDomain}/get_all_courses`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch the courses");
-        }
-        const data = await response.json();
-        dispatch(setCourses(data));
-        dispatch(setLoading(false));
-      } catch (error: any) {
-        console.log(error);
-        dispatch(setError(error.message));
-      }
-    };
-    fetchCourses();
-  }, [dispatch]);
-
-  const handleViewCourse = (id: number) => {
-    dispatch(setLoading(true));
-    try {
-      dispatch(setActiveCourseId(id));
-      navigator.push(`/courses/${id}`);
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
-    }
-  };
-
-  const handlePostFeedback = (id: number) => {
-    dispatch(setLoading(true));
-    try {
-      dispatch(setActiveCourseId(id));
-      navigator.push(`/courses/${id}/feedback`);
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
-    }
-  };
+  const { handleViewCourse, handlePostFeedback } = useCourseHandlers();
 
   return (
     <div className="container mx-auto px-4 py-8">
