@@ -5,7 +5,7 @@ export interface Course {
   code: string;
   professor: string;
   department: string;
-  num_credits: number;
+  num_credits: string;
 }
 
 export interface Student {

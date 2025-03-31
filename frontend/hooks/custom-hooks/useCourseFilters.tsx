@@ -12,7 +12,7 @@ export function useCourseFilters() {
   const [professorSearch, setProfessorSearch] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedCredits, setSelectedCredits] = useState(0);
+  const [selectedCredits, setSelectedCredits] = useState("");
 
   const uniqueProfessors = useMemo(
     () => [
@@ -58,7 +58,7 @@ export function useCourseFilters() {
             course.professor === selectedProfessor) &&
           (selectedDepartment === "" ||
             course.department === selectedDepartment) &&
-          (selectedCredits === 0 || course.num_credits === selectedCredits)
+          (selectedCredits === "" || course.num_credits === selectedCredits)
         );
       }),
     [

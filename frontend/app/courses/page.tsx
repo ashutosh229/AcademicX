@@ -129,9 +129,9 @@ export default function CoursesPage() {
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Credits:</label>
             <Select
-              value={selectedCredits.toString()}
+              value={selectedCredits}
               onValueChange={(value) =>
-                setSelectedCredits(value === "all" ? 0 : Number(value))
+                setSelectedCredits(value === "all" ? "" : value)
               }
             >
               <SelectTrigger className="w-[150px] border border-gray-300 shadow-sm hover:bg-gray-100">
@@ -142,10 +142,7 @@ export default function CoursesPage() {
                 {uniqueCredits.map(
                   (credits) =>
                     credits && (
-                      <SelectItem
-                        key={credits.toString()}
-                        value={credits.toString()}
-                      >
+                      <SelectItem key={credits} value={credits}>
                         {credits} Credits
                       </SelectItem>
                     )
