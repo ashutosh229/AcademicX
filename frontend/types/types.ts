@@ -121,6 +121,8 @@ export const gradeMapping: Record<string, number> = {
   I: 0
 };
 
+export const backendDomain = "http://localhost:8080"
+
 
 
 
