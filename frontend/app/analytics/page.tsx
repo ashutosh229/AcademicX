@@ -9,14 +9,14 @@ const AnalyticsPage = () => {
 
   const analyticsData = [
     { label: "Activated Users", key: "number_of_users_activated" },
-    { label: "Total Comments", key: "number_of_comments" },
-    { label: "Total Feedbacks", key: "number_of_feedbacks" },
+    { label: "Comments Written", key: "number_of_comments" },
+    { label: "Feedbacks Given", key: "number_of_feedbacks" },
     { label: "Courses Rated", key: "number_of_courses_rated" },
     {
-      label: "Unique Users Gave Feedback",
+      label: "Unique Users Who Gave Feedback",
       key: "number_of_unique_users_gave_feedback",
     },
-    { label: "Total Resources", key: "number_of_resources" },
+    { label: "Resources Posted", key: "number_of_resources" },
     { label: "Total Upvotes", key: "number_of_upvotes" },
     { label: "Total Downvotes", key: "number_of_downvotes" },
   ];

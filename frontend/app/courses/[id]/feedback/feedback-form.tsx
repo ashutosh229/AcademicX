@@ -55,17 +55,6 @@ const FeedbackForm = () => {
     setIsSubmitting(true);
     dispatch(setLoading(true));
     try {
-      console.log(activeCourseId);
-      console.log(contentToughness[0]);
-      console.log(teachingQuality[0]);
-      console.log(workload[0]);
-      console.log(examDifficulty[0]);
-      console.log(gradingStrictness[0]);
-      console.log(resourcesProvided[0]);
-      console.log(recommendation[0]);
-      console.log(gradeObtained);
-      console.log(session?.user.email?.toString());
-
       const response = await fetch(`${backendDomain}/give_course_feedback/`, {
         method: "POST",
         headers: {
@@ -87,14 +76,14 @@ const FeedbackForm = () => {
       if (!response.ok) {
         console.log(response);
         throw new Error("Unable to send the course feedback");
-        toast.error("Unable to send the course feedback");
       }
+      setIsSubmitting(false);
       toast.success("Course Feedback sent successfully");
       dispatch(setLoading(false));
-      setIsSubmitting(false);
       router.push("/courses");
     } catch (error: any) {
       console.log(error);
+      toast.error("Unable to send the course feedback");
       dispatch(setError(error.message));
     }
   };
