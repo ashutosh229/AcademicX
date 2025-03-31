@@ -35,7 +35,7 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
   // 📝 Add Comment
   const addComment = useCallback(
     async (
-      activeCourseId: number,
+      activeCourseId: number | null,
       commentText: string,
       isAnonymous: boolean,
       setIsOpen: (state: boolean) => void

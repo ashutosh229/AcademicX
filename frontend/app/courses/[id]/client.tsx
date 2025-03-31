@@ -23,11 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  formatString,
-  getUserVote,
-  getUserVoteForResources,
-} from "@/lib/utils";
+import useComments from "@/hooks/custom-hooks/useComments";
+import { formatString, getUserVoteForResources } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { CourseDetails } from "@/types/types";
@@ -103,204 +100,8 @@ const CoursePageClient = () => {
     fetchDetails();
   }, [activeCourse]);
 
-  const handleAddComment = async (
-    commentText: string,
-    isAnonymous: boolean
-  ) => {
-    dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/add_comment/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          course: activeCourseId,
-          text: commentText,
-          contributor: session?.user.email?.toString(),
-          is_anonymous: isAnonymous,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to add the comment");
-      }
-      toast.success("Added comment successfully");
-      setIsOpen(false);
-    } catch (error: any) {
-      console.log(error);
-      toast.error("Unable to add comment");
-      dispatch(setError(error.message));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
-  const handleDeleteComment = async (id: number) => {
-    dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/delete_comment/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          comment_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to delete the comment");
-      }
-      toast.success("Deleted the comment successfully");
-      setDeleteDialogOpen(null);
-    } catch (error: any) {
-      console.log(error);
-      toast.error("Unable to delete the comment");
-      dispatch(setError(error.message));
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
-
-  const handleUpdateUpvotesComment = async (id: number) => {
-    dispatch(setLoading(true));
-
-    const performAction = async (
-      url: string,
-      successMessage: string,
-      errorMessage: string
-    ) => {
-      try {
-        const response = await fetch(`${backendDomain}/comments/${url}/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: session?.user.email?.toString(),
-            comment_id: id,
-          }),
-        });
-
-        if (!response.ok) throw new Error(errorMessage);
-
-        toast.success(successMessage);
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.message);
-        dispatch(setError(error.message));
-      }
-    };
-
-    const userVote = getUserVote(courseData?.comments, id);
-
-    switch (userVote) {
-      case 0:
-        await performAction(
-          "upvote",
-          "Upvoted successfully",
-          "Unable to upvote"
-        );
-        break;
-
-      case 1:
-        await performAction(
-          "remove_upvote",
-          "Upvote removed",
-          "Unable to remove the upvote"
-        );
-        break;
-
-      case 2:
-        await performAction(
-          "remove_downvote",
-          "Removed downvote",
-          "Unable to remove the downvote"
-        );
-        await performAction(
-          "upvote",
-          "Upvoted successfully",
-          "Unable to upvote"
-        );
-        break;
-
-      default:
-        console.warn("Unexpected vote state");
-        break;
-    }
-
-    dispatch(setLoading(false));
-  };
-
-  const handleUpdateDownvotesComment = async (id: number) => {
-    dispatch(setLoading(true));
-
-    const performAction = async (
-      url: string,
-      successMessage: string,
-      errorMessage: string
-    ) => {
-      try {
-        const response = await fetch(`${backendDomain}/comments/${url}/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: session?.user.email?.toString(),
-            comment_id: id,
-          }),
-        });
-
-        if (!response.ok) throw new Error(errorMessage);
-
-        toast.success(successMessage);
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.message);
-        dispatch(setError(error.message));
-      }
-    };
-
-    const userVote = getUserVote(courseData?.comments, id);
-
-    switch (userVote) {
-      case 0:
-        await performAction(
-          "downvote",
-          "Downvoted successfully",
-          "Unable to downvote"
-        );
-        break;
-
-      case 2:
-        await performAction(
-          "remove_downvote",
-          "Downvote removed",
-          "Unable to remove the downvote"
-        );
-        break;
-
-      case 1:
-        await performAction(
-          "remove_upvote",
-          "Removed upvote",
-          "Unable to remove the upvote"
-        );
-        await performAction(
-          "downvote",
-          "Downvoted successfully",
-          "Unable to downvote"
-        );
-        break;
-
-      default:
-        console.warn("Unexpected vote state");
-        break;
-    }
-
-    dispatch(setLoading(false));
-  };
+  const { addComment, deleteComment, upvoteComment, downvoteComment } =
+    useComments(backendDomain, session, courseData);
 
   const handleAddResource = async (
     name: string,
@@ -608,7 +409,12 @@ const CoursePageClient = () => {
                     <DialogFooter>
                       <Button
                         onClick={() =>
-                          handleAddComment(commentText, isAnonymous)
+                          addComment(
+                            activeCourseId,
+                            commentText,
+                            isAnonymous,
+                            setIsOpen
+                          )
                         }
                       >
                         Add Comment
@@ -631,14 +437,14 @@ const CoursePageClient = () => {
                     </p>
                     <div className="flex items-center space-x-4">
                       <button
-                        onClick={() => handleUpdateUpvotesComment(comment.id)}
+                        onClick={() => upvoteComment(comment.id)}
                         className="flex items-center text-sm text-gray-600"
                       >
                         <ArrowUpCircle className="h-4 w-4 mr-1" />
                         {comment.upvotes}
                       </button>
                       <button
-                        onClick={() => handleUpdateDownvotesComment(comment.id)}
+                        onClick={() => downvoteComment(comment.id)}
                         className="flex items-center text-sm text-gray-600"
                       >
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
@@ -677,7 +483,9 @@ const CoursePageClient = () => {
                               </Button>
                               <Button
                                 variant="destructive"
-                                onClick={() => handleDeleteComment(comment.id)}
+                                onClick={() =>
+                                  deleteComment(comment.id, setDeleteDialogOpen)
+                                }
                               >
                                 Delete Comment
                               </Button>
