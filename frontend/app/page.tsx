@@ -1,20 +1,11 @@
 "use client";
 
 import { LoginButton } from "@/components/auth/login-button";
+import useAuthenticationRedirection from "@/hooks/custom-hooks/useAuthenticationRedirection";
 import { GraduationCap, Users } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function WelcomePage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/courses");
-    }
-  }, [status, router]);
+  useAuthenticationRedirection();
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50">
