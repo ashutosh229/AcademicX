@@ -36,19 +36,19 @@ urlpatterns = [
     path('comments/upvote/', upvote_comment, name='upvote_comment'), #integrated
     path('comments/downvote/', downvote_comment, name='downvote_comment'),#integrated
     path('comments/remove_upvote/', remove_upvote_comment, name='remove_upvote_comment'), #integrated
-    path('comments/remove_downvote/', remove_downvote_comment, name='remove_downvote_comment'),
+    path('comments/remove_downvote/', remove_downvote_comment, name='remove_downvote_comment'), #integrated
     
     #resources end-points
     path('add_resource/', add_resource, name='add_resource'), #integrated
     path('delete_resource/', delete_resource, name='delete_resource'),#integrated
     path('resources/upvote/', upvote_resource, name='upvote_resource'),#integrated
     path('resources/downvote/', downvote_resource, name='downvote_resource'), #integrated
-    path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),
-    path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),
+    path('resources/remove_upvote/', remove_upvote_resource, name='remove_upvote_resource'),#integrated
+    path('resources/remove_downvote/', remove_downvote_resource, name='remove_downvote_resource'),#integrated
 
     path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),#integrated
     path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
-    path('get_course_details', get_course_details, name='get_course_details'),
+    path('get_course_details', get_course_details, name='get_course_details'),#integrated
     path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),
     path('get_course_comments', get_course_comments, name='get_course_comments'),
     path('get_course_resources', get_course_resources, name='get_course_resources'),
