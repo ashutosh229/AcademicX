@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useComments from "@/hooks/custom-hooks/useComments";
-import { formatString, getUserVoteForResources } from "@/lib/utils";
+import useResources from "@/hooks/custom-hooks/useResources";
+import { formatString } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
 import { CourseDetails } from "@/types/types";
@@ -40,7 +41,6 @@ import {
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
 
 const CoursePageClient = () => {
   const { data: session } = useSession();
@@ -103,204 +103,8 @@ const CoursePageClient = () => {
   const { addComment, deleteComment, upvoteComment, downvoteComment } =
     useComments(backendDomain, session, courseData);
 
-  const handleAddResource = async (
-    name: string,
-    remarks: string,
-    url: string,
-    isAnonymous: boolean
-  ) => {
-    dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/add_resource`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          course: activeCourseId,
-          name: name,
-          remarks: remarks,
-          url: url,
-          contributor: session?.user.email?.toString(),
-          is_anonymous: isAnonymous,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to add the resource");
-        toast.error("Unable to add the resource");
-      }
-      toast.success("Added the resource successfully");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error.message));
-    }
-  };
-
-  const handleUpdateUpvotesResource = async (id: number) => {
-    dispatch(setLoading(true));
-
-    const performAction = async (
-      url: string,
-      successMessage: string,
-      errorMessage: string
-    ) => {
-      try {
-        const response = await fetch(`${backendDomain}/resources/${url}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: session?.user.email?.toString(),
-            resource_id: id,
-          }),
-        });
-
-        if (!response.ok) throw new Error(errorMessage);
-
-        toast.success(successMessage);
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.message);
-        dispatch(setError(error.message));
-      }
-    };
-
-    const userVote = getUserVoteForResources(courseData?.resources, id);
-
-    switch (userVote) {
-      case 0:
-        await performAction(
-          "upvote",
-          "Upvoted successfully",
-          "Unable to upvote the resource"
-        );
-        break;
-
-      case 1:
-        await performAction(
-          "remove_upvote",
-          "Upvote removed",
-          "Unable to remove the upvote"
-        );
-        break;
-
-      case 2:
-        await performAction(
-          "remove_downvote",
-          "Removed downvote",
-          "Unable to remove the downvote"
-        );
-        await performAction(
-          "upvote",
-          "Upvoted successfully",
-          "Unable to upvote the resource"
-        );
-        break;
-
-      default:
-        console.warn("Unexpected vote state");
-        break;
-    }
-
-    dispatch(setLoading(false));
-  };
-
-  const handleUpdateDownvotesResource = async (id: number) => {
-    dispatch(setLoading(true));
-
-    const performAction = async (
-      url: string,
-      successMessage: string,
-      errorMessage: string
-    ) => {
-      try {
-        const response = await fetch(`${backendDomain}/resources/${url}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: session?.user.email?.toString(),
-            resource_id: id,
-          }),
-        });
-
-        if (!response.ok) throw new Error(errorMessage);
-
-        toast.success(successMessage);
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.message);
-        dispatch(setError(error.message));
-      }
-    };
-
-    const userVote = getUserVoteForResources(courseData?.resources, id);
-
-    switch (userVote) {
-      case 0:
-        await performAction(
-          "downvote",
-          "Downvoted successfully",
-          "Unable to downvote the resource"
-        );
-        break;
-
-      case 2:
-        await performAction(
-          "remove_downvote",
-          "Downvote removed",
-          "Unable to remove the downvote"
-        );
-        break;
-
-      case 1:
-        await performAction(
-          "remove_upvote",
-          "Removed upvote",
-          "Unable to remove the upvote"
-        );
-        await performAction(
-          "downvote",
-          "Downvoted successfully",
-          "Unable to downvote the resource"
-        );
-        break;
-
-      default:
-        console.warn("Unexpected vote state");
-        break;
-    }
-
-    dispatch(setLoading(false));
-  };
-
-  const handleDeleteResource = async (id: number) => {
-    dispatch(setLoading(true));
-    try {
-      const response = await fetch(`${backendDomain}/delete_resource`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: session?.user.email?.toString(),
-          resource_id: id,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Unable to delete the resource");
-        toast.error("Unable to delete the resource");
-      }
-      toast.success("Deleted the resource successfully");
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      console.log(error);
-      dispatch(setError(error));
-    }
-  };
+  const { addResource, deleteResource, upvoteResource, downvoteResource } =
+    useResources(backendDomain, session, courseData, activeCourseId);
 
   // Sorting logic
   const sortedComments = useMemo(() => {
@@ -564,7 +368,7 @@ const CoursePageClient = () => {
                   <DialogFooter>
                     <Button
                       onClick={() =>
-                        handleAddResource(
+                        addResource(
                           resourceName,
                           resourceRemarks,
                           resourceUrl,
@@ -606,14 +410,14 @@ const CoursePageClient = () => {
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
                     <button
-                      onClick={() => handleUpdateUpvotesResource(resource.id)}
+                      onClick={() => upvoteResource(resource.id)}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsUp className="h-4 w-4 mr-1" />
                       {resource.upvotes}
                     </button>
                     <button
-                      onClick={() => handleUpdateDownvotesResource(resource.id)}
+                      onClick={() => downvoteResource(resource.id)}
                       className="flex items-center text-sm text-gray-600"
                     >
                       <ThumbsDown className="h-4 w-4 mr-1" />
@@ -658,7 +462,7 @@ const CoursePageClient = () => {
                             </Button>
                             <Button
                               variant="destructive"
-                              onClick={() => handleDeleteResource(resource.id)}
+                              onClick={() => deleteResource(resource.id)}
                             >
                               Delete Comment
                             </Button>

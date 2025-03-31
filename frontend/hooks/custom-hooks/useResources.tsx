@@ -10,7 +10,7 @@ const useResources = (
   backendDomain: string,
   session: any,
   courseData: any,
-  activeCourseId: number
+  activeCourseId: number | null
 ) => {
   const dispatch = useDispatch();
 
