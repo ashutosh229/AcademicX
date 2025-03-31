@@ -33,7 +33,6 @@ export function useEditStudentProfile() {
       if (!response.ok) {
         throw new Error("Unable to update the student's name");
       }
-
       toast.success("Updated the name of the user successfully");
       setSuccess(true);
       router.push("/profile");
