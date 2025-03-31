@@ -48,11 +48,26 @@ export function useCourseHandlers() {
     }
   };
 
-  const handlePostFeedback = (id: number) => {
+  const handlePostFeedback = async (id: number, email: string | undefined) => {
     dispatch(setLoading(true));
     try {
       dispatch(setActiveCourseId(id));
-      router.push(`/courses/${id}/feedback`);
+      const response = await fetch(
+        `${backendDomain}/user_course_feedback/${id}/${email}/`,
+        {
+          method: "GET",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Unable to get the user's feedback");
+      }
+      const data = await response.json();
+      if ("detail" in data) {
+        router.push(`/courses/${id}/feedback`);
+      } else {
+        
+        router.push(`/courses/${id}/feedback/show`);
+      }
     } catch (error: any) {
       dispatch(setError(error.message));
     } finally {

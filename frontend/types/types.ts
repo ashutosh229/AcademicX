@@ -17,11 +17,26 @@ export interface Student {
   degree: string
 }
 
+export interface Feedback {
+  id: number,
+  content_toughness: number,
+  teaching_quality: number,
+  workload: number,
+  exam_difficulty: number,
+  grading_strictness: number,
+  resources_provided: number,
+  recommendation: number,
+  grade_obtained: number,
+  course: number,
+  contributor: string,
+}
+
 export interface StudentState {
   students: Student[],
   loading: boolean,
   error: string | null,
-  activeStudent: Student | null
+  activeStudent: Student | null,
+  courseFeedback: Feedback | null,
 }
 
 export interface Resource {

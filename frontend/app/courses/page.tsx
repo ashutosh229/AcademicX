@@ -186,7 +186,12 @@ export default function CoursesPage() {
                         </Button>
                         {session?.user?.role === "student" && (
                           <Button
-                            onClick={() => handlePostFeedback(course.id)}
+                            onClick={() =>
+                              handlePostFeedback(
+                                course.id,
+                                session.user.email?.toString()
+                              )
+                            }
                             variant="outline"
                             size="sm"
                           >
