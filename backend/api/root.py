@@ -33,10 +33,24 @@ def api_root(request, format=None):
                 "get_all_courses",  request=request, format=format
 
             ),
-            "Get Course Details using course id": reverse(
-                "get_course_details",args=["1"], request=request, format=format
+            "Get Course Details": reverse(
+                "get_course_details", request=request, format=format
 
             ),
+            "Get Course Feedbacks": reverse(
+                "get_course_feedbacks",args=["1808"], request=request, format=format
+
+            ),
+            "Get Course Comments": reverse(
+                "get_course_comments", request=request, format=format
+
+            ),
+            "Get Course Resources": reverse(
+                "get_course_resources", request=request, format=format
+
+            ),
+
+
             "Get All Students": reverse(
                 "get_all_students", request=request, format=format
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, CourseMetrics, Resource, Comment, Student
+from .models import Course, CourseMetrics, Resource, Comment, Student, ResourceVote, CommentVote
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -24,7 +24,7 @@ class StudentAdmin(admin.ModelAdmin):
         """
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("name", "code", "professor", "department", "num_credits")
+    list_display = ("id","name", "code", "professor", "department", "num_credits")
     search_fields = ("name", "code", "professor", "department")
     list_filter = ("department", "num_credits")
     ordering = ("name",)
@@ -48,15 +48,28 @@ class CourseMetricsAdmin(admin.ModelAdmin):
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    list_display = ("name", "course", "contributor","upvotes", "downvotes", "date_added")
-    search_fields = ("name", "course__name", "contributor__email")
+    list_display = ( "resource_id","course","name", "contributor","upvotes", "downvotes", "date_added")
+    search_fields = ("name", "course__name", "contributor__email","resource_id")
     list_filter = ("course", "is_anonymous", "date_added")
-    ordering = ("-date_added",)
+    ordering = ("-date_added","resource_id")
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("course", "text", "contributor", "upvotes", "downvotes", "date_posted")
-    search_fields = ("course__name", "text", "contributor__email")
+    list_display = ("comment_id","course", "text", "contributor", "upvotes", "downvotes", "date_posted")
+    search_fields = ("course__name", "comment_id", "contributor__email")
     list_filter = ("course", "is_anonymous", "date_posted")
-    ordering = ("-date_posted",)
+    ordering = ("-date_posted","comment_id")
+
+
+@admin.register(ResourceVote)
+class ResourceVoteAdmin(admin.ModelAdmin):
+    list_display = ("student", "resource", "vote_type")
+    list_filter = ("vote_type",)
+    search_fields = ("student__email", "resource__pk") # search by primary key
+
+@admin.register(CommentVote)
+class CommentVoteAdmin(admin.ModelAdmin):
+    list_display = ("student", "comment", "vote_type")
+    list_filter = ("vote_type",)
+    search_fields = ("student__email", "comment__pk")
