@@ -180,6 +180,19 @@ export interface CourseFiltersResult {
   filteredCourses: Course[];
 }
 
+// Define analytics data type
+export interface AnalyticsData {
+  [key: string]: number;
+}
+
+// Define return type for the hook
+export interface AnalyticsResult {
+  analytics: AnalyticsData | null;
+  loading: boolean;
+  error: string | null;
+  refreshAnalytics: () => Promise<void>;
+}
+
 
 
 
