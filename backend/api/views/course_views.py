@@ -127,13 +127,14 @@ def get_course_details(request):
             anonymous_value = resource_item.pop("is_anonymous")
             contributor_email = resource_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
-            try:
-                student = Student.objects.get(email=contributor_email)
-                contributor_name = student.name if student.name else contributor_email
-            except Student.DoesNotExist:
-                contributor_name = contributor_email  # Default to email if not found
 
-            resource_item["contributor"] = {"name": contributor_name, "email":contributor_email, "isAnonymous": anonymous_value}
+            student = Student.objects.get(email=contributor_email)
+            contributor_name = student.name if student.name else contributor_email
+
+
+            resource_item["contributor"] = {"name": contributor_name,
+                                            "batch":student.batch,"degree":student.degree,
+                                      "branch":student.branch,"email":contributor_email, "isAnonymous": anonymous_value}
 
         comments= comment_serializer.data.copy()
 
@@ -145,13 +146,14 @@ def get_course_details(request):
             anonymous_value = comment_item.pop("is_anonymous")
             contributor_email = comment_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
-            try:
-                student = Student.objects.get(email=contributor_email)
-                author_name = student.name if student.name else contributor_email
-            except Student.DoesNotExist: # this will never be triggered as Student deletion will have cascade effect
-                author_name = contributor_email  # Default to email if not found
 
-            comment_item["author"] = {"name": author_name, "email":contributor_email, "isAnonymous": anonymous_value}
+            student = Student.objects.get(email=contributor_email)
+            author_name = student.name if student.name else contributor_email
+
+
+            comment_item["author"] = {"name": author_name,
+                                      "batch":student.batch,"degree":student.degree,
+                                      "branch":student.branch,"email":contributor_email, "isAnonymous": anonymous_value}
 
 
 
@@ -193,13 +195,14 @@ def get_course_resources(request):
             anonymous_value = resource_item.pop("is_anonymous")
             contributor_email = resource_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
-            try:
-                student = Student.objects.get(email=contributor_email)
-                contributor_name = student.name if student.name else contributor_email
-            except Student.DoesNotExist:
-                contributor_name = contributor_email  # Default to email if not found
 
-            resource_item["contributor"] = {"name": contributor_name, "email":contributor_email, "isAnonymous": anonymous_value}
+            student = Student.objects.get(email=contributor_email)
+            contributor_name = student.name if student.name else contributor_email
+
+
+            resource_item["contributor"] = {"name": contributor_name,
+                                            "batch":student.batch,"degree":student.degree,
+                                      "branch":student.branch,"email":contributor_email, "isAnonymous": anonymous_value}
 
         return Response({
 
@@ -234,13 +237,13 @@ def get_course_comments(request):
             anonymous_value = comment_item.pop("is_anonymous")
             contributor_email = comment_item.pop("contributor")
             # Fetch student's name if available, otherwise keep the email
-            try:
-                student = Student.objects.get(email=contributor_email)
-                author_name = student.name if student.name else contributor_email
-            except Student.DoesNotExist: # this will never be triggered as Student deletion will have cascade effect
-                author_name = contributor_email  # Default to email if not found
 
-            comment_item["author"] = {"name": author_name, "email":contributor_email, "isAnonymous": anonymous_value}
+            student = Student.objects.get(email=contributor_email)
+            author_name = student.name if student.name else contributor_email
+
+            comment_item["author"] = {"name": author_name,"batch":student.batch,"degree":student.degree,
+                                      "branch":student.branch,
+                                      "email":contributor_email, "isAnonymous": anonymous_value}
 
 
 
