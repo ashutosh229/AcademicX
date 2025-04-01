@@ -1,90 +1,129 @@
 "use client";
 
 import { RootState } from "@/redux/store";
-import { Course } from "@/types/types";
-import { useMemo, useState } from "react";
+import {
+  Course,
+  CourseFiltersResult,
+  CourseMetadata,
+  FilterState,
+} from "@/types/types";
+import { useCallback, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-export function useCourseFilters() {
+export function useCourseFilters(): CourseFiltersResult {
   const { courses } = useSelector((state: RootState) => state.course);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [professorSearch, setProfessorSearch] = useState("");
-  const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedCredits, setSelectedCredits] = useState("");
+  // Group filter states together to reduce re-renders
+  const [filters, setFilters] = useState<FilterState>({
+    searchTerm: "",
+    professorSearch: "",
+    selectedProfessor: "",
+    selectedDepartment: "",
+    selectedCredits: "",
+  });
 
-  const uniqueProfessors = useMemo(
-    () => [
-      ...new Set(
-        courses.map((course: Course) => course.professor).filter(Boolean)
-      ),
-    ],
-    [courses]
+  // Memoize course metadata to prevent recalculation
+  const courseMetadata = useMemo<CourseMetadata>(() => {
+    // Create sets for faster lookups
+    const professors = new Set<string>();
+    const departments = new Set<string>();
+    const credits = new Set<string>();
+
+    courses.forEach((course: Course) => {
+      if (course.professor) professors.add(course.professor);
+      if (course.department) departments.add(course.department);
+      if (course.num_credits) credits.add(course.num_credits);
+    });
+
+    return {
+      uniqueProfessors: Array.from(professors),
+      uniqueDepartments: Array.from(departments),
+      uniqueCredits: Array.from(credits),
+    };
+  }, [courses]);
+
+  // Optimized filter handlers that only update necessary state
+  const updateFilter = useCallback(
+    (filterName: keyof FilterState, value: string) => {
+      setFilters((prev) => ({ ...prev, [filterName]: value }));
+    },
+    []
   );
 
-  const uniqueDepartments = useMemo(
-    () => [
-      ...new Set(
-        courses.map((course: Course) => course.department).filter(Boolean)
-      ),
-    ],
-    [courses]
-  );
-
-  const uniqueCredits = useMemo(
-    () => [
-      ...new Set(
-        courses.map((course: Course) => course.num_credits).filter(Boolean)
-      ),
-    ],
-    [courses]
-  );
-
-  const filteredCourses = useMemo(
-    () =>
-      courses.filter((course: Course) => {
-        return (
-          (course.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase().trim()) ||
-            course.code
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase().trim())) &&
-          course.professor
-            .toLowerCase()
-            .includes(professorSearch.toLowerCase().trim()) &&
-          (selectedProfessor === "" ||
-            course.professor === selectedProfessor) &&
-          (selectedDepartment === "" ||
-            course.department === selectedDepartment) &&
-          (selectedCredits === "" || course.num_credits === selectedCredits)
-        );
-      }),
-    [
-      courses,
+  // Memoized filtered courses with optimized filtering logic
+  const filteredCourses = useMemo<Course[]>(() => {
+    const {
       searchTerm,
       professorSearch,
       selectedProfessor,
       selectedDepartment,
       selectedCredits,
-    ]
-  );
+    } = filters;
+
+    // Create lowercase trimmed versions once to avoid repetition
+    const searchTermLower = searchTerm.toLowerCase().trim();
+    const professorSearchLower = professorSearch.toLowerCase().trim();
+
+    // Return early if no filters are applied
+    if (
+      !searchTermLower &&
+      !professorSearchLower &&
+      !selectedProfessor &&
+      !selectedDepartment &&
+      !selectedCredits
+    ) {
+      return courses;
+    }
+
+    return courses.filter((course: Course) => {
+      // First check the most restrictive filters
+      if (selectedProfessor && course.professor !== selectedProfessor)
+        return false;
+      if (selectedDepartment && course.department !== selectedDepartment)
+        return false;
+      if (selectedCredits && course.num_credits !== selectedCredits)
+        return false;
+
+      // Then check text-based filters
+      if (
+        searchTermLower &&
+        !(
+          course.name.toLowerCase().includes(searchTermLower) ||
+          course.code.toLowerCase().includes(searchTermLower)
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        professorSearchLower &&
+        !course.professor.toLowerCase().includes(professorSearchLower)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [courses, filters]);
 
   return {
-    searchTerm,
-    setSearchTerm,
-    professorSearch,
-    setProfessorSearch,
-    selectedProfessor,
-    setSelectedProfessor,
-    selectedDepartment,
-    setSelectedDepartment,
-    selectedCredits,
-    setSelectedCredits,
-    uniqueProfessors,
-    uniqueDepartments,
-    uniqueCredits,
+    searchTerm: filters.searchTerm,
+    setSearchTerm: (value: string) => updateFilter("searchTerm", value),
+    professorSearch: filters.professorSearch,
+    setProfessorSearch: (value: string) =>
+      updateFilter("professorSearch", value),
+    selectedProfessor: filters.selectedProfessor,
+    setSelectedProfessor: (value: string) =>
+      updateFilter("selectedProfessor", value),
+    selectedDepartment: filters.selectedDepartment,
+    setSelectedDepartment: (value: string) =>
+      updateFilter("selectedDepartment", value),
+    selectedCredits: filters.selectedCredits,
+    setSelectedCredits: (value: string) =>
+      updateFilter("selectedCredits", value),
+    uniqueProfessors: courseMetadata.uniqueProfessors,
+    uniqueDepartments: courseMetadata.uniqueDepartments,
+    uniqueCredits: courseMetadata.uniqueCredits,
     filteredCourses,
   };
 }

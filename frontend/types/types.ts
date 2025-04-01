@@ -146,6 +146,40 @@ export const gradeMapping: Record<string, number> = {
 
 export const backendDomain = "http://localhost:8080"
 
+// Define types for filter state
+export interface FilterState {
+  searchTerm: string;
+  professorSearch: string;
+  selectedProfessor: string;
+  selectedDepartment: string;
+  selectedCredits: string;
+}
+
+// Define types for course metadata
+export interface CourseMetadata {
+  uniqueProfessors: string[];
+  uniqueDepartments: string[];
+  uniqueCredits: string[];
+}
+
+// Define return type for the hook
+export interface CourseFiltersResult {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  professorSearch: string;
+  setProfessorSearch: (value: string) => void;
+  selectedProfessor: string;
+  setSelectedProfessor: (value: string) => void;
+  selectedDepartment: string;
+  setSelectedDepartment: (value: string) => void;
+  selectedCredits: string;
+  setSelectedCredits: (value: string) => void;
+  uniqueProfessors: string[];
+  uniqueDepartments: string[];
+  uniqueCredits: string[];
+  filteredCourses: Course[];
+}
+
 
 
 
