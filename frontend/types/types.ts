@@ -51,7 +51,10 @@ export interface Resource {
   contributor: {
     name: string;
     isAnonymous: boolean;
-    email: string
+    email: string;
+    batch: string;
+    degree: string;
+    branch: string;
   };
 }
 
@@ -65,7 +68,10 @@ export interface Comment {
   author: {
     name: string;
     isAnonymous: boolean;
-    email: string
+    email: string;
+    batch: string;
+    degree: string;
+    branch: string;
   };
 }
 

@@ -628,7 +628,13 @@ const CoursePageClient = () => {
                     <p className="text-sm font-medium">
                       {comment.author.isAnonymous
                         ? "Anonymous"
-                        : comment.author.name}
+                        : comment.author.name +
+                          ", " +
+                          comment.author.degree +
+                          " " +
+                          comment.author.batch +
+                          ", " +
+                          comment.author.branch}
                     </p>
                     <div className="flex items-center space-x-4">
                       <button
