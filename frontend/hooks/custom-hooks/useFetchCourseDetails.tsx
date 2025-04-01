@@ -20,7 +20,7 @@ const useFetchCourseDetails = (
     dispatch(setLoading(true));
 
     try {
-      const response = await fetch(`${backendDomain}/get_course_details`, {
+      const response = await fetch(`${backendDomain}/get_course_details/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
