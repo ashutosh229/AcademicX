@@ -169,7 +169,6 @@ def get_course_details(request):
 
 @api_view(['POST'])
 def get_course_resources(request):
-
     id = request.data.get("course_id")
     user_email = request.data.get("user_email")
     if not id or not user_email:
