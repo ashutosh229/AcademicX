@@ -48,7 +48,7 @@ class CourseMetricsAdmin(admin.ModelAdmin):
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    list_display = ( "resource_id","course","name", "contributor","upvotes", "downvotes", "date_added")
+    list_display = ( "resource_id","course","name", "contributor","upvotes", "downvotes","is_anonymous", "date_added")
     search_fields = ("name", "course__name", "contributor__email","resource_id")
     list_filter = ("course", "is_anonymous", "date_added")
     ordering = ("-date_added","resource_id")
@@ -56,8 +56,8 @@ class ResourceAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("comment_id","course", "text", "contributor", "upvotes", "downvotes", "date_posted")
-    search_fields = ("course__name", "comment_id", "contributor__email")
+    list_display = ("comment_id","course", "text", "contributor", "upvotes", "downvotes","is_anonymous", "date_posted")
+    search_fields = ("course__name", "comment_id", "contributor__email","text")
     list_filter = ("course", "is_anonymous", "date_posted")
     ordering = ("-date_posted","comment_id")
 
