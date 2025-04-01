@@ -9,12 +9,13 @@ import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { toast } from "sonner";
+import { useToast } from "../use-toast";
 
 export function useFetchStudentProfile() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const prevEmailRef = useRef(null);
+  const { toast } = useToast();
 
   const fetchStudents = useCallback(
     async (email: any) => {
@@ -45,17 +46,26 @@ export function useFetchStudentProfile() {
         dispatch(setActiveStudent(data));
         // Only show success toast on initial load, not on refreshes
         if (!prevEmailRef.current) {
-          toast.success("Students fetched successfully");
+          toast({
+            title: "Success",
+            description: "Students fetched successfully",
+          });
         }
       } catch (error: any) {
         if (error.name === "AbortError") {
           console.error("Request timeout");
           dispatch(setError("Request timed out"));
-          toast.error("Request timed out");
+          toast({
+            title: "Error",
+            description: "Request timed out",
+          });
         } else {
           console.error("Fetch error:", error);
           dispatch(setError(error.message || "Failed to fetch student data"));
-          toast.error(error.message || "Failed to fetch student data");
+          toast({
+            title: "Error",
+            description: error.message || "Failed to fetch student data",
+          });
         }
       } finally {
         dispatch(setLoading(false));
