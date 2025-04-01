@@ -7,24 +7,35 @@ import {
 } from "@/redux/slices/studentSlice";
 import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 export function useFetchStudentProfile() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
+  const prevEmailRef = useRef(null);
 
-  useEffect(() => {
-    if (!session?.user?.email) return;
+  const fetchStudents = useCallback(
+    async (email: any) => {
+      if (!email) return;
 
-    const fetchStudents = async () => {
+      // Skip if email hasn't changed
+      if (prevEmailRef.current === email) return;
+      prevEmailRef.current = email;
+
       dispatch(setLoading(true));
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
         const response = await fetch(
-          `${backendDomain}/get_student_profile/${session.user.email}/`
+          `${backendDomain}/get_student_profile/${email}/`,
+          { signal: controller.signal }
         );
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error("Unable to fetch the students");
@@ -32,16 +43,28 @@ export function useFetchStudentProfile() {
 
         const data = await response.json();
         dispatch(setActiveStudent(data));
-        toast.success("Students fetched successfully");
+        // Only show success toast on initial load, not on refreshes
+        if (!prevEmailRef.current) {
+          toast.success("Students fetched successfully");
+        }
       } catch (error: any) {
-        console.error("Fetch error:", error);
-        dispatch(setError(error.message));
-        toast.error(error.message);
+        if (error.name === "AbortError") {
+          console.error("Request timeout");
+          dispatch(setError("Request timed out"));
+          toast.error("Request timed out");
+        } else {
+          console.error("Fetch error:", error);
+          dispatch(setError(error.message || "Failed to fetch student data"));
+          toast.error(error.message || "Failed to fetch student data");
+        }
       } finally {
-        dispatch(setLoading(false)); // Ensure loading is set to false
+        dispatch(setLoading(false));
       }
-    };
+    },
+    [dispatch]
+  );
 
-    fetchStudents();
-  }, [session?.user?.email, dispatch]);
+  useEffect(() => {
+    fetchStudents(session?.user?.email);
+  }, [session?.user?.email, fetchStudents]);
 }
