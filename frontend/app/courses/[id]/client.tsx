@@ -639,14 +639,22 @@ const CoursePageClient = () => {
                     <div className="flex items-center space-x-4">
                       <button
                         onClick={() => handleUpdateUpvotesComment(comment.id)}
-                        className="flex items-center text-sm text-gray-600"
+                        className={`flex items-center text-sm transition-colors duration-200 ${
+                          comment.user_vote === 1
+                            ? "text-green-500"
+                            : "text-gray-600"
+                        }`}
                       >
                         <ArrowUpCircle className="h-4 w-4 mr-1" />
                         {comment.upvotes}
                       </button>
                       <button
                         onClick={() => handleUpdateDownvotesComment(comment.id)}
-                        className="flex items-center text-sm text-gray-600"
+                        className={`flex items-center text-sm transition-colors duration-200 ${
+                          comment.user_vote === 2
+                            ? "text-red-500"
+                            : "text-gray-600"
+                        }`}
                       >
                         <ArrowDownCircle className="h-4 w-4 mr-1" />
                         {comment.downvotes}
@@ -799,21 +807,35 @@ const CoursePageClient = () => {
                         {resource.remarks} • By{" "}
                         {resource.contributor.isAnonymous
                           ? "Anonymous"
-                          : resource.contributor.name}
+                          : resource.contributor.name +
+                            ", " +
+                            resource.contributor.degree +
+                            " " +
+                            resource.contributor.batch +
+                            ", " +
+                            resource.contributor.branch}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4 mt-2">
                     <button
                       onClick={() => handleUpdateUpvotesResource(resource.id)}
-                      className="flex items-center text-sm text-gray-600"
+                      className={`flex items-center text-sm transition-colors duration-200 ${
+                        resource.user_vote === 1
+                          ? "text-green-500"
+                          : "text-gray-600"
+                      }`}
                     >
                       <ThumbsUp className="h-4 w-4 mr-1" />
                       {resource.upvotes}
                     </button>
                     <button
                       onClick={() => handleUpdateDownvotesResource(resource.id)}
-                      className="flex items-center text-sm text-gray-600"
+                      className={`flex items-center text-sm transition-colors duration-200 ${
+                        resource.user_vote === 2
+                          ? "text-red-500"
+                          : "text-gray-600"
+                      }`}
                     >
                       <ThumbsDown className="h-4 w-4 mr-1" />
                       {resource.downvotes}
