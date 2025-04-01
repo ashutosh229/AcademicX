@@ -4,13 +4,14 @@ import { getUserVote } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { toast } from "sonner";
+import { useToast } from "../use-toast";
 
 const useComments = (backendDomain: string, session: any, courseData: any) => {
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const apiCall = useCallback(
-    async (url: string, body: object, errorMessage: string) => {
+    async (url: string, body: object, errorMessage: string, toast: any) => {
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -51,10 +52,14 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
             contributor: session?.user.email?.toString(),
             is_anonymous: isAnonymous,
           },
-          "Unable to add comment"
+          "Unable to add comment",
+          toast
         );
 
-        toast.success("Added comment successfully");
+        toast({
+          title: "Success",
+          description: "Comment added successfully",
+        });
         setIsOpen(false);
       } catch (error: any) {
         dispatch(setError(error.message));
@@ -71,19 +76,31 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
       dispatch(setLoading(true));
 
       try {
-        await apiCall(
+        console.log(`Attempting to delete comment with ID: ${id}`);
+        const response = await apiCall(
           `${backendDomain}/delete_comment/`,
           {
             email: session?.user.email?.toString(),
             comment_id: id,
           },
-          "Unable to delete the comment"
+          "Unable to delete the comment",
+          toast
         );
 
-        toast.success("Deleted the comment successfully");
-        setDeleteDialogOpen(null);
+        console.log("Delete response:", response);
+
+        toast({
+          title: "Success",
+          description: "Deleted the comment successfully",
+        });
+        setDeleteDialogOpen(null); // Close the dialog after successful deletion
       } catch (error: any) {
+        console.error("Error while deleting the comment:", error);
         dispatch(setError(error.message));
+        toast({
+          title: "Error",
+          description: "Unable to delete the comment",
+        });
       } finally {
         dispatch(setLoading(false));
       }
@@ -108,10 +125,14 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
               email: session?.user.email?.toString(),
               comment_id: id,
             },
-            errorMessage
+            errorMessage,
+            toast
           );
 
-          toast.success(successMessage);
+          toast({
+            title: "Success",
+            description: successMessage,
+          });
         } catch (error: any) {
           dispatch(setError(error.message));
         }

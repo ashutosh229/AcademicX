@@ -22,3 +22,5 @@ export function getUserVoteForResources(resources: Resource[] | undefined, resou
   return resource ? resource.user_vote : null;
 }
 
+
+
