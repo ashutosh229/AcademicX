@@ -30,12 +30,15 @@ export function Header() {
             <Link href="/" className="text-sm font-medium hover:text-primary">
               Home
             </Link>
-            <Link
-              href={isAuthenticated ? "/courses" : "/"}
-              className="text-sm font-medium hover:text-primary"
-            >
-              Courses
-            </Link>
+            {isAuthenticated && (
+              <Link
+                // href={isAuthenticated ? "/courses" : "/"}
+                href={"/courses"}
+                className="text-sm font-medium hover:text-primary"
+              >
+                Courses
+              </Link>
+            )}
             <Link
               href={"/analytics"}
               className="text-sm font-medium hover:text-primary"
