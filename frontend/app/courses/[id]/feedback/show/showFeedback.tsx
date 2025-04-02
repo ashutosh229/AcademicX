@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { getCourseNameFromId } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
@@ -13,7 +14,9 @@ import { useSelector } from "react-redux";
 const ShowFeedback = () => {
   const { data: session } = useSession();
   const { courseFeedback } = useSelector((state: RootState) => state.student);
-  const { activeCourseId } = useSelector((state: RootState) => state.course);
+  const { activeCourseId, courses } = useSelector(
+    (state: RootState) => state.course
+  );
   const { toast } = useToast();
   const router = useRouter();
 
@@ -44,7 +47,7 @@ const ShowFeedback = () => {
         <CardHeader>
           <CardTitle>Course Feedback</CardTitle>
           <p className="text-sm text-gray-500">
-            Course ID: {courseFeedback?.course}
+            Course ID: {getCourseNameFromId(courses, courseFeedback?.course)}
           </p>
           <p className="text-sm text-gray-500">
             Contributor: {courseFeedback?.contributor}
