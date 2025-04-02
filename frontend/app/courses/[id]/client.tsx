@@ -58,7 +58,7 @@ const CoursePageClient = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<number | null>(null);
   const [sortOption, setSortOption] = useState<"By Date" | "By Upvotes">(
-    "By Date"
+    "By Upvotes"
   );
 
   //resources states
@@ -69,6 +69,9 @@ const CoursePageClient = () => {
   const [isAnonymousForResources, setIsAnonymousForResources] = useState(false);
   const [deleteDialogOpenForResource, setDeleteDialogOpenForResource] =
     useState<number | null>(null);
+  const [sortOptionForResources, setSortOptionForResources] = useState<
+    "By Date" | "By Upvotes"
+  >("By Upvotes");
 
   // Performance improvement: Only filter once as a memoized value
   const activeCourse = useMemo(() => {
@@ -612,6 +615,20 @@ const CoursePageClient = () => {
     });
   }, [courseData?.comments, sortOption]);
 
+  const sortedResources = useMemo(() => {
+    if (!courseData?.resources) return [];
+    return [...courseData.resources].sort((a, b) => {
+      if (sortOptionForResources === "By Date") {
+        return (
+          new Date(b.date_added).getTime() - new Date(a.date_added).getTime()
+        );
+      } else if (sortOptionForResources === "By Upvotes") {
+        return b.upvotes - a.upvotes;
+      }
+      return 0;
+    });
+  }, [courseData?.resources, sortOptionForResources]);
+
   // Performance improvement: Memoize metrics rendering
   const renderMetrics = useMemo(() => {
     if (!courseData?.metrics) return null;
@@ -739,6 +756,9 @@ const CoursePageClient = () => {
                 ? "Anonymous"
                 : `${resource.contributor.name}, ${resource.contributor.degree} ${resource.contributor.batch}, ${resource.contributor.branch}`}
             </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Posted on {new Date(resource.date_added).toLocaleDateString()}
+            </p>
           </div>
         </div>
         <div className="flex items-center space-x-4 mt-2">
@@ -815,25 +835,25 @@ const CoursePageClient = () => {
   );
 
   // Performance improvement: Add loading state visual feedback
-  if (!courseData && loading) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        Loading course data...
-      </div>
-    );
-  }
+  // if (!courseData && loading) {
+  //   return (
+  //     <div className="container mx-auto px-4 py-8 text-center">
+  //       Loading course data...
+  //     </div>
+  //   );
+  // }
 
   // Performance improvement: Add error state
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <p className="text-red-500">Error: {error}</p>
-        <Button onClick={fetchDetails} className="mt-4">
-          Retry
-        </Button>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="container mx-auto px-4 py-8 text-center">
+  //       <p className="text-red-500">Error: {error}</p>
+  //       <Button onClick={fetchDetails} className="mt-4">
+  //         Retry
+  //       </Button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -944,49 +964,82 @@ const CoursePageClient = () => {
 
         {/* Resources Section */}
         <div className="lg:col-span-1">
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Resources</h2>
+          <Card className="p-6 overflow-hidden">
+            {/* Section Heading */}
+            <h2 className="text-2xl font-semibold mb-4">Resources</h2>
 
+            {/* Sort & Add Resource Controls */}
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+              {/* Sorting Dropdown */}
+              <Select
+                onValueChange={(value) =>
+                  setSortOptionForResources(value as "By Date" | "By Upvotes")
+                }
+              >
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="By Date">By Date</SelectItem>
+                  <SelectItem value="By Upvotes">By Upvotes</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Add Resource Button & Dialog */}
               <Dialog
                 open={isOpenForResources}
                 onOpenChange={setIsOpenForResources}
               >
                 <DialogTrigger asChild>
-                  <Button onClick={() => setIsOpenForResources(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
+                  <Button
+                    onClick={() => setIsOpenForResources(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
                     Add Resource
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-lg w-full mx-auto p-6">
                   <DialogHeader>
-                    <DialogTitle>Add a Resource</DialogTitle>
+                    <DialogTitle className="text-xl font-medium">
+                      Add a Resource
+                    </DialogTitle>
                   </DialogHeader>
+
                   <div className="space-y-4">
-                    <Label>Resource Name</Label>
-                    <Input
-                      type="text"
-                      placeholder="Enter resource name..."
-                      value={resourceName}
-                      onChange={(e) => setResourceName(e.target.value)}
-                    />
+                    <div>
+                      <Label>Resource Name</Label>
+                      <Input
+                        type="text"
+                        placeholder="Enter resource name..."
+                        value={resourceName}
+                        onChange={(e) => setResourceName(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
 
-                    <Label>Remarks</Label>
-                    <Textarea
-                      placeholder="Add remarks about this resource..."
-                      value={resourceRemarks}
-                      onChange={(e) => setResourceRemarks(e.target.value)}
-                    />
+                    <div>
+                      <Label>Remarks</Label>
+                      <Textarea
+                        placeholder="Add remarks about this resource..."
+                        value={resourceRemarks}
+                        onChange={(e) => setResourceRemarks(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
 
-                    <Label>Resource URL</Label>
-                    <Input
-                      type="url"
-                      placeholder="Enter URL..."
-                      value={resourceUrl}
-                      onChange={(e) => setResourceUrl(e.target.value)}
-                    />
+                    <div>
+                      <Label>Resource URL</Label>
+                      <Input
+                        type="url"
+                        placeholder="Enter URL..."
+                        value={resourceUrl}
+                        onChange={(e) => setResourceUrl(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 mt-2">
                       <Checkbox
                         id="anonymous"
                         checked={isAnonymousForResources}
@@ -997,7 +1050,8 @@ const CoursePageClient = () => {
                       <Label htmlFor="anonymous">Contribute Anonymously</Label>
                     </div>
                   </div>
-                  <DialogFooter>
+
+                  <DialogFooter className="mt-4">
                     <Button
                       onClick={() =>
                         handleAddResource(
@@ -1015,17 +1069,15 @@ const CoursePageClient = () => {
               </Dialog>
             </div>
 
+            {/* Resources List */}
             <div className="space-y-4">
-              {courseData?.resources.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
+              {sortedResources.length === 0 ? (
+                <p className="text-gray-500 text-center py-6">
                   No resources yet. Be the first to add one!
                 </p>
               ) : (
-                courseData?.resources.map((resource) => (
-                  <ResourceItem
-                    key={resource.id}
-                    resource={resource}
-                  ></ResourceItem>
+                sortedResources.map((resource) => (
+                  <ResourceItem key={resource.id} resource={resource} />
                 ))
               )}
             </div>

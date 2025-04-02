@@ -46,7 +46,7 @@ export interface Resource {
   url: string;
   upvotes: number;
   downvotes: number;
-  dateAdded: string;
+  date_added: string;
   user_vote: number;
   contributor: {
     name: string;
