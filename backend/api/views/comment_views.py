@@ -10,7 +10,7 @@ def add_comment(request):
     serializer = AddCommentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"message": "Data inserted successfully"}, status=201)
+        return Response({"message": "comment added"}, status=201)
     return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
@@ -25,7 +25,7 @@ def delete_comment(request):
     comment = get_object_or_404(Comment, comment_id=comment_id, contributor=student)
 
     comment.delete()
-    return Response({"message": "Comment deleted successfully."}, status=status.HTTP_200_OK)
+    return Response({"message": "comment deleted"}, status=status.HTTP_200_OK)
 @api_view(['POST'])
 def upvote_comment(request):
     email = request.data.get('email')
