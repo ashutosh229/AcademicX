@@ -163,7 +163,7 @@ const CoursePageClient = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: session.user.email.toString(),
+            email: session?.user.email?.toString(),
             comment_id: id,
           }),
         });
@@ -180,7 +180,7 @@ const CoursePageClient = () => {
             ),
           });
         }
-        fetchDetails(); // Optional: Refetch to ensure data consistency
+        // fetchDetails(); // Optional: Refetch to ensure data consistency
       } catch (error: any) {
         console.log(error);
         dispatch(setError(error.message));
@@ -678,15 +678,17 @@ const CoursePageClient = () => {
             </button>
 
             {/* Delete Comment Dialog */}
-            {session?.user.email === comment.author.email && (
+            {session?.user.email?.toString() === comment.author.email && (
               <Dialog
                 open={deleteDialogOpen === comment.id}
-                onOpenChange={() => setDeleteDialogOpen(null)}
+                onOpenChange={(isOpen) =>
+                  setDeleteDialogOpen(isOpen ? comment.id : null)
+                }
               >
                 <DialogTrigger asChild>
                   <Button
                     variant="destructive"
-                    onClick={() => setDeleteDialogOpen(comment.id)}
+                    // onClick={() => setDeleteDialogOpen(comment.id)}
                   >
                     <Trash className="h-4 w-4 mr-1" />
                     Delete
@@ -833,27 +835,6 @@ const CoursePageClient = () => {
       setDeleteDialogOpenForResource,
     ]
   );
-
-  // Performance improvement: Add loading state visual feedback
-  // if (!courseData && loading) {
-  //   return (
-  //     <div className="container mx-auto px-4 py-8 text-center">
-  //       Loading course data...
-  //     </div>
-  //   );
-  // }
-
-  // Performance improvement: Add error state
-  // if (error) {
-  //   return (
-  //     <div className="container mx-auto px-4 py-8 text-center">
-  //       <p className="text-red-500">Error: {error}</p>
-  //       <Button onClick={fetchDetails} className="mt-4">
-  //         Retry
-  //       </Button>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="container mx-auto px-4 py-8">
