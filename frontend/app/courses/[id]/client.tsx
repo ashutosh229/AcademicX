@@ -562,7 +562,7 @@ const CoursePageClient = () => {
 
       dispatch(setLoading(true));
       try {
-        const response = await fetch(`${backendDomain}/delete_resource`, {
+        const response = await fetch(`${backendDomain}/delete_resource/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -588,7 +588,7 @@ const CoursePageClient = () => {
           });
         }
 
-        fetchDetails(); // Optional: Refetch to ensure data consistency
+        // fetchDetails(); // Optional: Refetch to ensure data consistency
       } catch (error: any) {
         console.log(error);
         dispatch(setError(error.message));
@@ -787,12 +787,16 @@ const CoursePageClient = () => {
           {session?.user.email === resource.contributor.email && (
             <Dialog
               open={deleteDialogOpenForResource === resource.id}
-              onOpenChange={() => setDeleteDialogOpenForResource(null)}
+              onOpenChange={(isOpenForResources) =>
+                setDeleteDialogOpenForResource(
+                  isOpenForResources ? resource.id : null
+                )
+              }
             >
               <DialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  onClick={() => setDeleteDialogOpenForResource(resource.id)}
+                  // onClick={() => setDeleteDialogOpenForResource(resource.id)}
                 >
                   <Trash className="h-4 w-4 mr-1" />
                   Delete
