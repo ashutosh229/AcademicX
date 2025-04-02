@@ -47,7 +47,7 @@ const ShowFeedback = () => {
         <CardHeader>
           <CardTitle>Course Feedback</CardTitle>
           <p className="text-sm text-gray-500">
-            Course ID: {getCourseNameFromId(courses, courseFeedback?.course)}
+            Course Name: {getCourseNameFromId(courses, courseFeedback?.course)}
           </p>
           <p className="text-sm text-gray-500">
             Contributor: {courseFeedback?.contributor}
