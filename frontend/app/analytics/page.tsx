@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAnalytics } from "@/hooks/custom-hooks/useAnalytics";
 
 const AnalyticsPage = () => {
-  const { analytics, loading, error } = useAnalytics();
+  const { analytics, loading, error, refreshAnalytics } = useAnalytics();
 
   const analyticsData = [
     { label: "Activated Users", key: "number_of_users_activated" },
