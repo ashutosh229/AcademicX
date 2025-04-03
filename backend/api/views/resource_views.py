@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from api.models import ResourceVote,Resource, Student
-from api.serializers import AddResourceSerializer
+from api.serializers import AddResourceSerializer,ResourceSerializer
 
 
 
@@ -12,8 +12,24 @@ def add_resource(request):
 
     serializer = AddResourceSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
+        resource = serializer.save()  # Save and get instance
+        resource_item = ResourceSerializer(resource).data  # Get serialized data as a dict
+        del resource_item["course"]  # remove without return
+        resource_item["id"] = resource_item.pop("resource_id")
+        resource_item["user_vote"] = 0 # default
+        anonymous_value = resource_item.pop("is_anonymous")
+        contributor_email = resource_item.pop("contributor")
+        # Fetch student's name if available, otherwise keep the email
+
+        student = Student.objects.get(email=contributor_email)
+        contributor_name = student.name if student.name else contributor_email
+
+        resource_item["contributor"] = {"name": contributor_name,
+                                        "batch": student.batch, "degree": student.degree,
+                                        "branch": student.branch, "email": contributor_email,
+                                        "isAnonymous": anonymous_value}
+
+        return Response(resource_item, status=201)
     return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
