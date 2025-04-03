@@ -121,6 +121,28 @@ const CoursePageClient = () => {
         return; // Validation
 
       dispatch(setLoading(true));
+
+      const tempComment: Comment = {
+        id: -1, // Temporary ID
+        text: commentText,
+        upvotes: 0,
+        downvotes: 0,
+        date_posted: new Date().toISOString(),
+        user_vote: 0,
+        author: {
+          name: session.user.name || "Anonymous",
+          batch: "N/A",
+          degree: "N/A",
+          branch: "N/A",
+          email: session.user.email,
+          isAnonymous,
+        },
+      };
+
+      setCourseData((prev) => {
+        if (!prev) return prev;
+        return { ...prev, comments: [tempComment, ...prev.comments] };
+      });
       try {
         const response = await fetch(`${backendDomain}/add_comment/`, {
           method: "POST",
@@ -138,15 +160,48 @@ const CoursePageClient = () => {
           throw new Error("Unable to add the comment");
         }
         const data = await response.json();
+        const newComment: Comment = {
+          text: data.text,
+          upvotes: data.upvotes,
+          downvotes: data.downvotes,
+          date_posted: data.date_posted,
+          id: data.id,
+          user_vote: data.user_vote,
+          author: {
+            name: data.author.name,
+            batch: data.author.batch,
+            degree: data.author.degree,
+            branch: data.author.branch,
+            email: data.author.email,
+            isAnonymous: data.author.isAnonymous,
+          },
+        };
+        // Replace temporary comment with actual comment
+        setCourseData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            comments: prev.comments.map((c) => (c.id === -1 ? newComment : c)), // Replace temp comment
+          };
+        });
         // Close dialog and reset form
-        setIsOpen(false);
-        setCommentText(""); // Reset form field after submission
-        fetchDetails(); // Refresh data
+        // Reset form field after submission
+        // fetchDetails(); // Refresh data
       } catch (error: any) {
         console.log(error);
         dispatch(setError(error.message));
+        // Revert UI if API call fails
+        setCourseData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            comments: prev.comments.filter((c) => c.id !== -1), // Remove temp comment
+          };
+        });
       } finally {
         dispatch(setLoading(false));
+        setIsOpen(false);
+        setCommentText("");
       }
     },
     [activeCourseId, session?.user.email, dispatch, fetchDetails]
@@ -367,6 +422,32 @@ const CoursePageClient = () => {
         return;
 
       dispatch(setLoading(true));
+
+      const tempResource: Resource = {
+        id: -1, // Temporary ID
+        name,
+        remarks,
+        url,
+        upvotes: 0,
+        downvotes: 0,
+        date_added: new Date().toISOString(),
+        user_vote: 0,
+        contributor: {
+          name: "Anonymous",
+          batch: "N/A",
+          degree: "N/A",
+          branch: "N/A",
+          email: session.user.email.toString(),
+          isAnonymous,
+        },
+      };
+
+      // Optimistically update UI
+      setCourseData((prev) => {
+        if (!prev) return prev;
+        return { ...prev, resources: [tempResource, ...prev.resources] };
+      });
+
       try {
         const response = await fetch(`${backendDomain}/add_resource/`, {
           method: "POST",
@@ -385,19 +466,53 @@ const CoursePageClient = () => {
         if (!response.ok) {
           throw new Error("Unable to add the resource");
         }
+        const data = await response.json();
+        const newResource: Resource = {
+          id: data.id,
+          name: data.name,
+          remarks: data.remarks,
+          url: data.url,
+          upvotes: data.upvotes,
+          downvotes: data.downvotes,
+          date_added: data.date_added,
+          user_vote: data.user_vote,
+          contributor: {
+            name: data.contributor.name,
+            batch: data.contributor.batch,
+            degree: data.contributor.degree,
+            branch: data.contributor.branch,
+            email: data.contributor.email,
+            isAnonymous: data.contributor.isAnonymous,
+          },
+        };
 
+        setCourseData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            resources: prev.resources.map((r) =>
+              r.id === -1 ? newResource : r
+            ),
+          };
+        });
         // Reset form and close dialog
+      } catch (error: any) {
+        console.log(error);
+        dispatch(setError(error.message));
+        // Revert UI if API call fails
+        setCourseData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            resources: prev.resources.filter((r) => r.id !== -1), // Remove temp resource
+          };
+        });
+      } finally {
+        dispatch(setLoading(false));
         setResourceName("");
         setResourceRemarks("");
         setResourceUrl("");
         setIsOpenForResources(false);
-
-        fetchDetails(); // Refresh data
-      } catch (error: any) {
-        console.log(error);
-        dispatch(setError(error.message));
-      } finally {
-        dispatch(setLoading(false));
       }
     },
     [activeCourseId, session?.user.email, dispatch, fetchDetails]

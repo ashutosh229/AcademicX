@@ -8,37 +8,6 @@ export interface Course {
   num_credits: string;
 }
 
-export interface Student {
-  email: string;
-  name: string;
-  branch: string;
-  batch: string;
-  activated: boolean;
-  degree: string
-}
-
-export interface Feedback {
-  id: number,
-  content_toughness: number,
-  teaching_quality: number,
-  workload: number,
-  exam_difficulty: number,
-  grading_strictness: number,
-  resources_provided: number,
-  recommendation: number,
-  grade_obtained: number,
-  course: number,
-  contributor: string,
-}
-
-export interface StudentState {
-  students: Student[],
-  loading: boolean,
-  error: string | null,
-  activeStudent: Student | null,
-  courseFeedback: Feedback | null,
-}
-
 export interface Resource {
   id: number
   name: string;
@@ -191,6 +160,37 @@ export interface AnalyticsResult {
   loading: boolean;
   error: string | null;
   refreshAnalytics: () => Promise<void>;
+}
+
+export interface Student {
+  email: string;
+  name: string;
+  branch: string;
+  batch: string;
+  activated: boolean;
+  degree: string
+}
+
+export interface Feedback {
+  id: number,
+  content_toughness: number,
+  teaching_quality: number,
+  workload: number,
+  exam_difficulty: number,
+  grading_strictness: number,
+  resources_provided: number,
+  recommendation: number,
+  grade_obtained: number,
+  course: number,
+  contributor: string,
+}
+
+export interface StudentState {
+  students: Student[],
+  loading: boolean,
+  error: string | null,
+  activeStudent: Student | null,
+  courseFeedback: Feedback | null,
 }
 
 
