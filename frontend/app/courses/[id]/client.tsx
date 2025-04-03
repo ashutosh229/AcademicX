@@ -137,6 +137,7 @@ const CoursePageClient = () => {
         if (!response.ok) {
           throw new Error("Unable to add the comment");
         }
+        const data = await response.json();
         // Close dialog and reset form
         setIsOpen(false);
         setCommentText(""); // Reset form field after submission
