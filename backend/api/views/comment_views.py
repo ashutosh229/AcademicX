@@ -3,15 +3,36 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from api.models import Comment, CommentVote, Student
-from api.serializers import AddCommentSerializer
+from api.serializers import AddCommentSerializer,CommentSerializer
+
+
 @api_view(['POST'])
 def add_comment(request):
-
     serializer = AddCommentSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
+        comment = serializer.save()  # Save and get instance
+        comment_item = CommentSerializer(comment).data  # Get serialized data as a dict
+
+        del comment_item["course"]  # remove without return
+        comment_item["id"] = comment_item.pop("comment_id")
+        comment_item["user_vote"] = 0
+        anonymous_value = comment_item.pop("is_anonymous")
+        contributor_email = comment_item.pop("contributor")
+        student = Student.objects.get(email=contributor_email)
+        author_name = student.name if student.name else contributor_email
+        comment_item["author"] = {
+            "name": author_name,
+            "batch": student.batch,
+            "degree": student.degree,
+            "branch": student.branch,
+            "email": contributor_email,
+            "isAnonymous": anonymous_value
+        }
+
+        return Response(comment_item, status=201)
+
     return Response(serializer.errors, status=400)
+
 
 @api_view(['POST'])
 def delete_comment(request):
