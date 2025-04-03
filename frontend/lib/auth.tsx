@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { getUserByEmail, isInstitutionalEmail } from "./auth-utils";
+import { getUserByEmail } from "./auth-utils";
 
 // Create the authentication context
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -99,5 +99,3 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
-
