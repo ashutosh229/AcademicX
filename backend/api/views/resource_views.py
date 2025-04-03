@@ -13,7 +13,7 @@ def add_resource(request):
     serializer = AddResourceSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"message": "Data inserted successfully"}, status=201)
+        return Response({"message": "resource added"}, status=201)
     return Response(serializer.errors, status=400)
 
 @api_view(['POST'])
@@ -28,7 +28,7 @@ def delete_resource(request):
     resource = get_object_or_404(Resource, resource_id=resource_id, contributor=student)
 
     resource.delete()
-    return Response({"message": "Resource deleted successfully."}, status=status.HTTP_200_OK)
+    return Response({"message": "resource deleted"}, status=status.HTTP_200_OK)
 @api_view(['POST'])
 def upvote_resource(request):
     email = request.data.get('email')
