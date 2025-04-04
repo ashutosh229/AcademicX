@@ -195,7 +195,7 @@ export interface StudentState {
 
 export interface AuthUser {
   email: string;
-  role: 'student' | 'viewer' | null;
+  role: 'student' | 'viewer';
   name?: string;
   image?: string;
 }
@@ -203,6 +203,12 @@ export interface AuthUser {
 export interface AuthState {
   status: 'authenticated' | 'unauthenticated' | 'loading';
   user: AuthUser | null;
+}
+
+// Define an interface for the reducer payload
+export interface AuthPayload {
+  status: AuthState["status"];
+  user?: AuthState["user"];
 }
 
 

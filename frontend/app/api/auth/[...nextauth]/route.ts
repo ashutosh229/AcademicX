@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { backendDomain, Student } from "@/types/types";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
@@ -15,38 +16,58 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (account && user) {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
         try {
           const response = await fetch(`${backendDomain}/get_all_students/`);
-          const data = await response.json() as Student[]
-          const isStudent = data.some(student => student.email === user.email)
-          token.role = isStudent ? "student" : "viewer"
-          token.email = user.email
-        }
-        catch (error) {
-          console.error('Error fetching students:', error);
-          token.role = "viewer";
-          token.email = user.email;
-
+          const data = (await response.json()) as Student[];
+          const isStudent = data.some((student) => student.email === (user as any).email);
+          (user as any).role = isStudent ? "student" : "viewer";
+          if (isStudent) {
+            const studentActivationResponse = await fetch(`${backendDomain}/activate_student/`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ email: (user as any).email.toString() })
+            })
+            if (!studentActivationResponse.ok) {
+              throw new Error("Unable to activate the error")
+            }
+            toast({
+              title: "Account Activated",
+              description: await studentActivationResponse.json().then((res) => res.message),
+              variant: "default",
+            })
+          }
+        } catch (error) {
+          console.error("Error fetching students:", error);
+          (user as any).role = "viewer"; // Default to viewer on error
         }
       }
-      return token
+      return true; // Allow sign-in
+    },
+
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+        token.role = (user as any).role;
+        token.sub = user.id; // Store the unique ID
+      }
+      return token;
     },
 
     async session({ session, token }) {
       if (session.user) {
-        session.user.email = token.email as string,
-          session.user.role = token.role as string
+        session.user.email = token.email as string;
+        session.user.role = token.role as string;
       }
-      return session
+      return session;
     },
-
-    async redirect({ url, baseUrl
-
-    }) {
-      return baseUrl + "/courses"
-    }
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/courses`;
+    },
   },
   pages: {
     signIn: "/",
@@ -54,4 +75,5 @@ export const authOptions: NextAuthOptions = {
   }
 }
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

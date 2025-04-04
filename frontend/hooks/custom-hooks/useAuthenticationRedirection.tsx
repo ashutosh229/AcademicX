@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 function useAuthenticationRedirection(redirectPath: string = "/courses") {
   const { status } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
-
+  
   useEffect(() => {
     if (status === "authenticated") {
       router.push(redirectPath);

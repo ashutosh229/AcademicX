@@ -1,15 +1,32 @@
 "use client";
 
 import { LoginButton } from "@/components/auth/login-button";
-import useAuthenticationRedirection from "@/hooks/custom-hooks/useAuthenticationRedirection";
-import { RootState } from "@/redux/store";
+import { setAuthStatus } from "@/redux/slices/authSlice";
 import { GraduationCap } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 export default function WelcomePage() {
-  const { status } = useSelector((state: RootState) => state.auth);
+  const { data: session, status } = useSession();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  useAuthenticationRedirection();
+  useEffect(() => {
+    if (session?.user) {
+      dispatch(
+        setAuthStatus({
+          status: "authenticated",
+          user: {
+            email: session.user.email as string,
+            role: session.user.role as "student" | "viewer",
+          },
+        })
+      );
+      router.push("/courses"); // Redirect to courses if authenticated
+    }
+  }, [session, dispatch, router]);
 
   if (status === "loading") {
     return (
@@ -18,10 +35,9 @@ export default function WelcomePage() {
       </div>
     );
   }
-
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50">
-      <div className="text-center max-w-3xl mx-auto px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white to-gray-50 px-4">
+      <div className="text-center max-w-lg mx-auto">
         <div className="flex justify-center mb-8">
           <GraduationCap className="h-20 w-20 text-primary" />
         </div>
@@ -30,14 +46,14 @@ export default function WelcomePage() {
           Welcome to AcademicX
         </h1>
 
-        <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+        <p className="text-lg text-gray-600 mb-8">
           Your comprehensive platform for academic course management and
           learning. Access course materials, share resources, and engage with
           your academic community.
         </p>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          {/* Student Login Card */}
+        {/* Centered Login Card */}
+        <div className="flex flex-col items-center space-y-6">
           <LoginButton
             icon={<GraduationCap className="h-12 w-12 text-primary" />}
             label="User Access"
@@ -45,7 +61,7 @@ export default function WelcomePage() {
           />
         </div>
 
-        <div className="mt-12 text-sm text-gray-500">
+        <div className="mt-12 text-sm text-gray-500 text-center">
           <p>Choose the appropriate login option based on your role.</p>
           <p>
             Students must use their institutional email address

@@ -1,4 +1,4 @@
-import { AuthState } from "@/types/types";
+import { AuthPayload, AuthState } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: AuthState = {
@@ -10,9 +10,11 @@ export const authSlice = createSlice({
     name: "auth",
     initialState: initialState,
     reducers: {
-        setAuthStatus(state, action: PayloadAction<AuthState>) {
+        setAuthStatus(state, action: PayloadAction<AuthPayload>) {
             state.status = action.payload.status;
-            state.user = action.payload.user;
+            if (action.payload.user !== undefined) {
+                state.user = action.payload.user;
+            }
         },
         clearAuth(state) {
             state.status = 'unauthenticated';

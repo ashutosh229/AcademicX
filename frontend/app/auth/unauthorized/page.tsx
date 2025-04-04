@@ -14,7 +14,7 @@ export default function UnauthorizedPage() {
 
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
           <p className="text-gray-700 mb-4">
-            You need to be logged in to access this page.
+            You need to be logged in to access the application.
           </p>
 
           <p className="text-gray-600 mb-6">
