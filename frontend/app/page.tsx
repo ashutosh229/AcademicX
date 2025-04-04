@@ -24,7 +24,7 @@ export default function WelcomePage() {
           },
         })
       );
-      router.push("/courses"); // Redirect to courses if authenticated
+      router.push("/custom-home");
     }
   }, [session, dispatch, router]);
 
@@ -35,6 +35,7 @@ export default function WelcomePage() {
       </div>
     );
   }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-white to-gray-50 px-4">
       <div className="text-center max-w-lg mx-auto">

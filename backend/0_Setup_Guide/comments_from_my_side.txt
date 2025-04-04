@@ -6,7 +6,6 @@ I will be needing some other APIs also which I will inform you today later
 
 API for fetching all the students
 
-
 Notes:
 1. Load time issue can arise due to fetching all the students in the profile page, have to use the single student fetch API for fetching single Student
 but that will need the change in the authentication system (will work later on it)

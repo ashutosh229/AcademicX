@@ -16,7 +16,7 @@ import Link from "next/link";
 export function Header() {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
-  const isStudent = session?.user?.role === "student";
+  const isStudent = session?.user.role === "student";
 
   return (
     <header className="border-b">

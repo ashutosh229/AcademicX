@@ -25,7 +25,7 @@ export function LoginButton({
       <Button
         className="w-full"
         variant={variant}
-        onClick={() => signIn("google", { callbackUrl: "/courses" })}
+        onClick={() => signIn("google")}
       >
         Login with Google
         <ArrowRight className="ml-2 h-4 w-4" />
