@@ -62,10 +62,10 @@ export default function WelcomePage() {
         </div>
 
         <div className="mt-12 text-sm text-gray-500 text-center">
-          <p>Choose the appropriate login option based on your role.</p>
+          <p>Choose the appropriate login email id based on your role.</p>
           <p>
-            Students must use their institutional email address
-            (@iitbhilai.ac.in).
+            Students must use their institutional email address to access the
+            facilities for the students (@iitbhilai.ac.in).
           </p>
         </div>
       </div>
