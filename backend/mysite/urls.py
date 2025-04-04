@@ -49,16 +49,16 @@ urlpatterns = [
     path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),#integrated
     path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
     path('get_course_details', get_course_details, name='get_course_details'),#integrated
-    path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),
-    path('get_course_comments', get_course_comments, name='get_course_comments'),
-    path('get_course_resources', get_course_resources, name='get_course_resources'),
+    path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),#no need
+    path('get_course_comments', get_course_comments, name='get_course_comments'),#no need
+    path('get_course_resources', get_course_resources, name='get_course_resources'),#no need
 
     path('get_all_students/', get_all_students, name='get_all_students'), #integrated
     path('edit_student_name/', edit_student_name, name='edit_student_name'), #integrated
     path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),#integrated
     path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),#integrated
     path('delete_course_feedback/', delete_user_course_feedback, name='delete_user_course_feedback'),#integrated
-    path('activate_student/', activate_student, name='activate_student'),   
+    path('activate_student/', activate_student, name='activate_student'),#integrated
 
 
     path('get_analytics/', get_analytics, name='get_analytics'), # integrated
