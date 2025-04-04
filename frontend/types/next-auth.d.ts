@@ -1,4 +1,5 @@
 import "next-auth";
+import { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 interface CustomJWT extends JWT {
@@ -8,24 +9,22 @@ interface CustomJWT extends JWT {
 declare module "next-auth" {
   interface Session {
     user: {
-      name?: string | null;
-      email?: string | null;
-      batch?: string | null;
-      branch?: string | null;
-      activated?: boolean | null
-      role?: 'student' | 'viewer';
-    };
+      role?: string;
+    } & DefaultSession["user"];
   }
+}
 
-  // interface User {
-  //   role?: 'student' | 'viewer';
-  // }
+declare module "next-auth/jwt" {
+  interface JWT {
+    role?: string;
+  }
 }
 
 export interface User {
   email?: string | null;
   name?: string | null;
   batch?: string | null;
+  degree?: string | null;
   branch?: string | null;
   activated?: booleam | null;
   role?: 'student' | 'viewer';

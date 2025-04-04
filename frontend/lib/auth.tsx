@@ -3,6 +3,7 @@
 import { setError, setLoading, setStudents } from "@/redux/slices/studentSlice";
 import { RootState } from "@/redux/store";
 import { AuthContextType, User } from "@/types/next-auth";
+import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +23,11 @@ export const useAuth = () => {
 };
 
 // AuthProvider component to provide authentication context
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { data: session } = useSession();
   const { students, loading, error } = useSelector(
     (state: RootState) => state.student
@@ -31,7 +36,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const backendDomain = "http://localhost:8080";
+  useEffect(() => {
+    const fetchStudets = async () => {
+      dispatch(setLoading(true));
+      try {
+        const response = await fetch(`${backendDomain}/get_all_students/`, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          throw new Error("Unable to fetch the students");
+        }
+        toast.success("Students fetched successfully");
+        const data = await response.json();
+        dispatch(setStudents(data));
+      } catch (error: any) {
+        console.log(error);
+        toast.error("Unable to fetch the students");
+        dispatch(setError(error.message));
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+    fetchStudets();
+  }, [dispatch]);
 
   // Load user from localStorage on initial render
   useEffect(() => {
@@ -47,42 +74,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    const fetchStudets = async () => {
-      dispatch(setLoading(true));
-      try {
-        const response = await fetch(`${backendDomain}/get_all_students/`, {
-          method: "GET",
-        });
-        if (!response.ok) {
-          throw new Error("Unable to fetch the students");
-          toast.error("Unable to fetch the students");
-        }
-        toast.success("Students fetched successfully");
-        const data = await response.json();
-        dispatch(setStudents(data));
-        dispatch(setLoading(false));
-      } catch (error: any) {
-        console.log(error);
-        dispatch(setError(error.message));
-      }
-    };
-    fetchStudets();
-  }, [dispatch]);
-
   // Function to log in a user
   const login = async (email: string): Promise<boolean> => {
     if (!email) return false;
 
     try {
       const user = getUserByEmail(email, session, students);
-      if (user) {
+      if (user && user.role === "viewer") {
+        setUser(user as User);
+        localStorage.setItem("academicx-user", JSON.stringify(user));
+        return true;
+      }
+      if (user && user.role === "student") {
         setUser(user as User);
         localStorage.setItem("academicx-user", JSON.stringify(user));
         return true;
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.log(error);
     }
     return false;
   };

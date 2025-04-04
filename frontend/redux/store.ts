@@ -10,8 +10,10 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import authSlice from "./slices/authSlice";
 import courseSlice from "./slices/courseSlice";
 import studentSlice from "./slices/studentSlice";
+
 
 const persistConfig = {
   key: "root",
@@ -21,7 +23,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   course: courseSlice,
-  student: studentSlice
+  student: studentSlice,
+  auth: authSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

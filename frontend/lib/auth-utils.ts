@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { Student } from "../types/types";
 
 // Function to determine if a user is a student based on email domain
@@ -5,8 +6,18 @@ export function isInstitutionalEmail(email: string): boolean {
   return email.endsWith('@iitbhilai.ac.in');
 }
 
-export function getUserRole(email: string): 'student' | 'viewer' {
-  return isInstitutionalEmail(email) ? 'student' : 'viewer';
+export function getUserRole(email: string, students: Student[]) {
+  try {
+    const student = students.find((student) => {
+      return student.email === email;
+    });
+    if (!student) {
+      return "viewer";
+    }
+    return "student"
+  } catch (error: any) {
+    console.log(error);
+  }
 }
 
 // Function to check if the email is an authorized student email
@@ -14,7 +25,7 @@ export function isAuthorizedStudent(email: string): boolean {
   return isInstitutionalEmail(email);
 }
 
-export function getUserByEmail(email: string, session: any, students: Student[]) {
+export function getUserByEmail(email: string, session: Session | null, students: Student[]) {
   try {
     const student = students.find((student) => {
       return student.email === email;
@@ -25,13 +36,12 @@ export function getUserByEmail(email: string, session: any, students: Student[])
         role: "viewer",
       };
     }
-    return student;
+    return {
+      student: student,
+      role: "student"
+    };
   } catch (error: any) {
     console.log(error);
-    // dispatch(setError(error.message));
-    return {
-      error: error.message,
-    };
   }
 };
 

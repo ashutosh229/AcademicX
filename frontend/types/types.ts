@@ -193,6 +193,18 @@ export interface StudentState {
   courseFeedback: Feedback | null,
 }
 
+export interface AuthUser {
+  email: string;
+  role: 'student' | 'viewer' | null;
+  name?: string;
+  image?: string;
+}
+
+export interface AuthState {
+  status: 'authenticated' | 'unauthenticated' | 'loading';
+  user: AuthUser | null;
+}
+
 
 
 

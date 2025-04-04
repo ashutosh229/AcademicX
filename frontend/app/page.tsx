@@ -2,10 +2,22 @@
 
 import { LoginButton } from "@/components/auth/login-button";
 import useAuthenticationRedirection from "@/hooks/custom-hooks/useAuthenticationRedirection";
-import { GraduationCap, Users } from "lucide-react";
+import { RootState } from "@/redux/store";
+import { GraduationCap } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function WelcomePage() {
+  const { status } = useSelector((state: RootState) => state.auth);
+
   useAuthenticationRedirection();
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50">
@@ -28,16 +40,8 @@ export default function WelcomePage() {
           {/* Student Login Card */}
           <LoginButton
             icon={<GraduationCap className="h-12 w-12 text-primary" />}
-            label="Student Access"
-            description="For enrolled students with institutional credentials. Full access to course materials and feedback."
-          />
-
-          {/* Viewer Login Card */}
-          <LoginButton
-            icon={<Users className="h-12 w-12 text-primary" />}
-            label="Viewer Access"
-            description="For guests and prospective students. Limited access to view course information."
-            variant="outline"
+            label="User Access"
+            description="Students and users will have different access levels."
           />
         </div>
 

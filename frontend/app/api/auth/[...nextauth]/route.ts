@@ -1,51 +1,57 @@
-import { getUserRole } from "@/lib/auth-utils";
-import { CustomJWT } from "@/types/next-auth";
-import NextAuth, { Session } from "next-auth";
+import { backendDomain, Student } from "@/types/types";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    })
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
   callbacks: {
-    async jwt({ token, account, profile }: {
-      token: CustomJWT,
-      account?: any,
-      profile?: any,
-    }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token; //assigned the access token
-      }
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        try {
+          const response = await fetch(`${backendDomain}/get_all_students/`);
+          const data = await response.json() as Student[]
+          const isStudent = data.some(student => student.email === user.email)
+          token.role = isStudent ? "student" : "viewer"
+          token.email = user.email
+        }
+        catch (error) {
+          console.error('Error fetching students:', error);
+          token.role = "viewer";
+          token.email = user.email;
 
-      // Add user role based on email domain
-      if (token.email) {
-        token.role = getUserRole(token.email); //assigned the role based on the email
+        }
       }
-
-      return token;
+      return token
     },
-    async session({ session, token }: {
-      session: Session,
-      token: CustomJWT,
-    }) {
-      // Send properties to the client
+
+    async session({ session, token }) {
       if (session.user) {
-        session.user.email = token.email; // we are using the email of the logged in user
-        session.user.role = token.role
+        session.user.email = token.email as string,
+          session.user.role = token.role as string
       }
-      return session;
+      return session
     },
+
+    async redirect({ url, baseUrl
+
+    }) {
+      return baseUrl + "/courses"
+    }
   },
   pages: {
-    signIn: '/',
-    error: '/auth/error',
-  },
-};
+    signIn: "/",
+    error: "/auth/error"
+  }
+}
 
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);

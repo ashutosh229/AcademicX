@@ -1,10 +1,14 @@
-import { Header } from "@/components/layout/header";
-import { AuthProvider } from "@/components/providers/auth-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { ReduxProvider } from "@/redux/provider";
 import type { Metadata } from "next";
+import { Session } from "next-auth";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
+
+type RootLayoutProps = {
+  children: React.ReactNode;
+  session?: Session;
+};
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,21 +17,12 @@ export const metadata: Metadata = {
   description: "A modern platform for academic course management and learning",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children, session }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <Toaster />
-        <ReduxProvider>
-          <AuthProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-          </AuthProvider>
-        </ReduxProvider>
+        <Providers children={children} session={session}></Providers>
       </body>
     </html>
   );
