@@ -16,6 +16,8 @@ const developers = [
     email: "shubhamy@iitbhilai.ac.in",
     linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
     github: "https://github.com/Shubham-Y-Mahajan",
+    branch: "Computer Science and Engineering",
+    year: "2026",
   },
   {
     name: "Ashutosh Kumar Jha",
@@ -23,6 +25,8 @@ const developers = [
     email: "ashutoshj@iitbhilai.ac.in",
     linkedin: "https://www.linkedin.com/in/ashutosh-kumar-jha-601098280/",
     github: "https://github.com/ashutosh229",
+    branch: "Data Science and Artificial Intelligence",
+    year: "2027",
   },
 ];
 
@@ -98,6 +102,7 @@ export default function AboutPage() {
                 <CardHeader>
                   <CardTitle>{dev.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{dev.role}</p>
+                  <p className="text-sm text-muted-foreground">{`${dev.branch}, ${dev.year}`}</p>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-4 mt-2">
