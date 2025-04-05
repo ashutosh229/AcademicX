@@ -18,6 +18,8 @@ const developers = [
     github: "https://github.com/Shubham-Y-Mahajan",
     branch: "Computer Science and Engineering",
     year: "2026",
+    image: "/images/shubham.jpg", // Replace with actual path or URL
+    techStack: ["Django REST Framework", "PostgreSQL"],
   },
   {
     name: "Ashutosh Kumar Jha",
@@ -27,6 +29,8 @@ const developers = [
     github: "https://github.com/ashutosh229",
     branch: "Data Science and Artificial Intelligence",
     year: "2027",
+    image: "/images/shubham.jpg", // Replace with actual path or URL
+    techStack: ["Next.js", "Tailwind CSS", "ShadcnUI", "Redux Toolkit"],
   },
 ];
 
@@ -100,12 +104,39 @@ export default function AboutPage() {
             {developers.map((dev, index) => (
               <Card key={index} className="shadow-lg">
                 <CardHeader>
-                  <CardTitle>{dev.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{dev.role}</p>
-                  <p className="text-sm text-muted-foreground">{`${dev.branch}, ${dev.year}`}</p>
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={dev.image}
+                      alt={dev.name}
+                      className="w-24 h-24 rounded-full object-cover border"
+                    />
+                    <div>
+                      <CardTitle>{dev.name}</CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        {dev.role}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {`${dev.branch}, ${dev.year}`}
+                      </p>
+                    </div>
+                  </div>
                 </CardHeader>
+
                 <CardContent>
-                  <div className="flex items-center gap-4 mt-2">
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                    {dev.techStack.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Socials */}
+                  <div className="flex items-center gap-4">
                     <a
                       href={`mailto:${dev.email}`}
                       className="text-primary hover:text-red-500 transition-colors"
