@@ -9,6 +9,7 @@ interface LoginButtonProps {
   description: string;
   variant?: "default" | "outline";
   handleClick: () => void;
+  inButtonLabel: string;
 }
 
 export function LoginButton({
@@ -17,6 +18,7 @@ export function LoginButton({
   description,
   variant = "default",
   handleClick,
+  inButtonLabel,
 }: LoginButtonProps) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
@@ -28,7 +30,7 @@ export function LoginButton({
         variant={variant}
         onClick={() => handleClick()}
       >
-        Login with Google
+        {inButtonLabel}
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </div>

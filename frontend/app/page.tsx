@@ -78,6 +78,7 @@ export default function WelcomePage() {
               label="Student Access"
               description="For enrolled students with institutional credentials. Full access to course materials and feedback."
               handleClick={handleLoginForStudent}
+              inButtonLabel="Login with Google"
             />
 
             {/* Viewer Login Card */}
@@ -87,6 +88,7 @@ export default function WelcomePage() {
               description="For guests and prospective students. Limited access to view course information."
               variant="outline"
               handleClick={handleLoginForViewer}
+              inButtonLabel="View as Guest"
             />
           </div>
 
