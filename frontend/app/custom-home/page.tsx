@@ -25,9 +25,10 @@ export default function HomePage() {
           Welcome
         </h1>
         <p className="text-lg text-gray-700 mt-3">
-          {session?.user.role === "student"
+          {/* {session?.user.role === "student"
             ? "Access your courses, resources, and academic materials."
-            : "Explore available content as a guest user."}
+            : "Explore available content as a guest user."} */}
+          Real student voices, real course insights — all in one place.
         </p>
 
         {/* Navigation Cards */}
@@ -42,7 +43,7 @@ export default function HomePage() {
             <CardContent className="text-center">
               <CardTitle>Courses</CardTitle>
               <p className="text-gray-600 text-sm">
-                Explore and enroll in courses.
+                Explore courses registered on the platform
               </p>
             </CardContent>
           </Card>
@@ -56,9 +57,7 @@ export default function HomePage() {
             </CardHeader>
             <CardContent className="text-center">
               <CardTitle>Analytics</CardTitle>
-              <p className="text-gray-600 text-sm">
-                Findout the numbers for the application
-              </p>
+              <p className="text-gray-600 text-sm">View website statistics</p>
             </CardContent>
           </Card>
 
@@ -72,7 +71,7 @@ export default function HomePage() {
             <CardContent className="text-center">
               <CardTitle>About</CardTitle>
               <p className="text-gray-600 text-sm">
-                Get to know the creators and maintainers
+                Get to know our purpose and meet the development team
               </p>
             </CardContent>
           </Card>
