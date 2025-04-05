@@ -24,7 +24,7 @@ export function Header() {
         <nav className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <GraduationCap className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">AcademicX</span>
+            <span className="text-2xl font-bold">IIT Bhilai Student Forum</span>
           </Link>
           <div className="flex items-center space-x-6">
             <Link href="/" className="text-sm font-medium hover:text-primary">

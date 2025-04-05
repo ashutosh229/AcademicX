@@ -39,7 +39,9 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">About AcademicX</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            About IIT Bhilai Student Forum
+          </h1>
           <p className="text-lg text-gray-600">
             Empowering students through collaborative learning and resource
             sharing
@@ -52,9 +54,10 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
-            AcademicX was created with a simple mission of enhancing the
-            academic experience by providing a platform where students can share
-            insights, resources, and feedback about their courses.
+            IIT Bhilai Student Forum was created with a simple mission of
+            enhancing the academic experience by providing a platform where
+            students can share insights, resources, and feedback about their
+            courses.
           </p>
           <p className="text-gray-700 leading-relaxed">
             We believe that collaborative learning leads to better outcomes for

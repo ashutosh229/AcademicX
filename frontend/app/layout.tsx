@@ -13,7 +13,7 @@ type RootLayoutProps = {
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AcademicX - Modern Learning Platform",
+  title: "IIT Bhilai Student Forum - Modern Learning Platform",
   description: "A modern platform for academic course management and learning",
 };
 
