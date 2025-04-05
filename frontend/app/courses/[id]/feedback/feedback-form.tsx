@@ -2,6 +2,15 @@
 
 import GradeDropdown from "@/components/charts/dropDown";
 import MetricSlider from "@/components/charts/metricSlider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -44,15 +53,20 @@ const FeedbackForm = () => {
   const [gradingStrictness, setGradingStrictness] = useState([5]);
   const [resourcesProvided, setResourcesProvided] = useState([5]);
   const [recommendation, setRecommendation] = useState([5]);
-  const [gradeObtained, setGradeObtained] = useState<number>(0);
+  const [gradeObtained, setGradeObtained] = useState<number>(-1);
   // const [comment, setComment] = useState("");
   // const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showGradeAlert, setShowGradeAlert] = useState(false); // NEW
 
   const backendDomain = "http://localhost:8080";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (gradeObtained === -1) {
+      setShowGradeAlert(true);
+      return;
+    }
     setIsSubmitting(true);
     dispatch(setLoading(true));
     try {
@@ -80,14 +94,11 @@ const FeedbackForm = () => {
       }
       dispatch(setLoading(false));
       setIsSubmitting(false);
-      // Introduce a delay before redirecting
-      setTimeout(() => {
-        toast({
-          title: "Success",
-          description: "Course Feedback sent successfully",
-        });
-        router.push("/courses");
-      }, 1.5); // 10 seconds delay
+      toast({
+        title: "Success",
+        description: "Course Feedback sent successfully",
+      });
+      router.push("/courses");
     } catch (error: any) {
       console.log(error);
       toast({
@@ -192,6 +203,23 @@ const FeedbackForm = () => {
           </Button>
         </form>
       </Card>
+
+      <AlertDialog open={showGradeAlert} onOpenChange={setShowGradeAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Missing Grade</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please select the grade you obtained before submitting the
+              feedback.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowGradeAlert(false)}>
+              Okay
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
