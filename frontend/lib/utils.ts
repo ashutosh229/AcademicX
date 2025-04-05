@@ -31,5 +31,25 @@ export function getCourseNameFromId(courses: Course[], id: number | undefined) {
   return course?.name
 }
 
+export const isValidUrl = async (url: string): Promise<boolean> => {
+  try {
+    // 1. Format validation
+    const parsed = new URL(url);
+    const isHttp = parsed.protocol === "http:" || parsed.protocol === "https:";
+    if (!isHttp) return false;
+
+    // 2. Check reachability (CORS restrictions may block this for some domains)
+    const response = await fetch(url, {
+      method: "HEAD", // Try to avoid loading entire page
+      mode: "no-cors", // Prevents CORS errors from throwing, but we can't read response
+    });
+
+    // If mode is "no-cors", we can't reliably read status, so we assume it's fine
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 
 

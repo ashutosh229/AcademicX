@@ -1,6 +1,15 @@
 "use client";
 
 import ChartCard from "@/components/charts/chartCard";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,6 +36,7 @@ import {
   formatString,
   getUserVote,
   getUserVoteForResources,
+  isValidUrl,
 } from "@/lib/utils";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
@@ -72,6 +82,7 @@ const CoursePageClient = () => {
   const [sortOptionForResources, setSortOptionForResources] = useState<
     "By Date" | "By Upvotes"
   >("By Upvotes");
+  const [showInvalidUrlAlert, setShowInvalidUrlAlert] = useState(false);
 
   // Performance improvement: Only filter once as a memoized value
   const activeCourse = useMemo(() => {
@@ -420,6 +431,11 @@ const CoursePageClient = () => {
         !session?.user.email
       )
         return;
+
+      if (!isValidUrl(url)) {
+        setShowInvalidUrlAlert(true);
+        return;
+      }
 
       dispatch(setLoading(true));
 
@@ -957,40 +973,147 @@ const CoursePageClient = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Course Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">
-          {courseData?.course.name}{" "}
-          <span className="text-2xl text-gray-600">
-            ({courseData?.course.code})
-          </span>
-        </h1>
-        <p className="text-xl text-gray-600">
-          Professor: {courseData?.course.professor}
-        </p>
-      </div>
+    <>
+      <AlertDialog
+        open={showInvalidUrlAlert}
+        onOpenChange={setShowInvalidUrlAlert}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Invalid URL</AlertDialogTitle>
+            <AlertDialogDescription>
+              The URL you entered is not valid. Please enter a valid URL
+              starting with <code>http://</code> or <code>https://</code>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowInvalidUrlAlert(false)}>
+              Okay
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <div className="container mx-auto px-4 py-8">
+        {/* Course Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">
+            {courseData?.course.name}{" "}
+            <span className="text-2xl text-gray-600">
+              ({courseData?.course.code})
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600">
+            Professor: {courseData?.course.professor}
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          {/* Metrics Section */}
-          <Card className="p-6 mb-8">
-            <h2 className="text-2xl font-semibold mb-6">Course Metrics</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            {/* Metrics Section */}
+            <Card className="p-6 mb-8">
+              <h2 className="text-2xl font-semibold mb-6">Course Metrics</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {renderMetrics}
-            </div>
-          </Card>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {renderMetrics}
+              </div>
+            </Card>
 
-          {/* Comments Section */}
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Comments</h2>
-              <div className="flex items-center space-x-4">
+            {/* Comments Section */}
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold">Comments</h2>
+                <div className="flex items-center space-x-4">
+                  {/* Sorting Dropdown */}
+                  <Select
+                    onValueChange={(value) =>
+                      setSortOption(value as "By Date" | "By Upvotes")
+                    }
+                  >
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="By Date">By Date</SelectItem>
+                      <SelectItem value="By Upvotes">By Upvotes</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Add Comment Button */}
+                  <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                    <DialogTrigger asChild>
+                      <Button onClick={() => setIsOpen(true)}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Comment
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add a Comment</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <Label>Your Comment</Label>
+                        <Input
+                          type="text"
+                          placeholder="Write your comment..."
+                          value={commentText}
+                          onChange={(e) => setCommentText(e.target.value)}
+                        />
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="anonymous"
+                            checked={isAnonymous}
+                            onCheckedChange={(checked) =>
+                              setIsAnonymous(checked === true)
+                            }
+                          />
+                          <Label htmlFor="anonymous">Post as Anonymous</Label>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          onClick={() =>
+                            handleAddComment(commentText, isAnonymous)
+                          }
+                          disabled={!commentText.trim()}
+                        >
+                          Add Comment
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              {/* Comments Section */}
+              <div className="space-y-6">
+                {sortedComments.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">
+                    No comments yet. Be the first to add one!
+                  </p>
+                ) : (
+                  sortedComments.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                    ></CommentItem>
+                  ))
+                )}
+              </div>
+            </Card>
+          </div>
+
+          {/* Resources Section */}
+          <div className="lg:col-span-1">
+            <Card className="p-6 overflow-hidden">
+              {/* Section Heading */}
+              <h2 className="text-2xl font-semibold mb-4">Resources</h2>
+
+              {/* Sort & Add Resource Controls */}
+              <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 {/* Sorting Dropdown */}
                 <Select
                   onValueChange={(value) =>
-                    setSortOption(value as "By Date" | "By Upvotes")
+                    setSortOptionForResources(value as "By Date" | "By Upvotes")
                   }
                 >
                   <SelectTrigger className="w-48">
@@ -1002,190 +1125,109 @@ const CoursePageClient = () => {
                   </SelectContent>
                 </Select>
 
-                {/* Add Comment Button */}
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                {/* Add Resource Button & Dialog */}
+                <Dialog
+                  open={isOpenForResources}
+                  onOpenChange={setIsOpenForResources}
+                >
                   <DialogTrigger asChild>
-                    <Button onClick={() => setIsOpen(true)}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Comment
+                    <Button
+                      onClick={() => setIsOpenForResources(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Resource
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="max-w-lg w-full mx-auto p-6">
                     <DialogHeader>
-                      <DialogTitle>Add a Comment</DialogTitle>
+                      <DialogTitle className="text-xl font-medium">
+                        Add a Resource
+                      </DialogTitle>
                     </DialogHeader>
+
                     <div className="space-y-4">
-                      <Label>Your Comment</Label>
-                      <Input
-                        type="text"
-                        placeholder="Write your comment..."
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                      />
-                      <div className="flex items-center space-x-2">
+                      <div>
+                        <Label>Resource Name</Label>
+                        <Input
+                          type="text"
+                          placeholder="Enter resource name..."
+                          value={resourceName}
+                          onChange={(e) => setResourceName(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Remarks</Label>
+                        <Textarea
+                          placeholder="Add remarks about this resource..."
+                          value={resourceRemarks}
+                          onChange={(e) => setResourceRemarks(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Resource URL</Label>
+                        <Input
+                          type="url"
+                          placeholder="Enter URL..."
+                          value={resourceUrl}
+                          onChange={(e) => setResourceUrl(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="flex items-center space-x-2 mt-2">
                         <Checkbox
                           id="anonymous"
-                          checked={isAnonymous}
+                          checked={isAnonymousForResources}
                           onCheckedChange={(checked) =>
-                            setIsAnonymous(checked === true)
+                            setIsAnonymousForResources(checked === true)
                           }
                         />
-                        <Label htmlFor="anonymous">Post as Anonymous</Label>
+                        <Label htmlFor="anonymous">
+                          Contribute Anonymously
+                        </Label>
                       </div>
                     </div>
-                    <DialogFooter>
+
+                    <DialogFooter className="mt-4">
                       <Button
                         onClick={() =>
-                          handleAddComment(commentText, isAnonymous)
+                          handleAddResource(
+                            resourceName,
+                            resourceRemarks,
+                            resourceUrl,
+                            isAnonymousForResources
+                          )
                         }
-                        disabled={!commentText.trim()}
                       >
-                        Add Comment
+                        Add Resource
                       </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </div>
-            </div>
 
-            {/* Comments Section */}
-            <div className="space-y-6">
-              {sortedComments.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
-                  No comments yet. Be the first to add one!
-                </p>
-              ) : (
-                sortedComments.map((comment) => (
-                  <CommentItem key={comment.id} comment={comment}></CommentItem>
-                ))
-              )}
-            </div>
-          </Card>
-        </div>
-
-        {/* Resources Section */}
-        <div className="lg:col-span-1">
-          <Card className="p-6 overflow-hidden">
-            {/* Section Heading */}
-            <h2 className="text-2xl font-semibold mb-4">Resources</h2>
-
-            {/* Sort & Add Resource Controls */}
-            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-              {/* Sorting Dropdown */}
-              <Select
-                onValueChange={(value) =>
-                  setSortOptionForResources(value as "By Date" | "By Upvotes")
-                }
-              >
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="By Date">By Date</SelectItem>
-                  <SelectItem value="By Upvotes">By Upvotes</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Add Resource Button & Dialog */}
-              <Dialog
-                open={isOpenForResources}
-                onOpenChange={setIsOpenForResources}
-              >
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={() => setIsOpenForResources(true)}
-                    className="flex items-center gap-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Resource
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg w-full mx-auto p-6">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-medium">
-                      Add a Resource
-                    </DialogTitle>
-                  </DialogHeader>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label>Resource Name</Label>
-                      <Input
-                        type="text"
-                        placeholder="Enter resource name..."
-                        value={resourceName}
-                        onChange={(e) => setResourceName(e.target.value)}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div>
-                      <Label>Remarks</Label>
-                      <Textarea
-                        placeholder="Add remarks about this resource..."
-                        value={resourceRemarks}
-                        onChange={(e) => setResourceRemarks(e.target.value)}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div>
-                      <Label>Resource URL</Label>
-                      <Input
-                        type="url"
-                        placeholder="Enter URL..."
-                        value={resourceUrl}
-                        onChange={(e) => setResourceUrl(e.target.value)}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Checkbox
-                        id="anonymous"
-                        checked={isAnonymousForResources}
-                        onCheckedChange={(checked) =>
-                          setIsAnonymousForResources(checked === true)
-                        }
-                      />
-                      <Label htmlFor="anonymous">Contribute Anonymously</Label>
-                    </div>
-                  </div>
-
-                  <DialogFooter className="mt-4">
-                    <Button
-                      onClick={() =>
-                        handleAddResource(
-                          resourceName,
-                          resourceRemarks,
-                          resourceUrl,
-                          isAnonymousForResources
-                        )
-                      }
-                    >
-                      Add Resource
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            {/* Resources List */}
-            <div className="space-y-4">
-              {sortedResources.length === 0 ? (
-                <p className="text-gray-500 text-center py-6">
-                  No resources yet. Be the first to add one!
-                </p>
-              ) : (
-                sortedResources.map((resource) => (
-                  <ResourceItem key={resource.id} resource={resource} />
-                ))
-              )}
-            </div>
-          </Card>
+              {/* Resources List */}
+              <div className="space-y-4">
+                {sortedResources.length === 0 ? (
+                  <p className="text-gray-500 text-center py-6">
+                    No resources yet. Be the first to add one!
+                  </p>
+                ) : (
+                  sortedResources.map((resource) => (
+                    <ResourceItem key={resource.id} resource={resource} />
+                  ))
+                )}
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
