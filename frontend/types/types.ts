@@ -119,14 +119,14 @@ export const backendDomain = "http://localhost:8080"
 export interface FilterState {
   searchTerm: string;
   professorSearch: string;
-  selectedProfessor: string;
+  // selectedProfessor: string;
   selectedDepartment: string;
   selectedCredits: string;
 }
 
 // Define types for course metadata
 export interface CourseMetadata {
-  uniqueProfessors: string[];
+  // uniqueProfessors: string[];
   uniqueDepartments: string[];
   uniqueCredits: string[];
 }
@@ -137,13 +137,13 @@ export interface CourseFiltersResult {
   setSearchTerm: (value: string) => void;
   professorSearch: string;
   setProfessorSearch: (value: string) => void;
-  selectedProfessor: string;
-  setSelectedProfessor: (value: string) => void;
+  // selectedProfessor: string;
+  // setSelectedProfessor: (value: string) => void;
   selectedDepartment: string;
   setSelectedDepartment: (value: string) => void;
   selectedCredits: string;
   setSelectedCredits: (value: string) => void;
-  uniqueProfessors: string[];
+  // uniqueProfessors: string[];
   uniqueDepartments: string[];
   uniqueCredits: string[];
   filteredCourses: Course[];

@@ -17,7 +17,7 @@ export function useCourseFilters(): CourseFiltersResult {
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
     professorSearch: "",
-    selectedProfessor: "",
+    // selectedProfessor: "",
     selectedDepartment: "",
     selectedCredits: "",
   });
@@ -25,18 +25,18 @@ export function useCourseFilters(): CourseFiltersResult {
   // Memoize course metadata to prevent recalculation
   const courseMetadata = useMemo<CourseMetadata>(() => {
     // Create sets for faster lookups
-    const professors = new Set<string>();
+    // const professors = new Set<string>();
     const departments = new Set<string>();
     const credits = new Set<string>();
 
     courses.forEach((course: Course) => {
-      if (course.professor) professors.add(course.professor);
+      // if (course.professor) professors.add(course.professor);
       if (course.department) departments.add(course.department);
       if (course.num_credits) credits.add(course.num_credits);
     });
 
     return {
-      uniqueProfessors: Array.from(professors),
+      // uniqueProfessors: Array.from(professors),
       uniqueDepartments: Array.from(departments),
       uniqueCredits: Array.from(credits),
     };
@@ -55,7 +55,7 @@ export function useCourseFilters(): CourseFiltersResult {
     const {
       searchTerm,
       professorSearch,
-      selectedProfessor,
+      // selectedProfessor,
       selectedDepartment,
       selectedCredits,
     } = filters;
@@ -68,7 +68,7 @@ export function useCourseFilters(): CourseFiltersResult {
     if (
       !searchTermLower &&
       !professorSearchLower &&
-      !selectedProfessor &&
+      // !selectedProfessor &&
       !selectedDepartment &&
       !selectedCredits
     ) {
@@ -77,8 +77,8 @@ export function useCourseFilters(): CourseFiltersResult {
 
     return courses.filter((course: Course) => {
       // First check the most restrictive filters
-      if (selectedProfessor && course.professor !== selectedProfessor)
-        return false;
+      // if (selectedProfessor && course.professor !== selectedProfessor)
+      //   return false;
       if (selectedDepartment && course.department !== selectedDepartment)
         return false;
       if (selectedCredits && course.num_credits !== selectedCredits)
@@ -112,16 +112,16 @@ export function useCourseFilters(): CourseFiltersResult {
     professorSearch: filters.professorSearch,
     setProfessorSearch: (value: string) =>
       updateFilter("professorSearch", value),
-    selectedProfessor: filters.selectedProfessor,
-    setSelectedProfessor: (value: string) =>
-      updateFilter("selectedProfessor", value),
+    // selectedProfessor: filters.selectedProfessor,
+    // setSelectedProfessor: (value: string) =>
+    //   updateFilter("selectedProfessor", value),
     selectedDepartment: filters.selectedDepartment,
     setSelectedDepartment: (value: string) =>
       updateFilter("selectedDepartment", value),
     selectedCredits: filters.selectedCredits,
     setSelectedCredits: (value: string) =>
       updateFilter("selectedCredits", value),
-    uniqueProfessors: courseMetadata.uniqueProfessors,
+    // uniqueProfessors: courseMetadata.uniqueProfessors,
     uniqueDepartments: courseMetadata.uniqueDepartments,
     uniqueCredits: courseMetadata.uniqueCredits,
     filteredCourses,

@@ -27,8 +27,8 @@ export default function CoursesPage() {
   const {
     searchTerm,
     setSearchTerm,
-    selectedProfessor,
-    setSelectedProfessor,
+    // selectedProfessor,
+    // setSelectedProfessor,
     selectedDepartment,
     setSelectedDepartment,
     selectedCredits,
@@ -36,7 +36,7 @@ export default function CoursesPage() {
     professorSearch,
     setProfessorSearch,
     filteredCourses,
-    uniqueProfessors,
+    // uniqueProfessors,
     uniqueDepartments,
     uniqueCredits,
   } = useCourseFilters();
@@ -74,7 +74,7 @@ export default function CoursesPage() {
           />
 
           {/* Professor Filter */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Professor:</label>
             <Select
               value={selectedProfessor}
@@ -97,7 +97,7 @@ export default function CoursesPage() {
                 )}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           {/* Department Filter */}
           <div className="flex items-center gap-2">
