@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useEditStudentProfile } from "@/hooks/custom-hooks/useEditStudentProfile";
 import { RootState } from "@/redux/store";
 import { Student } from "@/types/types";
-import { AlertCircle, Save, UserCircle } from "lucide-react";
+import { Save, UserCircle } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -40,7 +40,7 @@ export default function EditProfileForm({ student }: EditProfileFormProps) {
         className="space-y-6"
       >
         <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
+          <Label htmlFor="name">Display Name</Label>
           <Input
             id="name"
             value={formData.name}
@@ -75,12 +75,12 @@ export default function EditProfileForm({ student }: EditProfileFormProps) {
           />
         </div> */}
 
-        {error && (
+        {/* {error && (
           <div className="flex items-center gap-2 text-red-600 text-sm">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>
-        )}
+        )} */}
 
         {success && (
           <div className="bg-green-50 text-green-600 p-3 rounded-md text-sm">
