@@ -43,8 +43,8 @@ export default function AboutPage() {
             About IIT Bhilai Student Forum
           </h1>
           <p className="text-lg text-gray-600">
-            Empowering students through collaborative learning and resource
-            sharing
+            Helping students make smarter course choices through shared feedback
+            and resources.
           </p>
         </div>
 
