@@ -1,5 +1,4 @@
 "use client";
-
 import { AuthSync } from "@/components/auth/authSync";
 import { Header } from "@/components/layout/header";
 import { ReduxProvider } from "@/redux/provider";
