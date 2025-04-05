@@ -21,19 +21,19 @@ export default function ViewerLoginModal({
   open,
   onClose,
 }: ViewerLoginModalProps) {
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (!email || !name) {
+    if (!login || !name) {
       return alert("Please enter both name and email.");
     }
 
     setLoading(true);
     const res = await signIn("credentials", {
-      email,
+      login,
       name,
       redirect: false,
     });
@@ -62,10 +62,10 @@ export default function ViewerLoginModal({
             onChange={(e) => setName(e.target.value)}
           />
           <Input
-            placeholder="Your Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your Login"
+            type="text"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
           />
 
           <Button onClick={handleLogin} disabled={loading}>

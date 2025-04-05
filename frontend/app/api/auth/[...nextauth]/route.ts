@@ -12,9 +12,9 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Viewer Login",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email"
+        login: {
+          label: "Login",
+          type: "text"
         },
         name: {
           label: "Name",
@@ -22,13 +22,13 @@ export const authOptions: NextAuthOptions = {
         }
       },
       async authorize(credentials) {
-        const { email, name } = credentials as { email: string; name: string }
-        if (!email || !name) {
+        const { login, name } = credentials as { login: string; name: string }
+        if (!login || !name) {
           return null;
         }
         return {
-          id: email,
-          email,
+          id: login,
+          login,
           name,
           role: "viewer"
         }

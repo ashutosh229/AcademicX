@@ -1,19 +1,17 @@
 "use client";
 
 import { LoginButton } from "@/components/auth/login-button";
-import ViewerLoginModal from "@/components/auth/viewer-login-modal";
 import { setAuthStatus } from "@/redux/slices/authSlice";
 import { GraduationCap, Users } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export default function WelcomePage() {
   const { data: session, status } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
-  const [viewerModalOpen, setViewerModalOpen] = useState(false);
 
   useEffect(() => {
     if (session?.user) {
@@ -42,16 +40,21 @@ export default function WelcomePage() {
     signIn("google");
   };
 
-  const handleLoginForViewer = () => {
-    setViewerModalOpen(true);
+  const handleLoginForViewer = async () => {
+    const res = await signIn("credentials", {
+      login: "Guest Login",
+      name: "Viewer",
+      redirect: false,
+    });
+    if (res?.ok) {
+      router.push("/custom-home");
+    } else {
+      alert("Login Failed");
+    }
   };
 
   return (
     <>
-      <ViewerLoginModal
-        open={viewerModalOpen}
-        onClose={() => setViewerModalOpen(false)}
-      />
       <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50">
         <div className="text-center max-w-3xl mx-auto px-4">
           <div className="flex justify-center mb-8">
