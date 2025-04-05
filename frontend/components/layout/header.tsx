@@ -51,12 +51,12 @@ export function Header() {
             >
               About
             </Link>
-            <Link
+            {/* <Link
               href="/contact"
               className="text-sm font-medium hover:text-primary"
             >
               Contact
-            </Link>
+            </Link> */}
 
             {isAuthenticated && (
               <DropdownMenu>

@@ -1,5 +1,30 @@
-import { Card } from "@/components/ui/card";
-import { BookOpen, Code, GraduationCap, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  BookOpen,
+  Code,
+  Github,
+  GraduationCap,
+  Linkedin,
+  Mail,
+  Users,
+} from "lucide-react";
+
+const developers = [
+  {
+    name: "Shubham Mahajan",
+    role: "Backend Developer",
+    email: "shubhamy@iitbhilai.ac.in",
+    linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
+    github: "https://github.com/Shubham-Y-Mahajan",
+  },
+  {
+    name: "Ashutosh Kumar Jha",
+    role: "Frontend Developer",
+    email: "ashutoshj@iitbhilai.ac.in",
+    linkedin: "https://www.linkedin.com/in/ashutosh-kumar-jha-601098280/",
+    github: "https://github.com/ashutosh229",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -19,8 +44,8 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
-            AcademicX was created with a simple mission of enhancing the academic
-            experience by providing a platform where students can share
+            AcademicX was created with a simple mission of enhancing the
+            academic experience by providing a platform where students can share
             insights, resources, and feedback about their courses.
           </p>
           <p className="text-gray-700 leading-relaxed">
@@ -66,19 +91,42 @@ export default function AboutPage() {
             <Code className="mr-2 h-6 w-6 text-primary" />
             Development Team
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Backend Developer</h3>
-              <p className="text-gray-700">Shubham Mahajan</p>
-              <p className="text-gray-600 text-sm">Computer Science, 2026</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Frontend Developer</h3>
-              <p className="text-gray-700">Ashutosh Kumar Jha</p>
-              <p className="text-gray-600 text-sm">
-                Data Science and Artificial Intelligence, 2027
-              </p>
-            </div>
+          {/* Developer Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {developers.map((dev, index) => (
+              <Card key={index} className="shadow-lg">
+                <CardHeader>
+                  <CardTitle>{dev.name}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{dev.role}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-4 mt-2">
+                    <a
+                      href={`mailto:${dev.email}`}
+                      className="text-primary hover:text-red-500 transition-colors"
+                    >
+                      <Mail className="w-5 h-5" />
+                    </a>
+                    <a
+                      href={dev.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-blue-600 transition-colors"
+                    >
+                      <Linkedin className="w-5 h-5" />
+                    </a>
+                    <a
+                      href={dev.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-gray-800 transition-colors"
+                    >
+                      <Github className="w-5 h-5" />
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </Card>
       </div>

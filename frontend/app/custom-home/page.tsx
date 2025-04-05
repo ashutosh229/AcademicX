@@ -77,7 +77,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card
+          {/* <Card
             className="hover:shadow-xl transition cursor-pointer"
             onClick={() => router.push("/contact")}
           >
@@ -88,7 +88,7 @@ export default function HomePage() {
               <CardTitle>Contact</CardTitle>
               <p className="text-gray-600 text-sm">Contact the maintainers</p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Logout Button */}
