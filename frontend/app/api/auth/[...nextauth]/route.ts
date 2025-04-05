@@ -1,5 +1,6 @@
 import { backendDomain, Student } from "@/types/types";
 import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
@@ -7,6 +8,31 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    CredentialsProvider({
+      name: "Viewer Login",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email"
+        },
+        name: {
+          label: "Name",
+          type: "text"
+        }
+      },
+      async authorize(credentials) {
+        const { email, name } = credentials as { email: string; name: string }
+        if (!email || !name) {
+          return null;
+        }
+        return {
+          id: email,
+          email,
+          name,
+          role: "viewer"
+        }
+      }
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -58,9 +84,6 @@ export const authOptions: NextAuthOptions = {
       }
       return true; // Allow sign-in
     },
-
-
-
     async jwt({ token, user }) {
       if (user) {
         token.email = (user as any).email;
@@ -70,7 +93,6 @@ export const authOptions: NextAuthOptions = {
       console.log("JWT Token:", token);
       return token;
     },
-
     async session({ session, token }) {
       if (session.user) {
         session.user.email = token.email as string;

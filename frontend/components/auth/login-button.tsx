@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { signIn } from "next-auth/react";
 
 interface LoginButtonProps {
   icon: React.ReactNode;
   label: string;
   description: string;
   variant?: "default" | "outline";
+  handleClick: () => void;
 }
 
 export function LoginButton({
@@ -16,6 +16,7 @@ export function LoginButton({
   label,
   description,
   variant = "default",
+  handleClick,
 }: LoginButtonProps) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
@@ -25,7 +26,7 @@ export function LoginButton({
       <Button
         className="w-full"
         variant={variant}
-        onClick={() => signIn("google")}
+        onClick={() => handleClick()}
       >
         Login with Google
         <ArrowRight className="ml-2 h-4 w-4" />
