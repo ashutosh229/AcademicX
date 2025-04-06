@@ -14,7 +14,7 @@ export function formatString(str: string) {
 
 export function getUserVote(comments: Comment[] | undefined, commentId: number) {
   const comment = comments?.find(comment => comment.id === commentId);
-  return comment ? comment.user_vote : null;
+  return comment?.user_vote ?? 0;
 }
 
 export function getUserVoteForResources(resources: Resource[] | undefined, resourceId: number) {
