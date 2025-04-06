@@ -63,7 +63,7 @@ def upvote_comment(request):
         return Response({"error": "User already upvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Remove downvote if it exists (preventing both upvote and downvote at the same time)
-    downvote = CommentVote.objects.filter(student=student, comment=comment, vote_type=-1).first()
+    downvote = CommentVote.objects.filter(student=student, comment=comment, vote_type=2).first()
     if downvote:
         downvote.delete()
         comment.downvotes -= 1  # Decrement downvote count
@@ -110,7 +110,7 @@ def downvote_comment(request):
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Check if the user already downvoted
-    if CommentVote.objects.filter(student=student, comment=comment, vote_type=-1).exists():
+    if CommentVote.objects.filter(student=student, comment=comment, vote_type=2).exists():
         return Response({"error": "User already downvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Remove upvote if it exists (preventing both upvote and downvote at the same time)
@@ -120,7 +120,7 @@ def downvote_comment(request):
         comment.upvotes -= 1
 
     # Add downvote
-    CommentVote.objects.create(student=student, comment=comment, vote_type=-1)
+    CommentVote.objects.create(student=student, comment=comment, vote_type=2)
     comment.downvotes += 1
     comment.save()
 
@@ -138,7 +138,7 @@ def remove_downvote_comment(request):
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Find the downvote record
-    vote = CommentVote.objects.filter(student=student, comment=comment, vote_type=-1).first()
+    vote = CommentVote.objects.filter(student=student, comment=comment, vote_type=2).first()
     if not vote:
         return Response({"error": "User has not downvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
 

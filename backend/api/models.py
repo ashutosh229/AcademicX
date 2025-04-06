@@ -72,7 +72,7 @@ class Comment(models.Model):
 class ResourceVote(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="resource_votes", to_field="email")
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name="votes")
-    vote_type = models.IntegerField(choices=[(-1, "Downvote"), (1, "Upvote")])
+    vote_type = models.IntegerField(choices=[(2, "Downvote"), (1, "Upvote")])
 
     class Meta:
         unique_together = ("student", "resource")  # Prevents duplicate votes
@@ -80,7 +80,7 @@ class ResourceVote(models.Model):
 class CommentVote(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="comment_votes", to_field="email")
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="votes")
-    vote_type = models.IntegerField(choices=[(-1, "Downvote"), (1, "Upvote")])  # restricts choices to valid values
+    vote_type = models.IntegerField(choices=[(2, "Downvote"), (1, "Upvote")])  # restricts choices to valid values
 
     class Meta:
         unique_together = ("student", "comment")  # Ensures one vote per student per comment

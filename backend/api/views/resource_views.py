@@ -61,7 +61,7 @@ def upvote_resource(request):
         return Response({"error": "User already upvoted this resource."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Remove downvote if exists
-    downvote = ResourceVote.objects.filter(student=student, resource=resource, vote_type=-1).first()
+    downvote = ResourceVote.objects.filter(student=student, resource=resource, vote_type=2).first()
     if downvote:
         downvote.delete()
         resource.downvotes -= 1
@@ -110,7 +110,7 @@ def downvote_resource(request):
     resource = get_object_or_404(Resource, resource_id=resource_id)
 
     # Check if already downvoted
-    if ResourceVote.objects.filter(student=student, resource=resource, vote_type=-1).exists():
+    if ResourceVote.objects.filter(student=student, resource=resource, vote_type=2).exists():
         return Response({"error": "User already downvoted this resource."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Remove upvote if exists
@@ -120,7 +120,7 @@ def downvote_resource(request):
         resource.upvotes -= 1
 
     # Add downvote
-    ResourceVote.objects.create(student=student, resource=resource, vote_type=-1)
+    ResourceVote.objects.create(student=student, resource=resource, vote_type=2)
     resource.downvotes += 1
     resource.save()
 
@@ -139,7 +139,7 @@ def remove_downvote_resource(request):
     resource = get_object_or_404(Resource, resource_id=resource_id)
 
     # Find the downvote
-    vote = ResourceVote.objects.filter(student=student, resource=resource, vote_type=-1).first()
+    vote = ResourceVote.objects.filter(student=student, resource=resource, vote_type=2).first()
     if not vote:
         return Response({"error": "User has not downvoted this resource."}, status=status.HTTP_400_BAD_REQUEST)
 
