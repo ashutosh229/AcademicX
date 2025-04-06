@@ -9,6 +9,7 @@ import {
 import { setCourseFeedback } from "@/redux/slices/studentSlice";
 import { AppDispatch } from "@/redux/store";
 import { backendDomain } from "@/types/types";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
@@ -18,6 +19,7 @@ export function useCourseHandlers() {
   const router = useRouter();
   const coursesLoadedRef = useRef(false);
   const pendingRequestsRef = useRef(new Map());
+  const { data: session } = useSession();
 
   useEffect(() => {
     // Prevent redundant API calls if data is already loaded
@@ -61,16 +63,25 @@ export function useCourseHandlers() {
 
   const handleViewCourse = useCallback(
     (id: number) => {
+      if (session?.user.role === "viewer") {
+        router.push("/view-course-viewer");
+        return;
+      }
       // This operation is synchronous, no need for loading state
       dispatch(setActiveCourseId(id));
       router.push(`/courses/${id}`);
     },
-    [dispatch, router]
+    [dispatch, router, session]
   );
 
   const handlePostFeedback = useCallback(
-    async (id: number, email: string | undefined) => {
+    async (id: number) => {
+      if (session?.user.role === "viewer") {
+        router.push("/post-feedback-viewer");
+        return;
+      }
       // Prevent duplicate requests for the same course/email
+      const email = session?.user.email?.toString();
       const requestKey = `${id}-${email}`;
       if (pendingRequestsRef.current.get(requestKey)) return;
 
@@ -99,10 +110,12 @@ export function useCourseHandlers() {
 
         if (response.status === 404) {
           router.push(`/courses/${id}/feedback`);
-        } else {
+        } else if (response.ok) {
           const data = await response.json();
           dispatch(setCourseFeedback(data));
           router.push(`/courses/${id}/feedback/show`);
+        } else {
+          throw new Error(`Unexpected response: ${response.status}`);
         }
       } catch (error: any) {
         const errorMessage =
@@ -115,7 +128,7 @@ export function useCourseHandlers() {
         pendingRequestsRef.current.delete(requestKey);
       }
     },
-    [dispatch, router]
+    [dispatch, router, session]
   );
 
   return { handleViewCourse, handlePostFeedback };
