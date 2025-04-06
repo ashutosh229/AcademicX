@@ -14,7 +14,7 @@ export function formatString(str: string) {
 
 export function getUserVote(comments: Comment[] | undefined, commentId: number) {
   const comment = comments?.find(comment => comment.id === commentId);
-  return comment ? comment.user_vote : null;
+  return comment?.user_vote ?? 0;
 }
 
 export function getUserVoteForResources(resources: Resource[] | undefined, resourceId: number) {
@@ -33,23 +33,32 @@ export function getCourseNameFromId(courses: Course[], id: number | undefined) {
 
 export const isValidUrl = async (url: string): Promise<boolean> => {
   try {
-    // 1. Format validation
+    // Step 1: Format and protocol check
     const parsed = new URL(url);
-    const isHttp = parsed.protocol === "http:" || parsed.protocol === "https:";
-    if (!isHttp) return false;
+    if (!["http:", "https:"].includes(parsed.protocol)) return false;
 
-    // 2. Check reachability (CORS restrictions may block this for some domains)
-    const response = await fetch(url, {
-      method: "HEAD", // Try to avoid loading entire page
-      mode: "no-cors", // Prevents CORS errors from throwing, but we can't read response
+    // Step 2: Regex domain validation
+    const domainRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+    if (!domainRegex.test(url)) return false;
+
+    // Step 3: Filter out blocked/internal domains
+    const hostname = parsed.hostname.toLowerCase();
+    const blockedHosts = ["localhost", "127.0.0.1", "example.com", "example.invalid"];
+    if (blockedHosts.includes(hostname)) return false;
+
+    // Step 4: Try to reach the URL without checking response (CORS-safe)
+    await fetch(parsed.href, {
+      method: "HEAD",
+      mode: "no-cors",
     });
 
-    // If mode is "no-cors", we can't reliably read status, so we assume it's fine
+    // Even if fetch returns an opaque response, assume valid
     return true;
   } catch (err) {
     return false;
   }
 };
+
 
 
 

@@ -184,20 +184,13 @@ export default function CoursesPage() {
                         >
                           View Course
                         </Button>
-                        {session?.user?.role === "student" && (
-                          <Button
-                            onClick={() =>
-                              handlePostFeedback(
-                                course.id,
-                                session.user.email?.toString()
-                              )
-                            }
-                            variant="outline"
-                            size="sm"
-                          >
-                            Post Feedback
-                          </Button>
-                        )}
+                        <Button
+                          onClick={() => handlePostFeedback(course.id)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Post Feedback
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>

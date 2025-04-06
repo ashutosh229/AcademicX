@@ -432,7 +432,7 @@ const CoursePageClient = () => {
       )
         return;
 
-      if (!isValidUrl(url)) {
+      if (!(await isValidUrl(url))) {
         setShowInvalidUrlAlert(true);
         return;
       }
@@ -983,7 +983,6 @@ const CoursePageClient = () => {
             <AlertDialogTitle>Invalid URL</AlertDialogTitle>
             <AlertDialogDescription>
               The URL you entered is not valid. Please enter a valid URL
-              starting with <code>http://</code> or <code>https://</code>.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
