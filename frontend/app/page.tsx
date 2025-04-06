@@ -62,7 +62,7 @@ export default function WelcomePage() {
           </div>
 
           <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-            Welcome to AcademicX
+            Welcome to IIT Bhilai Student Forum
           </h1>
 
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
