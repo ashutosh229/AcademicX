@@ -1,5 +1,4 @@
-Left to be done:
--Changes in the role based access control (done)
--resolving the issue of the downvote tracking mechanism (done)
--improvement in url validation logic (done)
-
+Changes:
+-For the courses in which the feedbacks are not given, we can display the percentage as 0%. It is very obvious that if someone has not yet given the feedback it will be empty and the stat will be shown as 0 
+-The url validation algorithm is a bit strict i guess because the link which you have provided is not reachable when we talk about internet, it is accessible in the local system and thats why it is showing as not allowed 
+-The about page is changed
