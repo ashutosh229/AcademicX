@@ -88,11 +88,12 @@ export default function AboutPage() {
               For Viewers
             </h2>
             <ul className="space-y-2 text-gray-700">
-              <li>• Get to know the analytics of the application</li>
-              <li>• View the essence of course feedbacks and resources</li>
-              <li>• Explore the IIT Bhilai Student Forum</li>
+              <li>• View Website Statistics</li>
               <li>• Get insights into the academic environment</li>
-              <li>• Get to know about the application and its developers</li>
+              <li>
+                • Understand the essence of course feedbacks and resources
+              </li>
+              <li>• Learn more about the application and the team behind it</li>
             </ul>
           </Card>
         </div>
