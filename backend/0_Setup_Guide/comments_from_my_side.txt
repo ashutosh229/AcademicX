@@ -1,5 +1,0 @@
-Left to be done:
--Changes in the role based access control (done)
--resolving the issue of the downvote tracking mechanism (done)
--improvement in url validation logic (done)
-
