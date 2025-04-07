@@ -13,11 +13,14 @@ const developers = [
   {
     name: "Shubham Mahajan",
     role: "Backend Developer",
-    email: "shubhamy@iitbhilai.ac.in",
+    email: "shubhamy0023@gmail.com",
     linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
     github: "https://github.com/Shubham-Y-Mahajan",
     branch: "Computer Science and Engineering",
-    year: "2026",
+    degree: "B.Tech",
+    yearStarting: "2022",
+    yearEnding: "2026",
+    college: "IIT Bhilai",
     image: "/images/shubham.jpg", // Replace with actual path or URL
     techStack: ["Django REST Framework", "PostgreSQL"],
   },
@@ -28,7 +31,10 @@ const developers = [
     linkedin: "https://www.linkedin.com/in/ashutosh-kumar-jha-601098280/",
     github: "https://github.com/ashutosh229",
     branch: "Data Science and Artificial Intelligence",
-    year: "2027",
+    degree: "B.Tech",
+    yearStarting: "2023",
+    yearEnding: "2027",
+    college: "IIT Bhilai",
     image: "/images/shubham.jpg", // Replace with actual path or URL
     techStack: ["Next.js", "Tailwind CSS", "ShadcnUI", "Redux Toolkit"],
   },
@@ -88,11 +94,12 @@ export default function AboutPage() {
               For Viewers
             </h2>
             <ul className="space-y-2 text-gray-700">
-              <li>• Get to know the analytics of the application</li>
-              <li>• View the essence of course feedbacks and resources</li>
-              <li>• Explore the IIT Bhilai Student Forum</li>
+              <li>• View Website Statistics</li>
               <li>• Get insights into the academic environment</li>
-              <li>• Get to know about the application and its developers</li>
+              <li>
+                • Understand the essence of course feedbacks and resources
+              </li>
+              <li>• Learn more about the application and the team behind it</li>
             </ul>
           </Card>
         </div>
@@ -119,7 +126,7 @@ export default function AboutPage() {
                         {dev.role}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {`${dev.branch}, ${dev.year}`}
+                        {`${dev.degree} in ${dev.branch}, ${dev.college} (${dev.yearStarting} - ${dev.yearEnding})`}
                       </p>
                     </div>
                   </div>
