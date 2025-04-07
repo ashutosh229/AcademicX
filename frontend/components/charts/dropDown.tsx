@@ -8,12 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { gradeMapping } from "@/types/types";
+import { GradeDropdownProps, gradeMapping } from "@/types/types";
 import { useState } from "react";
-
-interface GradeDropdownProps {
-  onChange: (value: number) => void;
-}
 
 export default function GradeDropdown({ onChange }: GradeDropdownProps) {
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);

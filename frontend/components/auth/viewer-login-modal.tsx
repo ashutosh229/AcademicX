@@ -8,14 +8,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ViewerLoginModalProps } from "@/types/types";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-interface ViewerLoginModalProps {
-  open: boolean;
-  onClose: () => void;
-}
 
 export default function ViewerLoginModal({
   open,

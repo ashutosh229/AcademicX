@@ -10,12 +10,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { AddCommentDialogProps } from "@/types/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-
-interface AddCommentDialogProps {
-  onAddComment: (commentText: string, isAnonymous: boolean) => void;
-}
 
 const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
   onAddComment,

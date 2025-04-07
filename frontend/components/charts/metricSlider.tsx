@@ -1,16 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-
-interface MetricSliderProps {
-  label: string;
-  value: number[];
-  setValue: (val: number[]) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-  minLabel?: string;
-  maxLabel?: string;
-}
+import { MetricSliderProps } from "@/types/types";
 
 const MetricSlider: React.FC<MetricSliderProps> = ({
   label,

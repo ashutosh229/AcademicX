@@ -1,4 +1,7 @@
-// Temporary data store until API integration
+//backend domain
+export const backendDomain = "http://localhost:8080"
+
+//Course
 export interface Course {
   id: number;
   name: string;
@@ -92,74 +95,12 @@ export interface CourseDetails {
   metrics: CourseMetrics,
 }
 
+//Redux States
 export interface CourseState {
   courses: Course[];
   loading: boolean;
   error: string | null;
   activeCourseId: number | null;
-}
-
-export const gradeMapping: Record<string, number> = {
-  "A+": 10,
-  A: 10,
-  "A-": 9,
-  B: 8,
-  "B-": 7,
-  C: 6,
-  "C-": 5,
-  D: 4,
-  F: 0,
-  "FS": 0,
-  I: 0
-};
-
-export const backendDomain = "http://localhost:8080"
-
-// Define types for filter state
-export interface FilterState {
-  searchTerm: string;
-  professorSearch: string;
-  // selectedProfessor: string;
-  selectedDepartment: string;
-  selectedCredits: string;
-}
-
-// Define types for course metadata
-export interface CourseMetadata {
-  // uniqueProfessors: string[];
-  uniqueDepartments: string[];
-  uniqueCredits: string[];
-}
-
-// Define return type for the hook
-export interface CourseFiltersResult {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
-  professorSearch: string;
-  setProfessorSearch: (value: string) => void;
-  // selectedProfessor: string;
-  // setSelectedProfessor: (value: string) => void;
-  selectedDepartment: string;
-  setSelectedDepartment: (value: string) => void;
-  selectedCredits: string;
-  setSelectedCredits: (value: string) => void;
-  // uniqueProfessors: string[];
-  uniqueDepartments: string[];
-  uniqueCredits: string[];
-  filteredCourses: Course[];
-}
-
-// Define analytics data type
-export interface AnalyticsData {
-  [key: string]: number;
-}
-
-// Define return type for the hook
-export interface AnalyticsResult {
-  analytics: AnalyticsData | null;
-  loading: boolean;
-  error: string | null;
-  refreshAnalytics: () => Promise<void>;
 }
 
 export interface Student {
@@ -205,11 +146,105 @@ export interface AuthState {
   user: AuthUser | null;
 }
 
-// Define an interface for the reducer payload
 export interface AuthPayload {
   status: AuthState["status"];
   user?: AuthState["user"];
 }
+
+//Unique Filter states
+export interface FilterState {
+  searchTerm: string;
+  professorSearch: string;
+  selectedDepartment: string;
+  selectedCredits: string;
+}
+
+export interface CourseMetadata {
+  uniqueDepartments: string[];
+  uniqueCredits: string[];
+}
+
+export interface CourseFiltersResult {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  professorSearch: string;
+  setProfessorSearch: (value: string) => void;
+  selectedDepartment: string;
+  setSelectedDepartment: (value: string) => void;
+  selectedCredits: string;
+  setSelectedCredits: (value: string) => void;
+  uniqueDepartments: string[];
+  uniqueCredits: string[];
+  filteredCourses: Course[];
+}
+
+//Component Props
+export interface LoginButtonProps {
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  variant?: "default" | "outline";
+  handleClick: () => void;
+  inButtonLabel: string;
+}
+
+export interface ViewerLoginModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export interface ChartCardProps {
+  metricName: string;
+  metricData: {
+    average: number;
+    distribution: { value: number; count: number }[];
+  };
+}
+
+export interface GradeDropdownProps {
+  onChange: (value: number) => void;
+}
+
+export interface MetricSliderProps {
+  label: string;
+  value: number[];
+  setValue: (val: number[]) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  minLabel?: string;
+  maxLabel?: string;
+}
+
+export interface AddCommentDialogProps {
+  onAddComment: (commentText: string, isAnonymous: boolean) => void;
+}
+
+export interface AnalyticsData {
+  [key: string]: number;
+}
+
+export interface AnalyticsResult {
+  analytics: AnalyticsData | null;
+  loading: boolean;
+  error: string | null;
+  refreshAnalytics: () => Promise<void>;
+}
+
+//data
+export const gradeMapping: Record<string, number> = {
+  "A+": 10,
+  A: 10,
+  "A-": 9,
+  B: 8,
+  "B-": 7,
+  C: 6,
+  "C-": 5,
+  D: 4,
+  F: 0,
+  "FS": 0,
+  I: 0
+};
 
 
 

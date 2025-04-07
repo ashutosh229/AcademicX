@@ -1,3 +1,4 @@
+import { ChartCardProps } from "@/types/types";
 import {
   BarElement,
   CategoryScale,
@@ -20,14 +21,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface ChartCardProps {
-  metricName: string;
-  metricData: {
-    average: number;
-    distribution: { value: number; count: number }[];
-  };
-}
 
 const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
   const barData = {

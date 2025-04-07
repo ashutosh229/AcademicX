@@ -1,16 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { LoginButtonProps } from "@/types/types";
 import { ArrowRight } from "lucide-react";
-
-interface LoginButtonProps {
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  variant?: "default" | "outline";
-  handleClick: () => void;
-  inButtonLabel: string;
-}
 
 export function LoginButton({
   icon,

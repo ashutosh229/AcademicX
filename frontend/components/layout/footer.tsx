@@ -1,4 +1,4 @@
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap } from "lucide-react";
 
 export function Footer() {
   return (

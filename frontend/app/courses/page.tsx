@@ -73,32 +73,6 @@ export default function CoursesPage() {
             className="flex-1 min-w-[250px] p-2 border border-gray-300 rounded-lg"
           />
 
-          {/* Professor Filter */}
-          {/* <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Professor:</label>
-            <Select
-              value={selectedProfessor}
-              onValueChange={(value) =>
-                setSelectedProfessor(value === "all" ? "" : value)
-              }
-            >
-              <SelectTrigger className="w-[180px] border border-gray-300 shadow-sm hover:bg-gray-100">
-                <SelectValue placeholder="All Professors" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Professors</SelectItem>
-                {uniqueProfessors.map(
-                  (professor) =>
-                    professor && (
-                      <SelectItem key={professor} value={professor}>
-                        {professor}
-                      </SelectItem>
-                    )
-                )}
-              </SelectContent>
-            </Select>
-          </div> */}
-
           {/* Department Filter */}
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Department:</label>

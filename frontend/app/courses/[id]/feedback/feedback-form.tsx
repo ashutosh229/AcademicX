@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { setError, setLoading } from "@/redux/slices/courseSlice";
 import { RootState } from "@/redux/store";
+import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -58,8 +59,6 @@ const FeedbackForm = () => {
   // const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showGradeAlert, setShowGradeAlert] = useState(false); // NEW
-
-  const backendDomain = "http://localhost:8080";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
