@@ -42,6 +42,11 @@ const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
     },
   };
 
+  let averageValue = metricData.average;
+  if (metricData.average === -1) {
+    averageValue = 0;
+  }
+
   const stableGaugeChart = useMemo(
     () => (
       <GaugeChart
@@ -49,21 +54,19 @@ const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
         nrOfLevels={11}
         arcsLength={[0.2, 0.4, 0.4]}
         colors={["#FF5F6D", "#FFC371", "#29AB87"]}
-        percent={metricData.average / 10}
+        percent={averageValue / 10}
         textColor="#000"
         animate={false} // Disable animation
       />
     ),
-    [metricName, metricData.average]
+    [metricName, averageValue]
   );
 
   return (
     <div>
       <h3 className="text-lg font-medium mb-4">{metricName}</h3>
       {stableGaugeChart}
-      <p className="text-center mt-2">
-        Average: {metricData.average.toFixed(2)}/10
-      </p>
+      <p className="text-center mt-2">Average: {averageValue.toFixed(2)}/10</p>
       <Bar data={barData} options={barOptions} className="mt-4" />
     </div>
   );
