@@ -1,5 +1,5 @@
 //backend domain
-export const backendDomain = "http://localhost:8080"
+export const backendDomain = "https://iit-bhilai-student-forum.onrender.com"
 
 //Course
 export interface Course {

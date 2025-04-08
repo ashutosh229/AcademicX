@@ -47,13 +47,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ metricName, metricData }) => {
     averageValue = 0;
   }
 
+  let colors = ["#29AB87", "#FFC371", "#FF5F6D"];
+  if (
+    [
+      "Teaching Quality",
+      "Resources Provided",
+      "Recommendation",
+      "Grade Obtained",
+    ].includes(metricName)
+  ) {
+    colors = ["#FF5F6D", "#FFC371", "#29AB87"];
+  }
+
   const stableGaugeChart = useMemo(
     () => (
       <GaugeChart
         id={metricName}
         nrOfLevels={11}
         arcsLength={[0.2, 0.4, 0.4]}
-        colors={["#FF5F6D", "#FFC371", "#29AB87"]}
+        colors={colors}
         percent={averageValue / 10}
         textColor="#000"
         animate={false} // Disable animation
