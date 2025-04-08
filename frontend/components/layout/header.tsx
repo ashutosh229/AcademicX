@@ -76,7 +76,7 @@ export function Header() {
                 <DropdownMenuContent align="end">
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
-                      {session.user?.name && (
+                      {session?.user?.name && (
                         <p className="font-medium">{session.user.name}</p>
                       )}
                       {session.user?.email && (
