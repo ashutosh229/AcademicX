@@ -79,7 +79,7 @@ export function Header() {
                       {session?.user?.name && (
                         <p className="font-medium">{session.user.name}</p>
                       )}
-                      {session.user?.email && (
+                      {session?.user?.email && (
                         <p className="w-[200px] truncate text-sm text-muted-foreground">
                           {session.user.email}
                         </p>
