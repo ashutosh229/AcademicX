@@ -94,11 +94,11 @@ def get_course_details(request):
 
         metrics = {
             "content_toughness": {"average":0, "distribution":[]},
-            "teaching_quality": {"average":0, "distribution":[]},
             "workload": {"average":0, "distribution":[]},
-            "exam_difficulty": {"average":0, "distribution":[]},
-            "grading_strictness": {"average":0, "distribution":[]},
+            "teaching_quality": {"average": 0, "distribution": []},
             "resources_provided": {"average":0, "distribution":[]},
+            "exam_difficulty": {"average": 0, "distribution": []},
+            "grading_strictness": {"average": 0, "distribution": []},
             "recommendation": {"average":0, "distribution":[]},
             "grade_obtained": {"average":0, "distribution":[]},
         }
