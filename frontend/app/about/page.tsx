@@ -11,20 +11,6 @@ import {
 
 const developers = [
   {
-    name: "Shubham Mahajan",
-    role: "Backend Developer",
-    email: "shubhamy0023@gmail.com",
-    linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
-    github: "https://github.com/Shubham-Y-Mahajan",
-    branch: "Computer Science and Engineering",
-    degree: "B.Tech",
-    yearStarting: "2022",
-    yearEnding: "2026",
-    college: "IIT Bhilai",
-    image: "/images/shubham.jpg",
-    techStack: ["Django REST Framework", "PostgreSQL"],
-  },
-  {
     name: "Ashutosh Kumar Jha",
     role: "Frontend Developer",
     email: "ashutoshj@iitbhilai.ac.in",
@@ -35,8 +21,22 @@ const developers = [
     yearStarting: "2023",
     yearEnding: "2027",
     college: "IIT Bhilai",
-    image: "/images/shubham.jpg",
+    image: "./Ashutosh_12340390.jpg",
     techStack: ["Next.js", "Tailwind CSS", "ShadcnUI", "Redux Toolkit"],
+  },
+  {
+    name: "Shubham Mahajan",
+    role: "Backend Developer",
+    email: "shubhamy0023@gmail.com",
+    linkedin: "https://www.linkedin.com/in/shubham-y-mahajan/",
+    github: "https://github.com/Shubham-Y-Mahajan",
+    branch: "Computer Science and Engineering",
+    degree: "B.Tech",
+    yearStarting: "2022",
+    yearEnding: "2026",
+    college: "IIT Bhilai",
+    image: "./Shubham_edited_pic_3.jpg",
+    techStack: ["Django REST Framework", "PostgreSQL"],
   },
 ];
 
@@ -116,36 +116,37 @@ export default function AboutPage() {
             </CardTitle>
           </CardHeader>
 
+          {/* Scrollable Developer List */}
           <CardContent className="p-6">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-col gap-y-12 max-h-[80vh] overflow-y-auto pr-2">
               {developers.map((dev, index) => (
                 <Card
                   key={index}
-                  className="p-4 flex flex-col items-center text-center shadow-sm"
+                  className="p-6 flex flex-col items-center text-center w-full shadow-sm"
                 >
-                  {/* Profile Image */}
+                  {/* Large Profile Image */}
                   <img
                     src={dev.image}
                     alt={`Photo of ${dev.name}`}
-                    className="w-36 h-36 rounded-full object-cover border-4 border-primary shadow-md mb-4"
+                    className="w-64 h-64 sm:w-72 sm:h-72 rounded-full object-cover border-4 border-primary shadow-md mb-6"
                   />
 
                   {/* Name & Role */}
-                  <h3 className="text-lg font-semibold">{dev.name}</h3>
-                  <p className="text-sm text-muted-foreground">{dev.role}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <h3 className="text-2xl font-semibold">{dev.name}</h3>
+                  <p className="text-base text-muted-foreground">{dev.role}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
                     {`${dev.degree} in ${dev.branch}`}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {`${dev.yearStarting} - ${dev.yearEnding}`}
                   </p>
 
                   {/* Tech Stack */}
-                  <div className="flex flex-wrap justify-center gap-2 mt-4">
+                  <div className="flex flex-wrap justify-center gap-3 mt-5">
                     {dev.techStack.map((tech, i) => (
                       <span
                         key={i}
-                        className="bg-primary/10 text-primary text-xs px-3 py-1 rounded-full font-medium"
+                        className="bg-primary/10 text-primary text-sm px-4 py-2 rounded-full font-medium"
                       >
                         {tech}
                       </span>
@@ -153,13 +154,13 @@ export default function AboutPage() {
                   </div>
 
                   {/* Socials */}
-                  <div className="flex justify-center gap-4 mt-4">
+                  <div className="flex justify-center gap-6 mt-6">
                     <a
                       href={`mailto:${dev.email}`}
                       aria-label="Email"
                       className="text-primary hover:text-red-500 transition-colors"
                     >
-                      <Mail className="w-5 h-5" />
+                      <Mail className="w-6 h-6" />
                     </a>
                     <a
                       href={dev.linkedin}
@@ -168,7 +169,7 @@ export default function AboutPage() {
                       aria-label="LinkedIn"
                       className="text-primary hover:text-blue-600 transition-colors"
                     >
-                      <Linkedin className="w-5 h-5" />
+                      <Linkedin className="w-6 h-6" />
                     </a>
                     <a
                       href={dev.github}
@@ -177,7 +178,7 @@ export default function AboutPage() {
                       aria-label="GitHub"
                       className="text-primary hover:text-gray-800 transition-colors"
                     >
-                      <Github className="w-5 h-5" />
+                      <Github className="w-6 h-6" />
                     </a>
                   </div>
                 </Card>
