@@ -1,10 +1,11 @@
 import { Comment, Course, Resource } from '@/types/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { backendDomain, Student } from "@/types/types";
+import { backendDomain, Student } from '@/types/types';
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { students } from './students_data';
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -106,10 +107,11 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google") {
         try {
           console.log("Fetching students...");
-          const response = await fetch(`${backendDomain}/get_all_students/`);
-          if (!response.ok) throw new Error("Failed to fetch students");
+          // const response = await fetch(`${backendDomain}/get_all_students/`);
+          // if (!response.ok) throw new Error("Failed to fetch students");
 
-          const data = (await response.json()) as Student[];
+          // const data = (await response.json()) as Student[];
+          const data = students as Student[];
           console.log("Student Data:", data);
 
           const userEmail = (user as any).email;
