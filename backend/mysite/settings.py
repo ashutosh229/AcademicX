@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-%cht)m85*otk)c0x19wm@z(#3_yq8**gi@wg4#yd))nqjx38#h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['iit-bhilai-student-forum.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
