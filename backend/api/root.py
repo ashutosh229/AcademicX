@@ -105,6 +105,10 @@ def api_root(request, format=None):
                 "get_analytics", request=request, format=format
 
             ),
+            "Warm Up Backend and DB": reverse(
+                "warmup", request=request, format=format
+
+            ),
 
 
         }

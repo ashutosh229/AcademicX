@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from api.models import Student, Comment, CourseMetrics, Resource, CommentVote, ResourceVote
-
+from django.db import connection
 @api_view(['GET'])
 def get_analytics(request):
     analytics = {
@@ -15,3 +15,10 @@ def get_analytics(request):
         "number_of_downvotes": CommentVote.objects.filter(vote_type=-1).count() + ResourceVote.objects.filter(vote_type=-1).count()
     }
     return Response(analytics)
+
+@api_view(['GET'])
+def warmup(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1;")
+        cursor.fetchone()
+    return Response({"status": "backend + db warmed"})
