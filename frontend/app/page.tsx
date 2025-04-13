@@ -14,6 +14,17 @@ export default function WelcomePage() {
   const router = useRouter();
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      return controller.abort();
+    }, 3000);
+    fetch("https://iit-bhilai-student-forum.onrender.com/warmup/", {
+      signal: controller.signal,
+    }).catch((error) => console.log("Warmup failed", error));
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
     if (session?.user) {
       dispatch(
         setAuthStatus({
