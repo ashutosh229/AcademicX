@@ -62,4 +62,5 @@ urlpatterns = [
 
 
     path('get_analytics/', get_analytics, name='get_analytics'), # integrated
+    path('warmup/',warmup, name='warmup'),
 ]
