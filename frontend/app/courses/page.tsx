@@ -171,8 +171,11 @@ export default function CoursesPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-4">
-                    No courses found.
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className="h-6 w-6 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                      <p className="text-sm text-gray-500">Loading...</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
