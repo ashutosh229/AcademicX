@@ -39,24 +39,20 @@ export function Header() {
                 Courses
               </Link>
             )}
-            <Link
-              href={"/analytics"}
-              className="text-sm font-medium hover:text-primary"
-            >
-              Analytics
-            </Link>
+            {isAuthenticated && (
+              <Link
+                href={"/analytics"}
+                className="text-sm font-medium hover:text-primary"
+              >
+                Analytics
+              </Link>
+            )}
             <Link
               href="/about"
               className="text-sm font-medium hover:text-primary"
             >
               About
             </Link>
-            {/* <Link
-              href="/contact"
-              className="text-sm font-medium hover:text-primary"
-            >
-              Contact
-            </Link> */}
 
             {isAuthenticated && (
               <DropdownMenu>
