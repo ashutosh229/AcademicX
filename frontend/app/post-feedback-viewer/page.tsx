@@ -46,7 +46,7 @@ export default function PostFeedbackViewerPage() {
             alt={`Feedback Slide ${currentIndex + 1}`}
             width={800}
             height={450}
-            className="w-full h-full object-cover transition-all duration-300"
+            className="w-full h-full object-contain transition-all duration-300 bg-white"
           />
 
           {/* Prev / Next buttons */}
