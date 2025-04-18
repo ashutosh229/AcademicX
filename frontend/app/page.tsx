@@ -13,50 +13,6 @@ export default function WelcomePage() {
   const { data: session, status } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
-
-  // Backend Warmup
-  useEffect(() => {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      if (!controller.signal.aborted) controller.abort();
-    }, 5000);
-
-    const warmer = async () => {
-      setLoading(true);
-      setSuccess(false);
-
-      try {
-        const response = await fetch(`${backendDomain}/warmup/`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) throw new Error("Failed warmup response");
-
-        const data = await response.json();
-        console.log(data);
-        setSuccess(true);
-      } catch (error) {
-        if ((error as any).name === "AbortError") {
-          console.log("Backend warmup request timed out.");
-        } else {
-          console.log("Error warming backend:", error);
-        }
-        setSuccess(false);
-      } finally {
-        clearTimeout(timeout);
-        setLoading(false);
-      }
-    };
-
-    warmer();
-
-    return () => {
-      clearTimeout(timeout);
-      controller.abort();
-    };
-  }, []);
 
   // Authenticated Redirection
   useEffect(() => {
@@ -114,37 +70,23 @@ export default function WelcomePage() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto min-h-[280px] place-items-center">
-          {loading ? (
-            <div className="col-span-2 flex justify-center items-center h-full">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
-            </div>
-          ) : success ? (
-            <>
-              <LoginButton
-                icon={<GraduationCap className="h-12 w-12 text-primary" />}
-                label="Student Access"
-                description="For enrolled students with institutional credentials. Full access to course materials and feedback."
-                handleClick={handleLoginForStudent}
-                inButtonLabel="Login with Google"
-              />
-              <LoginButton
-                icon={<Users className="h-12 w-12 text-primary" />}
-                label="Viewer Access"
-                description="For guests and prospective students. Limited access to view course information."
-                variant="outline"
-                handleClick={handleLoginForViewer}
-                inButtonLabel="View as Guest"
-              />
-            </>
-          ) : (
-            <div className="col-span-2 bg-red-100 text-red-700 px-4 py-6 rounded-xl shadow">
-              <p className="text-lg font-medium mb-2">Backend unavailable</p>
-              <p className="text-sm">
-                We’re having trouble connecting to the server. Please try again
-                later.
-              </p>
-            </div>
-          )}
+          <>
+            <LoginButton
+              icon={<GraduationCap className="h-12 w-12 text-primary" />}
+              label="Student Access"
+              description="For enrolled students with institutional credentials. Full access to course materials and feedback."
+              handleClick={handleLoginForStudent}
+              inButtonLabel="Login with Google"
+            />
+            <LoginButton
+              icon={<Users className="h-12 w-12 text-primary" />}
+              label="Viewer Access"
+              description="For guests and prospective students. Limited access to view course information."
+              variant="outline"
+              handleClick={handleLoginForViewer}
+              inButtonLabel="View as Guest"
+            />
+          </>
         </div>
 
         <div className="mt-12 text-sm text-gray-500">
