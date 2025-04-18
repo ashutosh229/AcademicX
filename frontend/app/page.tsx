@@ -18,11 +18,14 @@ export default function WelcomePage() {
 
   // Backend Warmup
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      if (!controller.signal.aborted) controller.abort();
+    }, 5000);
+
     const warmer = async () => {
       setLoading(true);
       setSuccess(false);
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000);
 
       try {
         const response = await fetch(`${backendDomain}/warmup/`, {
@@ -35,7 +38,11 @@ export default function WelcomePage() {
         console.log(data);
         setSuccess(true);
       } catch (error) {
-        console.log("Error warming backend", error);
+        if ((error as any).name === "AbortError") {
+          console.log("Backend warmup request timed out.");
+        } else {
+          console.log("Error warming backend:", error);
+        }
         setSuccess(false);
       } finally {
         clearTimeout(timeout);
@@ -44,6 +51,11 @@ export default function WelcomePage() {
     };
 
     warmer();
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
 
   // Authenticated Redirection
