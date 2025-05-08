@@ -16,7 +16,7 @@ def get_analytics(request):
     }
     return Response(analytics)
 
-@api_view(['GET'])
+@api_view(['GET', 'HEAD'])
 def warmup(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT 1;")
