@@ -1086,17 +1086,21 @@ const CoursePageClient = () => {
 
               {/* Comments Section */}
               <div className="space-y-6">
-                {sortedComments.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">
-                    No comments yet. Be the first to add one!
-                  </p>
+                {sortedComments ? (
+                  sortedComments.length === 0 ? (
+                    <p className="text-gray-500 text-center py-4">
+                      No comments yet. Be the first to add one!
+                    </p>
+                  ) : (
+                    sortedComments.map((comment) => (
+                      <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                      ></CommentItem>
+                    ))
+                  )
                 ) : (
-                  sortedComments.map((comment) => (
-                    <CommentItem
-                      key={comment.id}
-                      comment={comment}
-                    ></CommentItem>
-                  ))
+                  <Loader></Loader>
                 )}
               </div>
             </Card>
@@ -1213,14 +1217,18 @@ const CoursePageClient = () => {
 
               {/* Resources List */}
               <div className="space-y-4">
-                {sortedResources.length === 0 ? (
-                  <p className="text-gray-500 text-center py-6">
-                    No resources yet. Be the first to add one!
-                  </p>
+                {sortedResources ? (
+                  sortedResources.length === 0 ? (
+                    <p className="text-gray-500 text-center py-6">
+                      No resources yet. Be the first to add one!
+                    </p>
+                  ) : (
+                    sortedResources.map((resource) => (
+                      <ResourceItem key={resource.id} resource={resource} />
+                    ))
+                  )
                 ) : (
-                  sortedResources.map((resource) => (
-                    <ResourceItem key={resource.id} resource={resource} />
-                  ))
+                  <Loader></Loader>
                 )}
               </div>
             </Card>
