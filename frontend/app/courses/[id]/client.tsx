@@ -1,6 +1,7 @@
 "use client";
 
 import ChartCard from "@/components/charts/chartCard";
+import Loader from "@/components/layout/loader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,6 +53,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { render } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 const CoursePageClient = () => {
@@ -995,7 +997,7 @@ const CoursePageClient = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Course Header */}
         <div className="mb-8">
-          {courseData?.course?(
+          {courseData?.course ? (
             <>
               <h1 className="text-4xl font-bold mb-2">
                 {courseData?.course.name}{" "}
@@ -1007,8 +1009,8 @@ const CoursePageClient = () => {
                 Professor: {courseData?.course.professor}
               </p>
             </>
-          ):(
-            
+          ) : (
+            <Loader></Loader>
           )}
         </div>
 
@@ -1019,7 +1021,7 @@ const CoursePageClient = () => {
               <h2 className="text-2xl font-semibold mb-6">Course Metrics</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {renderMetrics}
+                {courseData?.metrics ? renderMetrics : <Loader></Loader>}
               </div>
             </Card>
 
