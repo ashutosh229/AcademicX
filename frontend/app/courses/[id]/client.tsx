@@ -53,7 +53,6 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { render } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 const CoursePageClient = () => {
