@@ -15,8 +15,8 @@ class Student(models.Model):
 
 class Course(models.Model):
 
-    name = models.CharField(max_length=100)
-    code = models.CharField(max_length=50)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=255)
     professor = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
     num_credits = models.CharField(max_length=10) # to allow 3/6 type
@@ -47,8 +47,8 @@ class CourseMetrics(models.Model):
 class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="resources")
-    name = models.CharField(max_length=100,default="link")
-    remarks = models.CharField(max_length=255,default="") # type changed to remarks
+    name = models.CharField(max_length=255,default="link")
+    remarks = models.TextField(default="")  # No character limit
     url = models.URLField()
     contributor = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="resources_shared",to_field="email")
 
