@@ -996,15 +996,21 @@ const CoursePageClient = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Course Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">
-            {courseData?.course.name}{" "}
-            <span className="text-2xl text-gray-600">
-              ({courseData?.course.code})
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600">
-            Professor: {courseData?.course.professor}
-          </p>
+          {courseData?.course ? (
+            <>
+              <h1 className="text-4xl font-bold mb-2">
+                {courseData?.course.name}{" "}
+                <span className="text-2xl text-gray-600">
+                  ({courseData?.course.code})
+                </span>
+              </h1>
+              <p className="text-xl text-gray-600">
+                Professor: {courseData?.course.professor}
+              </p>
+            </>
+          ) : (
+            <Loader></Loader>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1014,7 +1020,7 @@ const CoursePageClient = () => {
               <h2 className="text-2xl font-semibold mb-6">Course Metrics</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {courseData?.metrics ? renderMetrics : <Loader></Loader>}
+                {renderMetrics}
               </div>
             </Card>
 
@@ -1086,21 +1092,17 @@ const CoursePageClient = () => {
 
               {/* Comments Section */}
               <div className="space-y-6">
-                {sortedComments ? (
-                  sortedComments.length === 0 ? (
-                    <p className="text-gray-500 text-center py-4">
-                      No comments yet. Be the first to add one!
-                    </p>
-                  ) : (
-                    sortedComments.map((comment) => (
-                      <CommentItem
-                        key={comment.id}
-                        comment={comment}
-                      ></CommentItem>
-                    ))
-                  )
+                {sortedComments.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">
+                    No comments yet. Be the first to add one!
+                  </p>
                 ) : (
-                  <Loader></Loader>
+                  sortedComments.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                    ></CommentItem>
+                  ))
                 )}
               </div>
             </Card>
@@ -1217,18 +1219,14 @@ const CoursePageClient = () => {
 
               {/* Resources List */}
               <div className="space-y-4">
-                {sortedResources ? (
-                  sortedResources.length === 0 ? (
-                    <p className="text-gray-500 text-center py-6">
-                      No resources yet. Be the first to add one!
-                    </p>
-                  ) : (
-                    sortedResources.map((resource) => (
-                      <ResourceItem key={resource.id} resource={resource} />
-                    ))
-                  )
+                {sortedResources.length === 0 ? (
+                  <p className="text-gray-500 text-center py-6">
+                    No resources yet. Be the first to add one!
+                  </p>
                 ) : (
-                  <Loader></Loader>
+                  sortedResources.map((resource) => (
+                    <ResourceItem key={resource.id} resource={resource} />
+                  ))
                 )}
               </div>
             </Card>
