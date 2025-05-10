@@ -995,15 +995,21 @@ const CoursePageClient = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Course Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">
-            {courseData?.course.name}{" "}
-            <span className="text-2xl text-gray-600">
-              ({courseData?.course.code})
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600">
-            Professor: {courseData?.course.professor}
-          </p>
+          {courseData?.course?(
+            <>
+              <h1 className="text-4xl font-bold mb-2">
+                {courseData?.course.name}{" "}
+                <span className="text-2xl text-gray-600">
+                  ({courseData?.course.code})
+                </span>
+              </h1>
+              <p className="text-xl text-gray-600">
+                Professor: {courseData?.course.professor}
+              </p>
+            </>
+          ):(
+            
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
