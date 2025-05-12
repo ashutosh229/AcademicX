@@ -2,7 +2,6 @@
 
 import { LoginButton } from "@/components/auth/login-button";
 import { setAuthStatus } from "@/redux/slices/authSlice";
-import { backendDomain } from "@/types/types";
 import { GraduationCap, Users } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -64,9 +63,8 @@ export default function WelcomePage() {
         </h1>
 
         <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-          Your comprehensive platform for academic course management and
-          learning. Access course materials, share resources, and engage with
-          your academic community.
+          Helping students make smarter academic choices through shared feedback
+          and resources.
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto min-h-[280px] place-items-center">
@@ -74,14 +72,14 @@ export default function WelcomePage() {
             <LoginButton
               icon={<GraduationCap className="h-12 w-12 text-primary" />}
               label="Student Access"
-              description="For enrolled students with institutional credentials. Full access to course materials and feedback."
+              description="For IIT Bhilai Students (Complete Access)"
               handleClick={handleLoginForStudent}
               inButtonLabel="Login with Google"
             />
             <LoginButton
               icon={<Users className="h-12 w-12 text-primary" />}
               label="Viewer Access"
-              description="For guests and prospective students. Limited access to view course information."
+              description="For Guests (Limited Access)"
               variant="outline"
               handleClick={handleLoginForViewer}
               inButtonLabel="View as Guest"
