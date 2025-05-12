@@ -2,7 +2,7 @@
 
 import { LoginButton } from "@/components/auth/login-button";
 import { setAuthStatus } from "@/redux/slices/authSlice";
-import { GraduationCap, Users } from "lucide-react";
+import { GraduationCap, Monitor, Users } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -87,7 +87,14 @@ export default function WelcomePage() {
           </>
         </div>
 
+        {/* 📢 Disclaimer section */}
         <div className="mt-12 text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-2 text-red-600 font-medium mb-4">
+            <Monitor className="h-4 w-4" />
+            <span>
+              This application is best experienced on a desktop device.
+            </span>
+          </div>
           <p>Choose the appropriate login option based on your role.</p>
           <p>
             Students must use their institutional email address
