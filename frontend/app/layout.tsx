@@ -13,8 +13,9 @@ type RootLayoutProps = {
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "IIT Bhilai Student Forum - Modern Learning Platform",
-  description: "A modern platform for academic course management and learning",
+  title: "IIT Bhilai Student Forum - Modern Platform for Course Management",
+  description:
+    "A centralized hub for IIT Bhilai students to access course insights, peer reviews, and shared academic resources.",
 };
 
 export default function RootLayout({ children, session }: RootLayoutProps) {
