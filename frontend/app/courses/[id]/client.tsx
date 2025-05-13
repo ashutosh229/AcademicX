@@ -75,8 +75,8 @@ const CoursePageClient = () => {
   //resources states
   const [isOpenForResources, setIsOpenForResources] = useState(false);
   const [resourceName, setResourceName] = useState("");
-  const [resourceRemarks, setResourceRemarks] = useState("");
   const [resourceUrl, setResourceUrl] = useState("");
+  const [resourceRemarks, setResourceRemarks] = useState("");
   const [isAnonymousForResources, setIsAnonymousForResources] = useState(false);
   const [deleteDialogOpenForResource, setDeleteDialogOpenForResource] =
     useState<number | null>(null);
@@ -84,6 +84,7 @@ const CoursePageClient = () => {
     "By Date" | "By Upvotes"
   >("By Upvotes");
   const [showInvalidUrlAlert, setShowInvalidUrlAlert] = useState(false);
+  const [isNameAndUrlAbsent, setIsNameAndUrlAbsent] = useState(false);
 
   // Performance improvement: Only filter once as a memoized value
   const activeCourse = useMemo(() => {
@@ -425,13 +426,12 @@ const CoursePageClient = () => {
       url: string,
       isAnonymous: boolean
     ) => {
-      if (
-        !name.trim() ||
-        !url.trim() ||
-        !activeCourseId ||
-        !session?.user.email
-      )
+      if (!activeCourseId || !session?.user.email) return;
+
+      if (!name.trim() || !url.trim()) {
+        setIsNameAndUrlAbsent(true);
         return;
+      }
 
       if (!(await isValidUrl(url))) {
         setShowInvalidUrlAlert(true);
@@ -988,6 +988,26 @@ const CoursePageClient = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setShowInvalidUrlAlert(false)}>
+              Okay
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog
+        open={isNameAndUrlAbsent}
+        onOpenChange={setIsNameAndUrlAbsent}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Name and URL are compulsory fields
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Please provide a name and URL for the resource.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setIsNameAndUrlAbsent(false)}>
               Okay
             </AlertDialogAction>
           </AlertDialogFooter>
