@@ -439,6 +439,12 @@ const CoursePageClient = () => {
       }
 
       dispatch(setLoading(true));
+      console.log({
+        name: name,
+        remarks: remarks,
+        url: url,
+        isAnonymous: isAnonymous,
+      });
 
       const tempResource: Resource = {
         id: -1, // Temporary ID
@@ -512,7 +518,6 @@ const CoursePageClient = () => {
             ),
           };
         });
-        // Reset form and close dialog
       } catch (error: any) {
         console.log(error);
         dispatch(setError(error.message));
