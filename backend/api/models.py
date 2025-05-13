@@ -48,7 +48,7 @@ class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="resources")
     name = models.CharField(max_length=255,default="link")
-    remarks = models.TextField(default=" ")  # No character limit
+    remarks = models.TextField(default=" ",blank=True)  # No character limit
     url = models.URLField()
     contributor = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="resources_shared",to_field="email")
 
