@@ -9,8 +9,8 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CourseSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(min_length=1, max_length=100)  #  Enforcing length
-    code = serializers.CharField(min_length=1,max_length=50)
+    name = serializers.CharField(min_length=1, max_length=255)  #  Enforcing length
+    code = serializers.CharField(min_length=1,max_length=255)
 
     # these above enforcements are optional and only checked/applied during POST or PUT request
     class Meta:
@@ -24,8 +24,6 @@ class CourseMetricSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AddResourceSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(min_length=1, max_length=100)  # Enforcing length
-    remarks = serializers.CharField(min_length=0, max_length=255)
     class Meta:
         model = Resource
         fields = ['course','name','remarks','url','contributor','is_anonymous']
