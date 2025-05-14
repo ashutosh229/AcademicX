@@ -89,7 +89,7 @@ export default function WelcomePage() {
 
         {/* 📢 Disclaimer section */}
         <div className="mt-12 text-sm text-gray-500">
-          <div className="flex items-center justify-center gap-2 text-red-600 font-medium mb-4">
+          <div className="flex items-center justify-center gap-2 text-blue-600 font-medium mb-4">
             <Monitor className="h-4 w-4" />
             <span>
               This application is best experienced on a desktop device.
