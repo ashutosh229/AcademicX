@@ -31,10 +31,14 @@ export function useFetchStudentProfile() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-        const response = await fetch(
-          `${backendDomain}/get_student_profile/${email}/`,
-          { signal: controller.signal }
-        );
+        const response = await fetch(`${backendDomain}/get_student_profile/`, {
+          method: "POST",
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        });
 
         clearTimeout(timeoutId);
 
