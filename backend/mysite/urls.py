@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     #root API (only for testing)
-    path('', api_root, name='api_root'),  # Root page
+    #path('', api_root, name='api_root'),  # Root page
     
     #not to be integrated
     #path('create_course/', create_course, name='create_course'),
@@ -49,7 +49,7 @@ urlpatterns = [
     path('give_course_feedback/', give_course_feedback, name='give_course_feedback'),#integrated
     path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
     path('get_course_details', get_course_details, name='get_course_details'),#integrated
-    path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),#no need
+    #path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),#no need - REMOVED
     path('get_course_comments', get_course_comments, name='get_course_comments'),#no need
     path('get_course_resources', get_course_resources, name='get_course_resources'),#no need
 
