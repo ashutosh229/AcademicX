@@ -25,10 +25,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     #root API (only for testing)
-    #path('', api_root, name='api_root'),  # Root page
+    path('', api_root, name='api_root'),  # Root page
     
     #not to be integrated
-    path('create_course/', create_course, name='create_course'), 
+    #path('create_course/', create_course, name='create_course'),
     
     #comments end-points
     path('add_comment/', add_comment, name='add_comment'), #integrated

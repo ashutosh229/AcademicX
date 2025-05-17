@@ -10,9 +10,6 @@ def api_root(request, format=None):
     return Response(
         {
 
-            "Create Course": reverse(
-                "create_course", request=request, format=format
-            ),
             "Add Comment": reverse(
                 "add_comment", request=request, format=format
             ),
