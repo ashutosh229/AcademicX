@@ -31,7 +31,6 @@ const FeedbackForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // console.log("Courses:", courses);
 
   const activeCourse = courses.find((course) => course.id === activeCourseId);
 
@@ -55,10 +54,8 @@ const FeedbackForm = () => {
   const [resourcesProvided, setResourcesProvided] = useState([5]);
   const [recommendation, setRecommendation] = useState([5]);
   const [gradeObtained, setGradeObtained] = useState<number>(-1);
-  // const [comment, setComment] = useState("");
-  // const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showGradeAlert, setShowGradeAlert] = useState(false); // NEW
+  const [showGradeAlert, setShowGradeAlert] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,30 +168,6 @@ const FeedbackForm = () => {
             maxLabel="Highly Recommended"
           />
           <GradeDropdown onChange={setGradeObtained}></GradeDropdown>
-
-          {/* Comment */}
-          {/* <div className="space-y-4">
-            <Label htmlFor="comment">Additional Comments</Label>
-            <Textarea
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Share your experience with this course..."
-              className="h-32"
-            />
-          </div> */}
-
-          {/* Anonymous Toggle */}
-          {/* <div className="flex items-center justify-between">
-            <Label htmlFor="anonymous" className="cursor-pointer">
-              Submit Anonymously
-            </Label>
-            <Switch
-              id="anonymous"
-              checked={isAnonymous}
-              onCheckedChange={setIsAnonymous}
-            />
-          </div> */}
 
           {/* Submit Button */}
           <Button type="submit" className="w-full" disabled={isSubmitting}>

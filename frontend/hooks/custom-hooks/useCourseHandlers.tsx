@@ -98,13 +98,17 @@ export function useCourseHandlers() {
 
         dispatch(setActiveCourseId(id));
 
-        const response = await fetch(
-          `${backendDomain}/user_course_feedback/${id}/${email}/`,
-          {
-            method: "GET",
-            signal: controller.signal,
-          }
-        );
+        const response = await fetch(`${backendDomain}/user_course_feedback/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            email: email,
+            course_id: id,
+          }),
+        });
 
         clearTimeout(timeoutId);
 
