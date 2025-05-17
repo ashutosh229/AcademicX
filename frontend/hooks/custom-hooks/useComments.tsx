@@ -51,6 +51,7 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
             text: commentText,
             contributor: session?.user.email?.toString(),
             is_anonymous: isAnonymous,
+            
           },
           "Unable to add comment",
           toast

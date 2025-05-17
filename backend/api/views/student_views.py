@@ -30,8 +30,11 @@ def activate_student(request):
     return Response({"message": "Student is already activated"}, status=200)
 
 
-@api_view(['GET'])
-def get_student_profile(request, email):
+@api_view(['POST'])
+def get_student_profile(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({"error": "Student id is required."}, status=status.HTTP_400_BAD_REQUEST)
     student = get_object_or_404(Student, email=email)  # Fetch the student or return 404
     serializer = StudentSerializer(student)
     return Response(serializer.data, status=200)
@@ -57,8 +60,14 @@ def edit_student_name(request):
 
     return Response({"message": "Name updated successfully", "name": student.name}, status=200)
 
-@api_view(['GET'])
-def get_user_course_feedback(request, course_id, email):
+@api_view(['POST'])
+def get_user_course_feedback(request):
+    email = request.data.get('email')
+    course_id = request.data.get('course_id')
+
+    if not email or not course_id:
+        return Response({"error": "Student id and course id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
     feedback = get_object_or_404(CourseMetrics, course_id=course_id, contributor__email=email)
 
     serializer = CourseMetricSerializer(feedback)

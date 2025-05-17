@@ -50,25 +50,20 @@ def api_root(request, format=None):
 
             ),
 
-
-            "Get All Students": reverse(
-                "get_all_students", request=request, format=format
-
-            ),
             "Activate Student (if not already)": reverse(
                 "activate_student", request=request, format=format
 
             ),
-            "Get Student Profile using email": reverse(
-                "get_student_profile", args=["shubhamy@iitbhilai.ac.in"], request=request, format=format
+            "Fetch Student Profile": reverse(
+                "get_student_profile", request=request, format=format
 
             ),
             "Edit Student Name": reverse(
                 "edit_student_name", request=request, format=format
 
             ),
-            "Get User's Course Feedback": reverse(
-                "user_course_feedback", args=["1","shubhamy@iitbhilai.ac.in"], request=request, format=format
+            "Fetch User's Course Feedback": reverse(
+                "user_course_feedback",  request=request, format=format
 
             ),
             "Delete User's Course Feedback": reverse(

@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     #root API (only for testing)
-    path('', api_root, name='api_root'),  # Root page
+    #path('', api_root, name='api_root'),  # Root page
     
     #not to be integrated
     path('create_course/', create_course, name='create_course'), 
@@ -53,10 +53,10 @@ urlpatterns = [
     path('get_course_comments', get_course_comments, name='get_course_comments'),#no need
     path('get_course_resources', get_course_resources, name='get_course_resources'),#no need
 
-    path('get_all_students/', get_all_students, name='get_all_students'), #integrated
+    #path('get_all_students/', get_all_students, name='get_all_students'), #REMOVED
     path('edit_student_name/', edit_student_name, name='edit_student_name'), #integrated
-    path('get_student_profile/<str:email>/', get_student_profile, name='get_student_profile'),#integrated
-    path('user_course_feedback/<int:course_id>/<str:email>/', get_user_course_feedback, name='user_course_feedback'),#integrated
+    path('get_student_profile/', get_student_profile, name='get_student_profile'),#MODIFIED TO POST
+    path('user_course_feedback/', get_user_course_feedback, name='user_course_feedback'),#MODIFIED TO POST
     path('delete_course_feedback/', delete_user_course_feedback, name='delete_user_course_feedback'),#integrated
     path('activate_student/', activate_student, name='activate_student'),#integrated
 
