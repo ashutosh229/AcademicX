@@ -27,8 +27,6 @@ export default function CoursesPage() {
   const {
     searchTerm,
     setSearchTerm,
-    // selectedProfessor,
-    // setSelectedProfessor,
     selectedDepartment,
     setSelectedDepartment,
     selectedCredits,
@@ -36,7 +34,6 @@ export default function CoursesPage() {
     professorSearch,
     setProfessorSearch,
     filteredCourses,
-    // uniqueProfessors,
     uniqueDepartments,
     uniqueCredits,
   } = useCourseFilters();
