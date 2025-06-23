@@ -31,7 +31,6 @@ const FeedbackForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-
   const activeCourse = courses.find((course) => course.id === activeCourseId);
 
   if (!activeCourse) {
@@ -70,6 +69,7 @@ const FeedbackForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
         },
         body: JSON.stringify({
           course: activeCourseId,

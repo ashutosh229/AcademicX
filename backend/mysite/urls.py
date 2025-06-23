@@ -50,17 +50,16 @@ urlpatterns = [
     path('get_all_courses/', get_all_courses, name='get_all_courses'),#integrated
     path('get_course_details', get_course_details, name='get_course_details'),#integrated
     #path('get_course_feedbacks/<str:id>/', get_course_feedbacks, name='get_course_feedbacks'),#no need - REMOVED
-    path('get_course_comments', get_course_comments, name='get_course_comments'),#no need
-    path('get_course_resources', get_course_resources, name='get_course_resources'),#no need
+    # path('get_course_comments', get_course_comments, name='get_course_comments'),#no need
+    # path('get_course_resources', get_course_resources, name='get_course_resources'),#no need
 
     #path('get_all_students/', get_all_students, name='get_all_students'), #REMOVED
     path('edit_student_name/', edit_student_name, name='edit_student_name'), #integrated
     path('get_student_profile/', get_student_profile, name='get_student_profile'),#MODIFIED TO POST
     path('user_course_feedback/', get_user_course_feedback, name='user_course_feedback'),#MODIFIED TO POST
     path('delete_course_feedback/', delete_user_course_feedback, name='delete_user_course_feedback'),#integrated
+    
     path('activate_student/', activate_student, name='activate_student'),#integrated
-
-
     path('get_analytics/', get_analytics, name='get_analytics'), # integrated
     path('warmup/',warmup, name='warmup'),
 ]

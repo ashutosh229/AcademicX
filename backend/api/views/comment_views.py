@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from api.models import Comment, CommentVote, Student
-from api.serializers import AddCommentSerializer,CommentSerializer
+from api.serializers import AddCommentSerializer, CommentSerializer
+import jwt
+import os
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def add_comment(request):
     serializer = AddCommentSerializer(data=request.data)
     if serializer.is_valid():
@@ -26,7 +28,7 @@ def add_comment(request):
             "degree": student.degree,
             "branch": student.branch,
             "email": contributor_email,
-            "isAnonymous": anonymous_value
+            "isAnonymous": anonymous_value,
         }
 
         return Response(comment_item, status=201)
@@ -34,36 +36,69 @@ def add_comment(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def delete_comment(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     comment_id = request.data.get("comment_id")
 
     if not email or not comment_id:
-        return Response({"error": "Email and comment_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and comment_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = get_object_or_404(Student, email=email)
     comment = get_object_or_404(Comment, comment_id=comment_id, contributor=student)
 
     comment.delete()
     return Response({"message": "comment deleted"}, status=status.HTTP_200_OK)
-@api_view(['POST'])
+
+
+@api_view(["POST"])
 def upvote_comment(request):
-    email = request.data.get('email')
-    comment_id = request.data.get('comment_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    comment_id = request.data.get("comment_id")
 
     if not email or not comment_id:
-        return Response({"error": "Email and comment_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and comment_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = get_object_or_404(Student, email=email)
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Check if the user already upvoted
-    if CommentVote.objects.filter(student=student, comment=comment, vote_type=1).exists():
-        return Response({"error": "User already upvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
+    if CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=1
+    ).exists():
+        return Response(
+            {"error": "User already upvoted this comment."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     # Remove downvote if it exists (preventing both upvote and downvote at the same time)
-    downvote = CommentVote.objects.filter(student=student, comment=comment, vote_type=2).first()
+    downvote = CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=2
+    ).first()
     if downvote:
         downvote.delete()
         comment.downvotes -= 1  # Decrement downvote count
@@ -73,48 +108,90 @@ def upvote_comment(request):
     comment.upvotes += 1
     comment.save()
 
-    return Response({"message": "Upvote added successfully."}, status=status.HTTP_201_CREATED)
+    return Response(
+        {"message": "Upvote added successfully."}, status=status.HTTP_201_CREATED
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def remove_upvote_comment(request):
-    email = request.data.get('email')
-    comment_id = request.data.get('comment_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    comment_id = request.data.get("comment_id")
 
     if not email or not comment_id:
-        return Response({"error": "Email and comment_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and comment_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = get_object_or_404(Student, email=email)
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Find the upvote record
-    vote = CommentVote.objects.filter(student=student, comment=comment, vote_type=1).first()
+    vote = CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=1
+    ).first()
     if not vote:
-        return Response({"error": "User has not upvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "User has not upvoted this comment."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     # Remove upvote
     vote.delete()
     comment.upvotes -= 1
     comment.save()
 
-    return Response({"message": "Upvote removed successfully."}, status=status.HTTP_200_OK)
+    return Response(
+        {"message": "Upvote removed successfully."}, status=status.HTTP_200_OK
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def downvote_comment(request):
-    email = request.data.get('email')
-    comment_id = request.data.get('comment_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    comment_id = request.data.get("comment_id")
 
     if not email or not comment_id:
-        return Response({"error": "Email and comment_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and comment_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = get_object_or_404(Student, email=email)
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Check if the user already downvoted
-    if CommentVote.objects.filter(student=student, comment=comment, vote_type=2).exists():
-        return Response({"error": "User already downvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
+    if CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=2
+    ).exists():
+        return Response(
+            {"error": "User already downvoted this comment."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     # Remove upvote if it exists (preventing both upvote and downvote at the same time)
-    upvote = CommentVote.objects.filter(student=student, comment=comment, vote_type=1).first()
+    upvote = CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=1
+    ).first()
     if upvote:
         upvote.delete()
         comment.upvotes -= 1
@@ -124,27 +201,49 @@ def downvote_comment(request):
     comment.downvotes += 1
     comment.save()
 
-    return Response({"message": "Downvote added successfully."}, status=status.HTTP_201_CREATED)
+    return Response(
+        {"message": "Downvote added successfully."}, status=status.HTTP_201_CREATED
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def remove_downvote_comment(request):
-    email = request.data.get('email')
-    comment_id = request.data.get('comment_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    comment_id = request.data.get("comment_id")
 
     if not email or not comment_id:
-        return Response({"error": "Email and comment_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and comment_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = get_object_or_404(Student, email=email)
     comment = get_object_or_404(Comment, comment_id=comment_id)
 
     # Find the downvote record
-    vote = CommentVote.objects.filter(student=student, comment=comment, vote_type=2).first()
+    vote = CommentVote.objects.filter(
+        student=student, comment=comment, vote_type=2
+    ).first()
     if not vote:
-        return Response({"error": "User has not downvoted this comment."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "User has not downvoted this comment."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     # Remove downvote
     vote.delete()
     comment.downvotes -= 1
     comment.save()
 
-    return Response({"message": "Downvote removed successfully."}, status=status.HTTP_200_OK)
+    return Response(
+        {"message": "Downvote removed successfully."}, status=status.HTTP_200_OK
+    )

@@ -22,7 +22,10 @@ const useFetchCourseDetails = (
     try {
       const response = await fetch(`${backendDomain}/get_course_details/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
         body: JSON.stringify({
           user_email: session.user.email.toString(),
           course_id: activeCourseId,
