@@ -4,11 +4,21 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from api.models import ResourceVote, Resource, Student
 from api.serializers import AddResourceSerializer, ResourceSerializer
+import jwt
+import os
 
 
 @api_view(["POST"])
 def add_resource(request):
-
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     serializer = AddResourceSerializer(data=request.data)
     if serializer.is_valid():
         resource = serializer.save()  # Save and get instance
@@ -40,6 +50,15 @@ def add_resource(request):
 
 @api_view(["POST"])
 def delete_resource(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     resource_id = request.data.get("resource_id")
 
@@ -58,6 +77,15 @@ def delete_resource(request):
 
 @api_view(["POST"])
 def upvote_resource(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     resource_id = request.data.get("resource_id")
 
@@ -99,6 +127,15 @@ def upvote_resource(request):
 
 @api_view(["POST"])
 def remove_upvote_resource(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     resource_id = request.data.get("resource_id")
 
@@ -133,6 +170,15 @@ def remove_upvote_resource(request):
 
 @api_view(["POST"])
 def downvote_resource(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     resource_id = request.data.get("resource_id")
 
@@ -174,6 +220,15 @@ def downvote_resource(request):
 
 @api_view(["POST"])
 def remove_downvote_resource(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     resource_id = request.data.get("resource_id")
 

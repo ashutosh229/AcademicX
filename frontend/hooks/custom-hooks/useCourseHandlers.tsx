@@ -35,7 +35,11 @@ export function useCourseHandlers() {
       try {
         const response = await fetch(`${backendDomain}/get_all_courses/`, {
           signal: controller.signal,
-          cache: "default", // Use browser's HTTP cache when possible
+          cache: "default",
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          }, // Use browser's HTTP cache when possible
         });
 
         clearTimeout(timeoutId);
@@ -102,6 +106,7 @@ export function useCourseHandlers() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           signal: controller.signal,
           body: JSON.stringify({

@@ -1,12 +1,12 @@
-import { Comment, Course, Resource } from '@/types/types';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { backendDomain, Student } from '@/types/types';
+import { Comment, Course, Resource } from "@/types/types";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { backendDomain, Student } from "@/types/types";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { students } from './students_data';
-
+import { students } from "./students_data";
+import jwt from "jsonwebtoken";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,23 +18,27 @@ export function formatString(str: string) {
     : str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function getUserVote(comments: Comment[] | undefined, commentId: number) {
-  const comment = comments?.find(comment => comment.id === commentId);
+export function getUserVote(
+  comments: Comment[] | undefined,
+  commentId: number
+) {
+  const comment = comments?.find((comment) => comment.id === commentId);
   return comment?.user_vote ?? 0;
 }
 
-export function getUserVoteForResources(resources: Resource[] | undefined, resourceId: number) {
-  const resource = resources?.find(resource => resource.id === resourceId);
+export function getUserVoteForResources(
+  resources: Resource[] | undefined,
+  resourceId: number
+) {
+  const resource = resources?.find((resource) => resource.id === resourceId);
   return resource ? resource.user_vote : null;
 }
 
 export function getCourseNameFromId(courses: Course[], id: number | undefined) {
   const course = courses.find((course) => {
-    return (
-      course.id === id
-    )
-  })
-  return course?.name
+    return course.id === id;
+  });
+  return course?.name;
 }
 
 export const isValidUrl = async (url: string): Promise<boolean> => {
@@ -44,12 +48,18 @@ export const isValidUrl = async (url: string): Promise<boolean> => {
     if (!["http:", "https:"].includes(parsed.protocol)) return false;
 
     // Step 2: Regex domain validation
-    const domainRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+    const domainRegex =
+      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
     if (!domainRegex.test(url)) return false;
 
     // Step 3: Filter out blocked/internal domains
     const hostname = parsed.hostname.toLowerCase();
-    const blockedHosts = ["localhost", "127.0.0.1", "example.com", "example.invalid"];
+    const blockedHosts = [
+      "localhost",
+      "127.0.0.1",
+      "example.com",
+      "example.invalid",
+    ];
     if (blockedHosts.includes(hostname)) return false;
 
     // Step 4: Try to reach the URL without checking response (CORS-safe)
@@ -76,15 +86,15 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         login: {
           label: "Login",
-          type: "text"
+          type: "text",
         },
         name: {
           label: "Name",
-          type: "text"
-        }
+          type: "text",
+        },
       },
       async authorize(credentials) {
-        const { login, name } = credentials as { login: string; name: string }
+        const { login, name } = credentials as { login: string; name: string };
         if (!login || !name) {
           return null;
         }
@@ -92,10 +102,10 @@ export const authOptions: NextAuthOptions = {
           id: login,
           login,
           name,
-          role: "viewer"
-        }
-      }
-    })
+          role: "viewer",
+        };
+      },
+    }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {
@@ -116,7 +126,6 @@ export const authOptions: NextAuthOptions = {
           console.log("Is Student:", isStudent);
 
           (user as any).role = isStudent ? "student" : "viewer";
-
           if (isStudent) {
             console.log("Activating student...");
             const studentActivationResponse = await fetch(
@@ -132,7 +141,8 @@ export const authOptions: NextAuthOptions = {
               throw new Error("Unable to activate the student");
             }
 
-            const activationMessageBody = await studentActivationResponse.json();
+            const activationMessageBody =
+              await studentActivationResponse.json();
             console.log("Activation Response:", activationMessageBody.message);
           }
         } catch (error) {
@@ -142,11 +152,21 @@ export const authOptions: NextAuthOptions = {
       }
       return true; // Allow sign-in
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.email = (user as any).email;
         token.role = (user as any).role ?? "viewer";
         token.sub = user.id; // Store the unique ID
+        token.accessToken = jwt.sign(
+          {
+            email: user.email,
+            role: (user as any).role,
+          },
+          process.env.NEXTAUTH_SECRET!,
+          {
+            expiresIn: "30d",
+          }
+        );
       }
       console.log("JWT Token:", token);
       return token;
@@ -155,6 +175,10 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email as string;
         session.user.role = token.role as string;
+        session.accessToken = token.accessToken as string;
+        if (session.user.role === "viewer") {
+          session.user.email = "Viewer";
+        }
       }
       console.log("Session Data:", session);
       return session;
@@ -165,10 +189,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/",
-    error: "/auth/error"
-  }
-}
-
-
-
-
+    error: "/auth/error",
+  },
+};

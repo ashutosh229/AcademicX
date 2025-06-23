@@ -10,13 +10,13 @@ declare module "next-auth" {
       role?: string;
       image?: string;
     } & DefaultSession["user"];
+    accessToken: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     role?: string;
+    accessToken?: string;
   }
 }
-
-

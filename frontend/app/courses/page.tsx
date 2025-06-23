@@ -22,7 +22,6 @@ import { useCourseHandlers } from "@/hooks/custom-hooks/useCourseHandlers";
 import { useSession } from "next-auth/react";
 
 export default function CoursesPage() {
-  const { data: session } = useSession();
 
   const {
     searchTerm,

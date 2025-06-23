@@ -101,6 +101,7 @@ const CoursePageClient = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
         },
         body: JSON.stringify({
           user_email: session.user.email.toString(),
@@ -161,6 +162,7 @@ const CoursePageClient = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({
             course: activeCourseId,
@@ -230,6 +232,7 @@ const CoursePageClient = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({
             email: session?.user.email?.toString(),
@@ -277,6 +280,7 @@ const CoursePageClient = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.accessToken}`,
             },
             body: JSON.stringify({
               email: session.user.email?.toString(),
@@ -476,6 +480,7 @@ const CoursePageClient = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({
             course: activeCourseId,
@@ -557,6 +562,7 @@ const CoursePageClient = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.accessToken}`,
             },
             body: JSON.stringify({
               email: session.user.email?.toString(),
@@ -704,6 +710,7 @@ const CoursePageClient = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({
             email: session.user.email.toString(),

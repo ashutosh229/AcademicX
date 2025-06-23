@@ -36,6 +36,7 @@ export function useFetchStudentProfile() {
           signal: controller.signal,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({ email: email }),
         });

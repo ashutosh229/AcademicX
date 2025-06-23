@@ -43,6 +43,7 @@ export function useEditStudentProfile() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({ email, name }),
           signal: controller.signal,

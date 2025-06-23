@@ -17,6 +17,7 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify(body),
         });
@@ -51,7 +52,6 @@ const useComments = (backendDomain: string, session: any, courseData: any) => {
             text: commentText,
             contributor: session?.user.email?.toString(),
             is_anonymous: isAnonymous,
-            
           },
           "Unable to add comment",
           toast

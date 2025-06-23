@@ -7,15 +7,21 @@ from rest_framework import status
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from api.models import  Student,CourseMetrics
-from api.serializers import StudentSerializer,CourseMetricSerializer
+from api.models import Student, CourseMetrics
+from api.serializers import StudentSerializer, CourseMetricSerializer
 
-@api_view(['GET'])
+import jwt
+import os
+
+
+@api_view(["GET"])
 def get_all_students(request):
     students = Student.objects.all()  # Fetch all courses
     serializer = StudentSerializer(students, many=True)  # Serialize the data
     return Response(serializer.data)  # Return JSON response
-@api_view(['PATCH'])
+
+
+@api_view(["PATCH"])
 def activate_student(request):
     email = request.data.get("email")
     if not email:
@@ -30,18 +36,38 @@ def activate_student(request):
     return Response({"message": "Student is already activated"}, status=200)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def get_student_profile(request):
-    email = request.data.get('email')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
     if not email:
-        return Response({"error": "Student id is required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Student id is required."}, status=status.HTTP_400_BAD_REQUEST
+        )
     student = get_object_or_404(Student, email=email)  # Fetch the student or return 404
     serializer = StudentSerializer(student)
     return Response(serializer.data, status=200)
 
 
-@api_view(['PATCH'])
+@api_view(["PATCH"])
 def edit_student_name(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     email = request.data.get("email")
     new_name = request.data.get("name")
     # Validate presence and length of the name
@@ -52,45 +78,79 @@ def edit_student_name(request):
     if len(new_name) > 50:
         return Response({"error": "Name cannot exceed 50 characters"}, status=400)
 
-
-
     student = get_object_or_404(Student, email=email)
     student.name = new_name
     student.save()
 
-    return Response({"message": "Name updated successfully", "name": student.name}, status=200)
+    return Response(
+        {"message": "Name updated successfully", "name": student.name}, status=200
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def get_user_course_feedback(request):
-    email = request.data.get('email')
-    course_id = request.data.get('course_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    course_id = request.data.get("course_id")
 
     if not email or not course_id:
-        return Response({"error": "Student id and course id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Student id and course id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
-    feedback = get_object_or_404(CourseMetrics, course_id=course_id, contributor__email=email)
+    feedback = get_object_or_404(
+        CourseMetrics, course_id=course_id, contributor__email=email
+    )
 
     serializer = CourseMetricSerializer(feedback)
     return Response(serializer.data, status=200)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def delete_user_course_feedback(request):
-    email = request.data.get('email')
-    course_id = request.data.get('course_id')
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
+    email = request.data.get("email")
+    course_id = request.data.get("course_id")
 
     if not email or not course_id:
-        return Response({"error": "Email and course_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Email and course_id are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     student = Student.objects.filter(email=email).first()
     if not student:
-        return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND
+        )
 
-    feedback = CourseMetrics.objects.filter(contributor=student, course_id=course_id).first()
+    feedback = CourseMetrics.objects.filter(
+        contributor=student, course_id=course_id
+    ).first()
     if not feedback:
-        return Response({"error": "No feedback found for this course by the contributor."},
-                        status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "No feedback found for this course by the contributor."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     feedback.delete()
-    return Response({"message": "Feedback deleted successfully."}, status=status.HTTP_200_OK)
-
+    return Response(
+        {"message": "Feedback deleted successfully."}, status=status.HTTP_200_OK
+    )
