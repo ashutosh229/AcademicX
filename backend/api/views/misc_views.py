@@ -11,7 +11,6 @@ from api.models import (
 from django.db import connection
 
 
-
 @api_view(["GET"])
 def get_analytics(request):
     analytics = {
