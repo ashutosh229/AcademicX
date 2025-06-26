@@ -11,6 +11,7 @@ import { AppDispatch } from "@/redux/store";
 import { backendDomain } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { stat } from "node:fs";
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
@@ -19,11 +20,11 @@ export function useCourseHandlers() {
   const router = useRouter();
   const coursesLoadedRef = useRef(false);
   const pendingRequestsRef = useRef(new Map());
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     // Prevent redundant API calls if data is already loaded
-    if (coursesLoadedRef.current) return;
+    if (coursesLoadedRef.current || status !== "authenticated") return;
 
     const fetchCourses = async () => {
       dispatch(setLoading(true));
@@ -65,7 +66,7 @@ export function useCourseHandlers() {
     };
 
     fetchCourses();
-  }, [dispatch]);
+  }, [dispatch, session, status]);
 
   const handleViewCourse = useCallback(
     (id: number) => {
