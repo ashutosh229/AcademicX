@@ -44,7 +44,7 @@ export default function CoursesPage() {
   const coursesLoadedRef = useRef(false);
   const pendingRequestsRef = useRef(new Map());
   const { data: session, status } = useSession();
-  const { courses } = useSelector((state: RootState) => state.course);
+  const { courses, loading } = useSelector((state: RootState) => state.course);
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -73,16 +73,13 @@ export default function CoursesPage() {
             Authorization: `Bearer ${session?.accessToken}`,
           },
         });
-        const dataDebug = await response.json();
-        console.log(dataDebug);
-
         clearTimeout(timeoutId);
-
         if (!response.ok) {
           throw new Error("Failed to fetch the courses");
         }
 
         const data = await response.json();
+        console.log(data);
         dispatch(setCourses(data));
         coursesLoadedRef.current = true;
       } catch (error: any) {
@@ -363,7 +360,16 @@ export default function CoursesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredCourses.length > 0 ? (
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className="h-6 w-6 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                      <p className="text-sm text-gray-500">Loading...</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : filteredCourses.length > 0 ? (
                 filteredCourses.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.name}</TableCell>
