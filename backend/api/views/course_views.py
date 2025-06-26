@@ -40,6 +40,7 @@ def get_all_courses(request):
     logger.info(f"Extracted Token: {token}")
 
     next_auth_secret = os.environ.get("NEXTAUTH_SECRET")
+    logger.warning(f"[DEBUG] NEXTAUTH_SECRET used for decoding: {next_auth_secret}")
     if not next_auth_secret:
         logger.error("NEXTAUTH_SECRET not found in environment variables.")
         return Response({"error": "Server misconfiguration"}, status=500)
