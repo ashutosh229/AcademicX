@@ -108,6 +108,7 @@ const CoursePageClient = () => {
           course_id: activeCourseId,
         }),
       });
+      console.log(response);
       if (!response.ok) {
         throw new Error("Course details could not be fetched properly");
       }

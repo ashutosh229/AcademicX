@@ -1,5 +1,5 @@
 //backend domain
-export const backendDomain = "https://iit-bhilai-student-forum.onrender.com"
+export const backendDomain = "https://iit-bhilai-student-forum.onrender.com";
 
 //Course
 export interface Course {
@@ -12,7 +12,7 @@ export interface Course {
 }
 
 export interface Resource {
-  id: number
+  id: number;
   name: string;
   remarks: string;
   url: string;
@@ -58,41 +58,41 @@ export interface CourseMetrics {
   };
   workload: {
     average: number;
-    distribution: { value: number; count: number }[]
+    distribution: { value: number; count: number }[];
   };
   examDifficulty: {
     average: number;
-    distribution: { value: number; count: number }[]
+    distribution: { value: number; count: number }[];
   };
   gradingStrictness: {
     average: number;
-    distribution: { value: number; count: number }[]
+    distribution: { value: number; count: number }[];
   };
   resourcesProvided: {
     average: number;
-    distribution: { value: number; count: number }[]
+    distribution: { value: number; count: number }[];
   };
   recommendation: {
     average: number;
     distribution: {
       value: number;
-      count: number
-    }[]
+      count: number;
+    }[];
   };
   gradeObtained: {
     average: number;
     distribution: {
       value: number;
-      count: number
-    }[]
-  }
+      count: number;
+    }[];
+  };
 }
 
 export interface CourseDetails {
-  course: Course,
-  resources: Resource[],
-  comments: Comment[],
-  metrics: CourseMetrics,
+  course: Course;
+  resources: Resource[];
+  comments: Comment[];
+  metrics: CourseMetrics;
 }
 
 //Redux States
@@ -109,40 +109,40 @@ export interface Student {
   branch: string;
   batch: string;
   activated: boolean;
-  degree: string
+  degree: string;
 }
 
 export interface Feedback {
-  id: number,
-  content_toughness: number,
-  teaching_quality: number,
-  workload: number,
-  exam_difficulty: number,
-  grading_strictness: number,
-  resources_provided: number,
-  recommendation: number,
-  grade_obtained: number,
-  course: number,
-  contributor: string,
+  id: number;
+  content_toughness: number;
+  teaching_quality: number;
+  workload: number;
+  exam_difficulty: number;
+  grading_strictness: number;
+  resources_provided: number;
+  recommendation: number;
+  grade_obtained: number;
+  course: number;
+  contributor: string;
 }
 
 export interface StudentState {
-  students: Student[],
-  loading: boolean,
-  error: string | null,
-  activeStudent: Student | null,
-  courseFeedback: Feedback | null,
+  students: Student[];
+  loading: boolean;
+  error: string | null;
+  activeStudent: Student | null;
+  courseFeedback: Feedback | null;
 }
 
 export interface AuthUser {
   email: string;
-  role: 'student' | 'viewer';
+  role: "student" | "viewer";
   name?: string;
   image?: string;
 }
 
 export interface AuthState {
-  status: 'authenticated' | 'unauthenticated' | 'loading';
+  status: "authenticated" | "unauthenticated" | "loading";
   user: AuthUser | null;
 }
 
@@ -242,14 +242,6 @@ export const gradeMapping: Record<string, number> = {
   "C-": 5,
   D: 4,
   F: 0,
-  "FS": 0,
-  I: 0
+  FS: 0,
+  I: 0,
 };
-
-
-
-
-
-
-
-
