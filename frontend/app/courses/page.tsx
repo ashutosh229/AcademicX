@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCourseFilters } from "@/hooks/custom-hooks/useCourseFilters";
 import {
   setActiveCourseId,
   setCourses,
@@ -27,12 +26,17 @@ import {
   setLoading,
 } from "@/redux/slices/courseSlice";
 import { setCourseFeedback } from "@/redux/slices/studentSlice";
-import { AppDispatch } from "@/redux/store";
-import { backendDomain } from "@/types/types";
+import { AppDispatch, RootState } from "@/redux/store";
+import {
+  backendDomain,
+  Course,
+  CourseMetadata,
+  FilterState,
+} from "@/types/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function CoursesPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +44,14 @@ export default function CoursesPage() {
   const coursesLoadedRef = useRef(false);
   const pendingRequestsRef = useRef(new Map());
   const { data: session, status } = useSession();
+  const { courses } = useSelector((state: RootState) => state.course);
+
+  const [filters, setFilters] = useState<FilterState>({
+    searchTerm: "",
+    professorSearch: "",
+    selectedDepartment: "",
+    selectedCredits: "",
+  });
 
   useEffect(() => {
     // Prevent redundant API calls if data is already loaded
@@ -162,19 +174,96 @@ export default function CoursesPage() {
     [dispatch, router, session]
   );
 
-  const {
-    searchTerm,
-    setSearchTerm,
-    selectedDepartment,
-    setSelectedDepartment,
-    selectedCredits,
-    setSelectedCredits,
-    professorSearch,
-    setProfessorSearch,
-    filteredCourses,
-    uniqueDepartments,
-    uniqueCredits,
-  } = useCourseFilters();
+  const courseMetadata = useMemo<CourseMetadata>(() => {
+    const departments = new Set<string>();
+    const credits = new Set<string>();
+
+    courses.forEach((course: Course) => {
+      if (course.department) departments.add(course.department);
+      if (course.num_credits) credits.add(course.num_credits);
+    });
+
+    return {
+      uniqueDepartments: Array.from(departments),
+      uniqueCredits: Array.from(credits),
+    };
+  }, [courses]);
+
+  const updateFilter = useCallback(
+    (filterName: keyof FilterState, value: string) => {
+      setFilters((prev) => ({ ...prev, [filterName]: value }));
+    },
+    []
+  );
+
+  const filteredCourses = useMemo<Course[]>(() => {
+    const {
+      searchTerm,
+      professorSearch,
+      // selectedProfessor,
+      selectedDepartment,
+      selectedCredits,
+    } = filters;
+
+    // Create lowercase trimmed versions once to avoid repetition
+    const searchTermLower = searchTerm.toLowerCase().trim();
+    const professorSearchLower = professorSearch.toLowerCase().trim();
+
+    // Return early if no filters are applied
+    if (
+      !searchTermLower &&
+      !professorSearchLower &&
+      // !selectedProfessor &&
+      !selectedDepartment &&
+      !selectedCredits
+    ) {
+      return courses;
+    }
+
+    return courses.filter((course: Course) => {
+      // First check the most restrictive filters
+      // if (selectedProfessor && course.professor !== selectedProfessor)
+      //   return false;
+      if (selectedDepartment && course.department !== selectedDepartment)
+        return false;
+      if (selectedCredits && course.num_credits !== selectedCredits)
+        return false;
+
+      // Then check text-based filters
+      if (
+        searchTermLower &&
+        !(
+          course.name.toLowerCase().includes(searchTermLower) ||
+          course.code.toLowerCase().includes(searchTermLower)
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        professorSearchLower &&
+        !course.professor.toLowerCase().includes(professorSearchLower)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [courses, filters]);
+
+  const searchTerm = filters.searchTerm;
+  const setSearchTerm = (value: string) => updateFilter("searchTerm", value);
+  const professorSearch = filters.professorSearch;
+  const setProfessorSearch = (value: string) =>
+    updateFilter("professorSearch", value);
+  const selectedDepartment = filters.selectedDepartment;
+  const setSelectedDepartment = (value: string) =>
+    updateFilter("selectedDepartment", value);
+  const selectedCredits = filters.selectedCredits;
+  const setSelectedCredits = (value: string) =>
+    updateFilter("selectedCredits", value);
+  const uniqueDepartments = courseMetadata.uniqueDepartments;
+  const uniqueCredits = courseMetadata.uniqueCredits;
 
   return (
     <div className="container mx-auto px-4 py-8">
