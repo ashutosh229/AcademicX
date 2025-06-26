@@ -23,6 +23,8 @@ import { useCourseFilters } from "@/hooks/custom-hooks/useCourseFilters";
 import { useCourseHandlers } from "@/hooks/custom-hooks/useCourseHandlers";
 
 export default function CoursesPage() {
+  const { handleViewCourse, handlePostFeedback } = useCourseHandlers();
+
   const {
     searchTerm,
     setSearchTerm,
@@ -36,8 +38,6 @@ export default function CoursesPage() {
     uniqueDepartments,
     uniqueCredits,
   } = useCourseFilters();
-
-  const { handleViewCourse, handlePostFeedback } = useCourseHandlers();
 
   return (
     <div className="container mx-auto px-4 py-8">
