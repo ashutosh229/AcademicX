@@ -41,6 +41,8 @@ export function useCourseHandlers() {
             Authorization: `Bearer ${session?.accessToken}`,
           },
         });
+        const dataDebug = await response.json();
+        console.log(dataDebug);
 
         clearTimeout(timeoutId);
 
