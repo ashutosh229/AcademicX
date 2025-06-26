@@ -22,30 +22,49 @@ def create_course(request):
     return Response(serializer.errors, status=400)
 
 
+import logging
+
+# Optional: configure Django logger
+logger = logging.getLogger(__name__)
+
 @api_view(["GET"])
 def get_all_courses(request):
     auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return Response({"error": "Unauthorized"}, status=401)
-    token = auth_header.split(" ")[1]
-    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
-    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
-    role = decoded.get("role")
-    if not role:
-        return Response({"error": "Role not found"}, status=402)
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return Response({"error": "Unauthorized"}, status=401)
-    token = auth_header.split(" ")[1]
-    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
-    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
-    role = decoded.get("role")
-    if not role:
-        return Response({"error": "Role not found"}, status=402)
-    courses = Course.objects.all()  # Fetch all courses
-    serializer = CourseSerializer(courses, many=True)  # Serialize the data
-    return Response(serializer.data)  # Return JSON response
+    logger.info(f"Authorization Header: {auth_header}")
 
+    if not auth_header or not auth_header.startswith("Bearer "):
+        logger.warning("Missing or invalid Authorization header.")
+        return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    token = auth_header.split(" ")[1]
+    logger.info(f"Extracted Token: {token}")
+
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET")
+    if not next_auth_secret:
+        logger.error("NEXTAUTH_SECRET not found in environment variables.")
+        return Response({"error": "Server misconfiguration"}, status=500)
+
+    try:
+        decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+        logger.info(f"Decoded Token Payload: {decoded}")
+    except jwt.ExpiredSignatureError:
+        logger.warning("Token has expired.")
+        return Response({"error": "Token expired"}, status=401)
+    except jwt.InvalidTokenError:
+        logger.warning("Invalid token.")
+        return Response({"error": "Invalid token"}, status=401)
+    except Exception as e:
+        logger.error(f"Token decoding error: {e}")
+        return Response({"error": "Token decode failed"}, status=500)
+
+    role = decoded.get("role")
+    if not role:
+        logger.warning("Token does not contain 'role'.")
+        return Response({"error": "Role not found"}, status=402)
+
+    courses = Course.objects.all()
+    serializer = CourseSerializer(courses, many=True)
+    return Response(serializer.data)
 
 @api_view(["POST"])
 def give_course_feedback(request):
