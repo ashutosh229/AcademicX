@@ -19,10 +19,8 @@ import {
 } from "@/components/ui/table";
 import { useCourseFilters } from "@/hooks/custom-hooks/useCourseFilters";
 import { useCourseHandlers } from "@/hooks/custom-hooks/useCourseHandlers";
-import { useSession } from "next-auth/react";
 
 export default function CoursesPage() {
-
   const {
     searchTerm,
     setSearchTerm,

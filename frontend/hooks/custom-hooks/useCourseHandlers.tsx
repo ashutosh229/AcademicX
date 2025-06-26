@@ -39,7 +39,7 @@ export function useCourseHandlers() {
           method: "GET",
           headers: {
             Authorization: `Bearer ${session?.accessToken}`,
-          }, // Use browser's HTTP cache when possible
+          },
         });
 
         clearTimeout(timeoutId);
