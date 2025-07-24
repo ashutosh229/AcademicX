@@ -97,6 +97,10 @@ const CoursePageClient = () => {
 
     dispatch(setLoading(true));
     try {
+      console.log(backendDomain);
+      console.log(session?.accessToken);
+      console.log(session.user.email.toString());
+      console.log(activeCourseId);
       const response = await fetch(`${backendDomain}/get_course_details/`, {
         method: "POST",
         headers: {
