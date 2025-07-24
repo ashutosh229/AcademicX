@@ -36,7 +36,23 @@ def get_analytics(request):
 
 @api_view(["GET", "HEAD"])
 def warmup(request):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT 1;")
-        cursor.fetchone()
-    return Response({"status": "backend + db warmed"})
+    try:
+        analytics = {
+            "number_of_comments": Comment.objects.count(),
+            "number_of_feedbacks": CourseMetrics.objects.count(),
+            "number_of_resources": Resource.objects.count(),
+            "number_of_upvotes": CommentVote.objects.filter(vote_type=1).count()
+                                 + ResourceVote.objects.filter(vote_type=1).count(),
+            "number_of_downvotes": CommentVote.objects.filter(vote_type=-1).count()
+                                   + ResourceVote.objects.filter(vote_type=-1).count(),
+        }
+
+        return Response({
+            "status": "backend and Supabase warmed",
+            "analytics_summary": analytics
+        })
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "details": str(e)
+        }, status=500)
