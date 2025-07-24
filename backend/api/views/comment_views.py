@@ -10,6 +10,15 @@ import os
 
 @api_view(["POST"])
 def add_comment(request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return Response({"error": "Unauthorized"}, status=401)
+    token = auth_header.split(" ")[1]
+    next_auth_secret = os.environ.get("NEXTAUTH_SECRET", "mysite.settings")
+    decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
+    role = decoded.get("role")
+    if not role:
+        return Response({"error": "Role not found"}, status=402)
     serializer = AddCommentSerializer(data=request.data)
     if serializer.is_valid():
         comment = serializer.save()  # Save and get instance
