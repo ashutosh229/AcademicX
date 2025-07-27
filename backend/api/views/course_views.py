@@ -10,7 +10,8 @@ from api.models import *
 from api.serializers import *
 import jwt
 import os
-
+#import logging
+# Optional: configure Django logger
 
 @api_view(["POST"])
 def create_course(request):
@@ -22,44 +23,41 @@ def create_course(request):
     return Response(serializer.errors, status=400)
 
 
-import logging
-
-# Optional: configure Django logger
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 @api_view(["GET"])
 def get_all_courses(request):
     auth_header = request.headers.get("Authorization")
-    logger.info(f"Authorization Header: {auth_header}")
+    #logger.info(f"Authorization Header: {auth_header}")
 
     if not auth_header or not auth_header.startswith("Bearer "):
-        logger.warning("Missing or invalid Authorization header.")
+        #logger.warning("Missing or invalid Authorization header.")
         return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
     token = auth_header.split(" ")[1]
-    logger.info(f"Extracted Token: {token}")
+    #logger.info(f"Extracted Token: {token}")
 
     next_auth_secret = os.environ.get("NEXTAUTH_SECRET")
     if not next_auth_secret:
-        logger.error("NEXTAUTH_SECRET not found in environment variables.")
+        #logger.error("NEXTAUTH_SECRET not found in environment variables.")
         return Response({"error": "Server misconfiguration"}, status=500)
 
     try:
         decoded = jwt.decode(token, next_auth_secret, algorithms=["HS256"])
-        logger.info(f"Decoded Token Payload: {decoded}")
+        #logger.info(f"Decoded Token Payload: {decoded}")
     except jwt.ExpiredSignatureError:
-        logger.warning("Token has expired.")
+        #logger.warning("Token has expired.")
         return Response({"error": "Token expired"}, status=401)
     except jwt.InvalidTokenError:
-        logger.warning("Invalid token.")
+        #logger.warning("Invalid token.")
         return Response({"error": "Invalid token"}, status=401)
     except Exception as e:
-        logger.error(f"Token decoding error: {e}")
+        #logger.error(f"Token decoding error: {e}")
         return Response({"error": "Token decode failed"}, status=500)
 
     role = decoded.get("role")
     if not role:
-        logger.warning("Token does not contain 'role'.")
+        #logger.warning("Token does not contain 'role'.")
         return Response({"error": "Role not found"}, status=402)
 
     courses = Course.objects.all()
