@@ -27,5 +27,5 @@ __all__ = [
     "upvote_resource", "remove_upvote_resource",
     "downvote_resource", "remove_downvote_resource",
 
-    "get_analytics","warmup",
+    "get_analytics","warmup","real_user_ping"
 ]

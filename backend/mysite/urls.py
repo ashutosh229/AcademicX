@@ -86,4 +86,5 @@ urlpatterns = [
     path("activate_student/", activate_student, name="activate_student"),  # integrated
     path("get_analytics/", get_analytics, name="get_analytics"),  # integrated
     path("warmup/", warmup, name="warmup"),
+    path("real_user_ping/", real_user_ping, name="real_user_ping"),
 ]
