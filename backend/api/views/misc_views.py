@@ -88,6 +88,7 @@ def real_user_ping(request):
             "target_url": target_url,
             "user_agent_used": chosen_ua,
             "status_code": internal_response.status_code,
+            "internal_response": internal_response
         })
 
     except Exception as e:
