@@ -1,5 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import random
+import requests
 from api.models import (
     Student,
     Comment,
@@ -55,4 +57,41 @@ def warmup(request):
         return Response({
             "status": "error",
             "details": str(e)
+        }, status=500)
+
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+    "Mozilla/5.0 (X11; Linux x86_64)",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
+    "Mozilla/5.0 (iPad; CPU OS 15_0 like Mac OS X)",
+    "Mozilla/5.0 (Android 10; Mobile; rv:79.0) Gecko/79.0 Firefox/79.0",
+    "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+    "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+]
+
+@api_view(["GET"])
+def real_user_ping(request):
+    try:
+        chosen_ua = random.choice(USER_AGENTS)
+        base_url = request.build_absolute_uri('/')[:-1]  # remove trailing slash
+        target_url = f"{base_url}/get_analytics/"
+
+        headers = {
+            "User-Agent": chosen_ua
+        }
+
+        internal_response = requests.get(target_url, headers=headers)
+
+        return Response({
+            "message": "Pinged /get_analytics/ as a browser",
+            "target_url": target_url,
+            "user_agent_used": chosen_ua,
+            "status_code": internal_response.status_code,
+        })
+
+    except Exception as e:
+        return Response({
+            "message": "Ping failed",
+            "error": str(e)
         }, status=500)
