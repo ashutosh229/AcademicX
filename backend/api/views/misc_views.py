@@ -70,29 +70,39 @@ USER_AGENTS = [
     "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
 ]
 
+
+
 @api_view(["GET"])
 def real_user_ping(request):
+    """
+    used to call time table creator's api to prevent circular calling
+    (calling request on your own instance causes deadlock)
+    """
     try:
         chosen_ua = random.choice(USER_AGENTS)
-        base_url = request.build_absolute_uri('/')[:-1]  # remove trailing slash
-        target_url = f"{base_url}/get_analytics/"
+        target_url = "https://timetable-creator-n51f.onrender.com/submit/"
 
         headers = {
-            "User-Agent": chosen_ua
+            "User-Agent": chosen_ua,
+            "Content-Type": "application/json"
         }
 
-        internal_response = requests.get(target_url, headers=headers)
+        payload = {
+            "course_id_list": [101, 102]
+        }
+
+        post_response = requests.post(target_url, json=payload, headers=headers)
 
         return Response({
-            "message": "Pinged /get_analytics/ as a browser",
+            "message": "POST ping sent to external timetable API",
             "target_url": target_url,
             "user_agent_used": chosen_ua,
-            "status_code": internal_response.status_code,
-            "internal_response": internal_response
+            "status_code": post_response.status_code,
+            "response_body": post_response.text[:300]  # optional: truncate to avoid log clutter
         })
 
     except Exception as e:
         return Response({
-            "message": "Ping failed",
+            "message": "POST ping failed",
             "error": str(e)
         }, status=500)
