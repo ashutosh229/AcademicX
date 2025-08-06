@@ -94,11 +94,8 @@ def real_user_ping(request):
         post_response = requests.post(target_url, json=payload, headers=headers)
 
         return Response({
-            "message": "POST ping sent to external timetable API",
             "target_url": target_url,
-            "user_agent_used": chosen_ua,
-            "status_code": post_response.status_code,
-            "response_body": post_response.text[:300]  # optional: truncate to avoid log clutter
+            "status_code": post_response.status_code
         })
 
     except Exception as e:
