@@ -72,7 +72,7 @@ USER_AGENTS = [
 
 
 
-@api_view(["GET"])
+@api_view(["GET","HEAD"])
 def real_user_ping(request):
     """
     used to call time table creator's api to prevent circular calling
@@ -96,7 +96,7 @@ def real_user_ping(request):
         return Response({
             "target_url": target_url,
             "status_code": post_response.status_code
-        })
+        },status=200)
 
     except Exception as e:
         return Response({
