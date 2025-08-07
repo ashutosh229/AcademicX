@@ -78,28 +78,20 @@ def real_user_ping(request):
     used to call time table creator's api to prevent circular calling
     (calling request on your own instance causes deadlock)
     """
-    try:
-        chosen_ua = random.choice(USER_AGENTS)
-        target_url = "https://timetable-creator-n51f.onrender.com/submit/"
 
-        headers = {
-            "User-Agent": chosen_ua,
-            "Content-Type": "application/json"
-        }
+    chosen_ua = random.choice(USER_AGENTS)
+    target_url = "https://timetable-creator-n51f.onrender.com/submit/"
 
-        payload = {
-            "course_id_list": [101, 102]
-        }
+    headers = {
+        "User-Agent": chosen_ua,
+        "Content-Type": "application/json"
+    }
 
-        post_response = requests.post(target_url, json=payload, headers=headers)
+    payload = {
+        "course_id_list": [101, 102]
+    }
 
-        return Response({
-            "target_url": target_url,
-            "status_code": post_response.status_code
-        },status=200)
+    internal_response = requests.post(target_url, json=payload, headers=headers)
 
-    except Exception as e:
-        return Response({
-            "message": "POST ping failed",
-            "error": str(e)
-        }, status=500)
+    return Response("warmup",status=internal_response.status_code)
+
