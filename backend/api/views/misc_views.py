@@ -11,7 +11,7 @@ from api.models import (
     ResourceVote,
 )
 from django.db import connection
-
+import time
 
 @api_view(["GET"])
 def get_analytics(request):
@@ -90,7 +90,8 @@ def real_user_ping(request):
     payload = {
         "course_id_list": [101, 102]
     }
-
+    # Add 5 second delay before making the request
+    time.sleep(5)
     internal_response = requests.post(target_url, json=payload, headers=headers)
 
     return Response("warmup",status=internal_response.status_code)
